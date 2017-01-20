@@ -27,6 +27,7 @@ apply plugin: 'me.champeau.gradle.antlr4'
 
 // Application
 mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.Runner'
+version = '0.1'
 sourceCompatibility = 1.8
 
 repositories {
@@ -40,6 +41,12 @@ dependencies {
 
     // ANTLR4
     compile 'org.antlr:antlr4-runtime:4.6'
+}
+
+// Ignore deprecation warnings introduced by ANTLR4
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:-unchecked" << "-Xlint:-deprecation"
 }
 
 // ANTLR4 configuration
@@ -71,3 +78,16 @@ configurations {
 // Configure IntelliJ Idea to include ANTLR4 java output to src
 idea.module.sourceDirs += file(antlrGeneratedPath)
 idea.module.generatedSourceDirs += file(antlrGeneratedPath)
+
+// Create a single application jar
+// From: http://www.mkyong.com/gradle/gradle-create-a-jar-file-with-dependencies/
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle generated jar',
+                   'Implementation-Version': version,
+                   'Main-Class': mainClassName
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
