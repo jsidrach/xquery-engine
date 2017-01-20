@@ -18,12 +18,12 @@ doc
 
 // Relative Path
 rp
-    : Identifier                                 # rpTag
+    : tag                                        # rpTag
     | '*'                                        # rpWildcard
     | '.'                                        # rpCurrent
     | '..'                                       # rpParent
     | 'text()'                                   # rpText
-    | '@' Identifier                             # rpAttribute
+    | '@' att                                    # rpAttribute
     | '(' rp ')'                                 # rpParentheses
     | rp '/' rp                                  # rpChildren
     | rp '//' rp                                 # rpAll
@@ -42,14 +42,24 @@ f
     | 'not' f                                    # fNot
     ;
 
+// Attribute
+att
+    : Identifier
+    ;
+
+// Tag
+tag
+    : Identifier
+    ;
+
 // File Name
-FileName: '"' + ((Letter | Digit | [,. -])+) + '"';
+FileName: '"' + ((Letter | Digit | [_,. /-])+) + '"';
 
 // Identifier
 Identifier: Letter (Letter | Digit)*;
 
 // Basic Fragments
-fragment Letter: [a-zA-Z_];
+fragment Letter: [a-zA-Z];
 
 fragment Digit: [0-9];
 
