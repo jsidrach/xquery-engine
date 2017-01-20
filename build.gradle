@@ -1,18 +1,69 @@
+buildscript {
+    // Dependencies repositories
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 
+    // ANTLR4 gradle wrapper
+    dependencies {
+        classpath 'me.champeau.gradle:antlr4-gradle-plugin:0.1'
+    }
+}
+
+// IntelliJ Idea project
+apply plugin: 'idea'
+// Java project
 apply plugin: 'java'
-apply plugin: 'antlr'
+// Runnable application
+apply plugin: 'application'
+// ANTLR4 gradle wrapper
+apply plugin: 'me.champeau.gradle.antlr4'
 
+// Application
+mainClassName = 'ucsd.cse232b.jsidrach.xpath.Runner'
 sourceCompatibility = 1.8
 
+// Dependencies
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
-    antlr "org.antlr:antlr4:4.6"
+    // Unit tests
     testCompile group: 'junit', name: 'junit', version: '4.11'
+
+    // ANTLR4
+    compile 'org.antlr:antlr4-runtime:4.6'
 }
 
-generateGrammarSource {
-    arguments += ["-encoding utf-8", "-no-listener", "-visitor", "-long-messages"]
+// ANTLR4 configuration
+def generatedSources = 'target/generated-sources'
+def antlrGeneratedPath = generatedSources + '/antlr'
+def grammarGeneratedPath = antlrGeneratedPath + '/ucsd/cse232b/jsidrach/xpath/parser'
+
+// Do not generate listener base classes
+antlr4.listener = false
+
+// Set output
+antlr4.output = file(grammarGeneratedPath)
+
+// Add ANTLR4 generatedsource directory
+sourceSets.main.java.srcDir generatedSources
+sourceSets.test.java.srcDir generatedSources
+
+// Remove ANTLR4 generated java files
+clean.delete generatedSources
+
+// Run ANTLR4 before compiling the rest of the java files
+compileJava.dependsOn antlr4
+
+// Add ANTLR4 to classpath
+configurations {
+    compile.extendsFrom antlr4
 }
+
+// Configure IntelliJ Idea to include ANTLR4 java output to src
+idea.module.sourceDirs += file(antlrGeneratedPath)
+idea.module.generatedSourceDirs += file(antlrGeneratedPath)
