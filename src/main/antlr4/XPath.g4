@@ -2,7 +2,7 @@
 grammar XPath;
 
 @header {
-package ucsd.cse232b.jsidrach.xpath.parser;
+package edu.ucsd.cse232b.jsidrach.xpath.parser;
 }
 
 // Absolute path

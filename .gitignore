@@ -1,25 +1,46 @@
-*.class
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files
-*.jar
-*.war
-*.ear
+# Output
+/target/
+/build/
+/out/
 
 # Virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
-# Output
-/target/
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
 
-# IntelliJ Idea
-.idea/
-/build/
-/out/
-.idea_modules/
-.gradle/
-*.iml
-*.ipr
+# Sensitive or high-churn files:
+.idea/dataSources/
+.idea/dataSources.ids
+.idea/dataSources.xml
+.idea/dataSources.local.xml
+.idea/sqlDataSources.xml
+.idea/dynamic.xml
+.idea/uiDesigner.xml
+
+# Gradle:
+.idea/gradle.xml
+.idea/libraries
+.gradle
+
+# Mongo Explorer plugin:
+.idea/mongoSettings.xml
+
+## File-based project format:
 *.iws
+
+## Plugin-specific files:
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# JIRA plugin
+atlassian-ide-plugin.xml
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+

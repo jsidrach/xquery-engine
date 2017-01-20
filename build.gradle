@@ -11,6 +11,11 @@ buildscript {
     }
 }
 
+task wrapper(type: Wrapper) {
+  gradleVersion = '3.1'
+  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+}
+
 // IntelliJ Idea project
 apply plugin: 'idea'
 // Java project
@@ -21,10 +26,9 @@ apply plugin: 'application'
 apply plugin: 'me.champeau.gradle.antlr4'
 
 // Application
-mainClassName = 'ucsd.cse232b.jsidrach.xpath.Runner'
+mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.Runner'
 sourceCompatibility = 1.8
 
-// Dependencies
 repositories {
     mavenCentral()
     jcenter()
@@ -41,7 +45,7 @@ dependencies {
 // ANTLR4 configuration
 def generatedSources = 'target/generated-sources'
 def antlrGeneratedPath = generatedSources + '/antlr'
-def grammarGeneratedPath = antlrGeneratedPath + '/ucsd/cse232b/jsidrach/xpath/parser'
+def grammarGeneratedPath = antlrGeneratedPath + '/edu/ucsd/cse232b/jsidrach/xpath/parser'
 
 // Do not generate listener base classes
 antlr4.listener = false
@@ -49,11 +53,11 @@ antlr4.listener = false
 // Set output
 antlr4.output = file(grammarGeneratedPath)
 
-// Add ANTLR4 generatedsource directory
+// Add ANTLR4 generatedSources as a source directory
 sourceSets.main.java.srcDir generatedSources
 sourceSets.test.java.srcDir generatedSources
 
-// Remove ANTLR4 generated java files
+// Remove ANTLR4 generatedSources directory on clean
 clean.delete generatedSources
 
 // Run ANTLR4 before compiling the rest of the java files

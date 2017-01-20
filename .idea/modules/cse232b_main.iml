@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="cse232b:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+    <output url="file://$MODULE_DIR$/../../build/classes/main" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../src/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../src/main/resources" type="java-resource" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../target">
+      <sourceFolder url="file://$MODULE_DIR$/../../target/generated-sources" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../target/generated-sources/antlr" isTestSource="false" generated="true" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: org.antlr:antlr4:4.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.antlr:antlr4-runtime:4.6" level="project" />
+    <orderEntry type="library" name="Gradle: org.antlr:antlr4-annotations:4.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.antlr:antlr-runtime:3.5.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.antlr:ST4:4.0.8" level="project" />
+  </component>
+</module>
