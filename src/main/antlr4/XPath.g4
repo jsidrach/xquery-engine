@@ -13,17 +13,17 @@ ap
 
 // Document
 doc
-    : ('doc(' | 'document(') FileName ')'
+    : 'doc(' FileName ')'
     ;
 
 // Relative Path
 rp
-    : tag                                        # rpTag
+    : Identifier                                 # rpTag
     | '*'                                        # rpWildcard
     | '.'                                        # rpCurrent
     | '..'                                       # rpParent
     | 'text()'                                   # rpText
-    | '@' att                                    # rpAttribute
+    | '@' Identifier                             # rpAttribute
     | '(' rp ')'                                 # rpParentheses
     | rp '/' rp                                  # rpChildren
     | rp '//' rp                                 # rpAll
@@ -40,16 +40,6 @@ f
     | f 'and' f                                  # fAnd
     | f 'or' f                                   # fOr
     | 'not' f                                    # fNot
-    ;
-
-// Attribute
-att
-    : Identifier
-    ;
-
-// Tag
-tag
-    : Identifier
     ;
 
 // File Name

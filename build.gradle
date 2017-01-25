@@ -26,7 +26,7 @@ apply plugin: 'application'
 apply plugin: 'me.champeau.gradle.antlr4'
 
 // Application
-mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.Runner'
+mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
 version = '0.1'
 sourceCompatibility = 1.8
 
@@ -91,3 +91,12 @@ task fatJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+
+// Generate documentation
+task docs(type: Javadoc) {
+    title = "CSE 232B - Project Documentation - J. Sidrach"
+    source = "src/main/java"
+    destinationDir = file("docs/javadoc")
+    failOnError = false
+}
+compileJava.dependsOn docs
