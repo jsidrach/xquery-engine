@@ -12,7 +12,7 @@ import java.util.List;
  * <p>
  * The traversal of the context tree has to be done manually, recursively calling visit(ctx)<br>
  * Initially, the root of the grammar is invoked<br>
- * Each method modifies the current list of nodes (nl) and returns it<br>
+ * Each method modifies the current list of nodes (nodes) and returns it<br>
  * </p>
  */
 public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
@@ -20,13 +20,13 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     /**
      * Current list of nodes
      */
-    private List<Node> nl;
+    private List<Node> nodes;
 
     /**
      * Public constructor - Initializes the current list of nodes to an empty linked list
      */
     public XPathVisitor() {
-        this.nl = new LinkedList<>();
+        this.nodes = new LinkedList<>();
     }
 
     /**
@@ -41,7 +41,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -56,7 +57,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -71,7 +73,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpTag(XPathParser.RpTagContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -86,7 +89,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpWildcard(XPathParser.RpWildcardContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -101,7 +105,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpCurrent(XPathParser.RpCurrentContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -116,7 +121,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpParent(XPathParser.RpParentContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -131,7 +137,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpText(XPathParser.RpTextContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -146,7 +153,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAttribute(XPathParser.RpAttributeContext ctx) {
-        return this.nl;
+        // TODO
+        return this.nodes;
     }
 
     /**
@@ -161,7 +169,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpParentheses(XPathParser.RpParenthesesContext ctx) {
-        return this.nl;
+        return visit(ctx.rp());
     }
 
     /**
@@ -176,7 +184,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpChildren(XPathParser.RpChildrenContext ctx) {
-        return this.nl;
+        visit(ctx.rp(0));
+        return visit(ctx.rp(1));
     }
 
     /**
@@ -191,7 +200,12 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
-        return this.nl;
+        List<Node> nodes = new LinkedList<>();
+        for (Node n: this.nodes) {
+            nodes.addAll(XPathEvaluator.children(n));
+        }
+        this.nodes = nodes;
+        return this.nodes;
     }
 
     /**
@@ -206,7 +220,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
-        return this.nl;
+        return this.nodes;
     }
 
     /**
@@ -221,7 +235,13 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpPair(XPathParser.RpPairContext ctx) {
-        return this.nl;
+        List<Node> original = new LinkedList<>(this.nodes);
+        List<Node> nodes = new LinkedList<>();
+        nodes.addAll(visit(ctx.rp(0)));
+        this.nodes = original;
+        nodes.addAll(visit(ctx.rp(1)));
+        // TODO: Should this.nodes be assigned to nodes now?
+        return nodes;
     }
 
     /**
@@ -236,7 +256,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFRelativePath(XPathParser.FRelativePathContext ctx) {
-        return this.nl;
+        List<Node> nodes = this.nodes;
+        List<Node> filter = visit(ctx.rp());
+        this.nodes = nodes;
+        return filter;
     }
 
     /**
@@ -252,7 +275,19 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFValueEquality(XPathParser.FValueEqualityContext ctx) {
-        return this.nl;
+        List<Node> nodes = this.nodes;
+        List<Node> l = visit(ctx.rp(0));
+        this.nodes = nodes;
+        List<Node> r = visit(ctx.rp(1));
+        this.nodes = nodes;
+        for (Node nl : l) {
+            for (Node nr : r) {
+                if (nl.isEqualNode(nr)) {
+                    return this.nodes;
+                }
+            }
+        }
+        return new LinkedList<>();
     }
 
     /**
@@ -268,7 +303,19 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFIdentityEquality(XPathParser.FIdentityEqualityContext ctx) {
-        return this.nl;
+        List<Node> nodes = this.nodes;
+        List<Node> l = visit(ctx.rp(0));
+        this.nodes = nodes;
+        List<Node> r = visit(ctx.rp(1));
+        this.nodes = nodes;
+        for (Node nl : l) {
+            for (Node nr : r) {
+                if (nl.isSameNode(nr)) {
+                    return this.nodes;
+                }
+            }
+        }
+        return new LinkedList<>();
     }
 
     /**
@@ -283,7 +330,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFParentheses(XPathParser.FParenthesesContext ctx) {
-        return this.nl;
+        return visit(ctx.f());
     }
 
     /**
@@ -298,7 +345,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFAnd(XPathParser.FAndContext ctx) {
-        return this.nl;
+        if ((visit(ctx.f(0)).isEmpty()) || (visit(ctx.f(1)).isEmpty())) {
+            return new LinkedList<>();
+        }
+        return this.nodes;
     }
 
     /**
@@ -313,7 +363,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFOr(XPathParser.FOrContext ctx) {
-        return this.nl;
+        if ((visit(ctx.f(0)).isEmpty()) && (visit(ctx.f(1)).isEmpty())) {
+            return new LinkedList<>();
+        }
+        return this.nodes;
     }
 
     /**
@@ -328,6 +381,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFNot(XPathParser.FNotContext ctx) {
-        return this.nl;
+        if (visit(ctx.f()).isEmpty()) {
+            return this.nodes;
+        }
+        return new LinkedList<>();
     }
 }

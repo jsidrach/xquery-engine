@@ -1,6 +1,6 @@
 package edu.ucsd.cse232b.jsidrach.xpath;
 
-import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -84,17 +84,16 @@ public class XPathEvaluator {
     }
 
     /**
-     * TODO
+     * Returns the attribute with the given name of the node
      *
-     * @param n       Node
+     * @param n Node
      * @param attName Node's attribute name
-     * @return TODO
+     * @return Value of the attribute attName of the node
      */
-    public static Node attrib(Node n, String attName) {
-        NamedNodeMap atts = n.getAttributes();
-        if ((atts != null) && (atts.getNamedItem(attName) != null)) {
-            return n;
+    public static String attrib(Node n, String attName) {
+        if (n.getNodeType() != Node.ELEMENT_NODE) {
+            return null;
         }
-        return null;
+        return ((Element)n).getAttribute(attName);
     }
 }

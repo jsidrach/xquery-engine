@@ -50,6 +50,8 @@ public class IO {
     public static String NodeToString(Node n) throws Exception {
         StringWriter buffer = new StringWriter();
         Transformer ts = TransformerFactory.newInstance().newTransformer();
+        ts.setOutputProperty(OutputKeys.METHOD, "xml");
+        ts.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         ts.setOutputProperty(OutputKeys.INDENT, "yes");
         ts.transform(new DOMSource(n), new StreamResult(buffer));
