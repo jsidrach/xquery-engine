@@ -64,11 +64,11 @@ public class XPathEvaluator {
      */
     public static List<Node> children(Node n) {
         NodeList nl = n.getChildNodes();
-        List<Node> lln = new LinkedList<>();
+        List<Node> nodes = new LinkedList<>();
         for (int i = 0; i < nl.getLength(); ++i) {
-            lln.add(nl.item(i));
+            nodes.add(nl.item(i));
         }
-        return lln;
+        return nodes;
     }
 
     /**
@@ -78,12 +78,12 @@ public class XPathEvaluator {
      * @return Singleton list containing the parent of the element node, if it has a parent - an empty list otherwise
      */
     public static List<Node> parent(Node n) {
-        List<Node> pl = new LinkedList<>();
+        List<Node> nodes = new LinkedList<>();
         Node p = n.getParentNode();
         if (p != null) {
-            pl.add(p);
+            nodes.add(p);
         }
-        return pl;
+        return nodes;
     }
 
     /**
@@ -105,8 +105,12 @@ public class XPathEvaluator {
     public static Node txt(Node n) {
         NodeList nl = n.getChildNodes();
         for (int i = 0; i < nl.getLength(); ++i) {
-            if (nl.item(i).getNodeType() == Node.TEXT_NODE) {
-                return nl.item(i);
+            Node node = nl.item(i);
+            if (node.getNodeType() == Node.TEXT_NODE) {
+                String text = n.getTextContent();
+                if ((text != null) && (!text.trim().isEmpty())) {
+                    return node;
+                }
             }
         }
         return null;
@@ -117,12 +121,17 @@ public class XPathEvaluator {
      *
      * @param n       Node
      * @param attName Node's attribute name
-     * @return Value of the attribute attName of the node
+     * @return Singleton list containing the attribute of the node, if it has such attribute - an empty list otherwise
      */
-    public static String attrib(Node n, String attName) {
+    public static List<Node> attrib(Node n, String attName) {
+        List<Node> nodes = new LinkedList<>();
         if (n.getNodeType() != Node.ELEMENT_NODE) {
-            return null;
+            return nodes;
         }
-        return ((Element) n).getAttribute(attName);
+        Node att = ((Element) n).getAttributeNode(attName);
+        if (att != null) {
+            nodes.add(att);
+        }
+        return nodes;
     }
 }

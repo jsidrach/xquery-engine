@@ -288,6 +288,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [rp](n)
      *   → [rp](n) ≠ { }
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -307,6 +308,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [rp1 eq rp2](n)
      *   → ∃ x ∈ [rp1](n) ∃ y ∈ [rp2](n) / x eq y
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -335,6 +337,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [rp1 is rp2](n)
      *   → ∃ x ∈ [rp1](n) ∃ y ∈ [rp2](n) / x is y
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -362,6 +365,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [(f)](n)
      *   → [f](n)
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -377,6 +381,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [f1 and f2](n)
      *   → [f1](n) ∧ [f2](n)
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -395,6 +400,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [f1 or f2](n)
      *   → [f1](n) ∨ [f2](n)
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -413,6 +419,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * [not f](n)
      *   → ¬[f](n)
      * </pre>
+     * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -422,7 +429,6 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         if (visit(ctx.f()).isEmpty()) {
             return this.nodes;
         }
-
         return new LinkedList<>();
     }
 }

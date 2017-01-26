@@ -10,7 +10,7 @@ import edu.ucsd.cse232b.jsidrach.utils.IO;
  * </p>
  */
 public class XPathRunner {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         // Check number of arguments
         if (args.length != 1) {
             System.out.println("Invalid number of arguments");
@@ -19,6 +19,10 @@ public class XPathRunner {
         }
 
         // Print the result of executing the xpath query
-        System.out.println(IO.NodesToString(IO.XPathQuery(args[0])));
+        try {
+            System.out.println(IO.NodesToString(IO.XPathQuery(args[0])));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
