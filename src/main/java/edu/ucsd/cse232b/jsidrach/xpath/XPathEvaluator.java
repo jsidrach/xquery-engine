@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * XPathEvaluator - Collection of functions to evaluate an XPath expression
  * <p>
- * All methods are static and public, to be accessed by the XPathEvaluator
+ * All methods are static and public, to be accessed by XPathVisitor
  * </p>
  */
 public class XPathEvaluator {
@@ -86,7 +86,7 @@ public class XPathEvaluator {
     /**
      * TODO
      *
-     * @param n Node
+     * @param n       Node
      * @param attName Node's attribute name
      * @return TODO
      */

@@ -41,7 +41,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -56,7 +56,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -71,7 +71,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpTag(XPathParser.RpTagContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -86,7 +86,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpWildcard(XPathParser.RpWildcardContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -101,7 +101,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpCurrent(XPathParser.RpCurrentContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -116,7 +116,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpParent(XPathParser.RpParentContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -131,7 +131,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpText(XPathParser.RpTextContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -146,7 +146,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAttribute(XPathParser.RpAttributeContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -161,7 +161,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpParentheses(XPathParser.RpParenthesesContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -176,7 +176,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpChildren(XPathParser.RpChildrenContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -191,7 +191,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -206,7 +206,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -221,7 +221,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpPair(XPathParser.RpPairContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -236,7 +236,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFRelativePath(XPathParser.FRelativePathContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -252,7 +252,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFValueEquality(XPathParser.FValueEqualityContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -268,7 +268,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFIdentityEquality(XPathParser.FIdentityEqualityContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -283,7 +283,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFParentheses(XPathParser.FParenthesesContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -298,7 +298,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFAnd(XPathParser.FAndContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -313,7 +313,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFOr(XPathParser.FOrContext ctx) {
-        return null;
+        return this.nl;
     }
 
     /**
@@ -328,6 +328,6 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitFNot(XPathParser.FNotContext ctx) {
-        return null;
+        return this.nl;
     }
 }
