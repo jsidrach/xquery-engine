@@ -30,7 +30,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     }
 
     /**
-     * Absolute path (all)
+     * Absolute path (children)
      * <pre>
      * [doc(FileName)/rp]
      *   → [rp](root(FileName))
@@ -40,13 +40,14 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * @return TODO
      */
     @Override
-    public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
-        // TODO
+    public List<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
+        visit(ctx.doc());
+        visit(ctx.rp());
         return this.nodes;
     }
 
     /**
-     * Absolute path (children)
+     * Absolute path (all)
      * <pre>
      * [doc(FileName)//rp]
      *   → [.//rp](root(FileName))
@@ -56,8 +57,36 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * @return TODO
      */
     @Override
-    public List<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
-        // TODO
+    public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
+        visit(ctx.doc());
+        List<Node> nodes = new LinkedList<>();
+        LinkedList<Node> q = new LinkedList<>();
+        nodes.addAll(this.nodes);
+        q.addAll(this.nodes);
+        while (!q.isEmpty()) {
+            Node n = q.poll();
+            List<Node> children = XPathEvaluator.children(n);
+            nodes.addAll(children);
+            q.addAll(children);
+        }
+
+        this.nodes = nodes;
+        return this.nodes;
+    }
+
+    /**
+     * Absolute path (doc)
+     * <pre>
+     * [doc(FileName)]
+     *   → root(FileName)
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitApDoc(XPathParser.ApDocContext ctx) {
+        this.nodes = XPathEvaluator.root(ctx.FileName().getText());
         return this.nodes;
     }
 
@@ -105,7 +134,6 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpCurrent(XPathParser.RpCurrentContext ctx) {
-        // TODO
         return this.nodes;
     }
 
@@ -121,7 +149,14 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpParent(XPathParser.RpParentContext ctx) {
-        // TODO
+        List<Node> nodes = new LinkedList<>();
+        for (Node n : this.nodes) {
+            Node p = n.getParentNode();
+            if (!nodes.contains(p)) {
+                nodes.add(p);
+            }
+        }
+        this.nodes = nodes;
         return this.nodes;
     }
 
@@ -185,7 +220,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitRpChildren(XPathParser.RpChildrenContext ctx) {
         visit(ctx.rp(0));
-        return visit(ctx.rp(1));
+        visit(ctx.rp(1));
+        this.nodes = XPathEvaluator.unique(this.nodes);
+        return this.nodes;
     }
 
     /**
@@ -201,10 +238,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
         List<Node> nodes = new LinkedList<>();
-        for (Node n: this.nodes) {
+        for (Node n : this.nodes) {
             nodes.addAll(XPathEvaluator.children(n));
         }
-        this.nodes = nodes;
+        this.nodes = XPathEvaluator.unique(nodes);
         return this.nodes;
     }
 
@@ -220,6 +257,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
+        // TODO
         return this.nodes;
     }
 
@@ -240,8 +278,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         nodes.addAll(visit(ctx.rp(0)));
         this.nodes = original;
         nodes.addAll(visit(ctx.rp(1)));
-        // TODO: Should this.nodes be assigned to nodes now?
-        return nodes;
+        this.nodes = nodes;
+        return this.nodes;
     }
 
     /**
@@ -384,6 +422,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         if (visit(ctx.f()).isEmpty()) {
             return this.nodes;
         }
+
         return new LinkedList<>();
     }
 }

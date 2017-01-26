@@ -1,10 +1,13 @@
 package edu.ucsd.cse232b.jsidrach.xpath;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import java.io.FileNotFoundException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,10 +24,36 @@ public class XPathEvaluator {
      *
      * @param fn Name of the XML file (relative to the executable's current path)
      * @return Root of the XML tree corresponding to the loaded document, as a node list
-     * @throws FileNotFoundException Invalid file name
      */
-    static List<Node> root(String fn) throws FileNotFoundException {
-        return null;
+    static List<Node> root(String fn) {
+        List<Node> nodes = new LinkedList<>();
+        try {
+            File xmlFile = new File(fn);
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+            Document doc = docBuilder.parse(xmlFile);
+            doc.getDocumentElement().normalize();
+            nodes.add(doc.getDocumentElement());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nodes;
+    }
+
+    /**
+     * Returns a list of nodes without duplicates
+     *
+     * @param nodes List of nodes with possible duplicates
+     * @return List of nodes without duplicates
+     */
+    static List<Node> unique(List<Node> nodes) {
+        List<Node> uNodes = new LinkedList<>();
+        for (Node n : nodes) {
+            if (!uNodes.contains(n)) {
+                uNodes.add(n);
+            }
+        }
+        return uNodes;
     }
 
     /**
@@ -86,7 +115,7 @@ public class XPathEvaluator {
     /**
      * Returns the attribute with the given name of the node
      *
-     * @param n Node
+     * @param n       Node
      * @param attName Node's attribute name
      * @return Value of the attribute attName of the node
      */
@@ -94,6 +123,6 @@ public class XPathEvaluator {
         if (n.getNodeType() != Node.ELEMENT_NODE) {
             return null;
         }
-        return ((Element)n).getAttribute(attName);
+        return ((Element) n).getAttribute(attName);
     }
 }
