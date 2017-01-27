@@ -102,7 +102,14 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpTag(XPathParser.RpTagContext ctx) {
-        // TODO
+        String tag = ctx.Identifier().getText();
+        List<Node> nodes = new LinkedList<>();
+        for (Node n : this.nodes) {
+            if (n.getNodeName().equals(tag)) {
+                nodes.add(n);
+            }
+        }
+        this.nodes = nodes;
         return this.nodes;
     }
 
@@ -118,7 +125,11 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpWildcard(XPathParser.RpWildcardContext ctx) {
-        // TODO
+        List<Node> nodes = new LinkedList<>();
+        for (Node n : this.nodes) {
+            nodes.addAll(XPathEvaluator.children(n));
+        }
+        this.nodes = nodes;
         return this.nodes;
     }
 
@@ -172,7 +183,14 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpText(XPathParser.RpTextContext ctx) {
-        // TODO
+        List<Node> nodes = new LinkedList<>();
+        for (Node n : this.nodes) {
+            Node text = XPathEvaluator.txt(n);
+            if (text != null) {
+                nodes.add(text);
+            }
+        }
+        this.nodes = nodes;
         return this.nodes;
     }
 
@@ -188,7 +206,11 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAttribute(XPathParser.RpAttributeContext ctx) {
-        // TODO
+        List<Node> nodes = new LinkedList<>();
+        for (Node n : this.nodes) {
+            nodes.addAll(XPathEvaluator.attrib(n, ctx.Identifier().getText()));
+        }
+        this.nodes = nodes;
         return this.nodes;
     }
 
@@ -257,7 +279,17 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
-        // TODO
+        List<Node> nodes = new LinkedList<>();
+        List<Node> rp = visit(ctx.rp());
+        for (Node n : rp) {
+            this.nodes = new LinkedList<>();
+            this.nodes.add(n);
+            if (!visit(ctx.f()).isEmpty()) {
+                nodes.add(n);
+            }
+
+        }
+        this.nodes = nodes;
         return this.nodes;
     }
 
