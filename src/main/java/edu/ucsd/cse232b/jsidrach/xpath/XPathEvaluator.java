@@ -28,8 +28,9 @@ public class XPathEvaluator {
     static List<Node> root(String fn) {
         List<Node> nodes = new LinkedList<>();
         try {
-            File xmlFile = new File(fn);
+            File xmlFile = new File(fn.substring(1, fn.length() - 1));
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            docFactory.setIgnoringElementContentWhitespace(true);
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(xmlFile);
             doc.getDocumentElement().normalize();
@@ -107,8 +108,9 @@ public class XPathEvaluator {
         for (int i = 0; i < nl.getLength(); ++i) {
             Node node = nl.item(i);
             if (node.getNodeType() == Node.TEXT_NODE) {
-                String text = n.getTextContent();
+                String text = node.getTextContent();
                 if ((text != null) && (!text.trim().isEmpty())) {
+                    node.setTextContent(text.trim());
                     return node;
                 }
             }

@@ -12,8 +12,8 @@ buildscript {
 }
 
 task wrapper(type: Wrapper) {
-  gradleVersion = '3.1'
-  distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
+  gradleVersion = '3.3'
+  distributionUrl = 'https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip'
 }
 
 // IntelliJ Idea project
@@ -27,7 +27,7 @@ apply plugin: 'me.champeau.gradle.antlr4'
 
 // Application
 mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
-version = '0.1'
+version = '1.0'
 sourceCompatibility = 1.8
 
 repositories {
@@ -46,7 +46,7 @@ dependencies {
 // Ignore deprecation warnings introduced by ANTLR4
 compileJava {
     options.encoding = 'UTF-8'
-    options.compilerArgs << "-Xlint:-unchecked" << "-Xlint:-deprecation"
+    options.compilerArgs << '-Xlint:-unchecked' << '-Xlint:-deprecation'
 }
 
 // ANTLR4 configuration
@@ -79,24 +79,29 @@ configurations {
 idea.module.sourceDirs += file(antlrGeneratedPath)
 idea.module.generatedSourceDirs += file(antlrGeneratedPath)
 
-// Create a single application jar
+// Create single application jars
 // From: http://www.mkyong.com/gradle/gradle-create-a-jar-file-with-dependencies/
-task fatJar(type: Jar) {
+def course = 'CSE 232B'
+def author = 'J. Sidrach'
+task xPathJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'Gradle generated jar',
+        attributes 'Implementation-Title': course + ' - XPath Processor - ' + author,
                    'Implementation-Version': version,
-                   'Main-Class': mainClassName
+                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
     }
-    baseName = project.name + '-all'
+    archiveName = 'xpath.jar'
+    destinationDir = file('demo')
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
 
 // Generate documentation
 task docs(type: Javadoc) {
-    title = "CSE 232B - Project Documentation - J. Sidrach"
-    source = "src/main/java"
-    destinationDir = file("docs/javadoc")
+    title = course + ' - Project Documentation - ' + author
+    source = 'src/main/java'
+    destinationDir = file('docs/javadoc')
     failOnError = false
 }
-compileJava.dependsOn docs
+
+// Generate docs and jars after build
+build.finalizedBy(docs, xPathJar)

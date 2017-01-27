@@ -15,6 +15,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileInputStream;
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -66,10 +67,17 @@ public class IO {
      * @throws Exception Internal error
      */
     public static String NodesToString(List<Node> ns) throws Exception {
-        String output = "<!-- Number of nodes: " + ns.size() + " -->";
+        List<String> nodesStr = new LinkedList<>();
+        for (Node n : ns) {
+            String nStr = IO.NodeToString(n).trim();
+            if (!nStr.isEmpty()) {
+                nodesStr.add(nStr);
+            }
+        }
+        String output = "<!-- Number of nodes: " + nodesStr.size() + " -->\n";
         for (int i = 0; i < ns.size(); ++i) {
             output += "<!-- Node #" + (i + 1) + " -->\n";
-            output += IO.NodeToString(ns.get(i));
+            output += nodesStr.get(i);
             output += "\n";
         }
         return output;

@@ -13,17 +13,17 @@ ap
 
 // Document
 doc
-    : 'doc(' FileName ')'                        # apDoc
+    : 'doc(' FILENAME ')'                      # apDoc
     ;
 
 // Relative Path
 rp
-    : Identifier                                 # rpTag
+    : IDENTIFIER                                 # rpTag
     | '*'                                        # rpWildcard
     | '.'                                        # rpCurrent
     | '..'                                       # rpParent
     | 'text()'                                   # rpText
-    | '@' Identifier                             # rpAttribute
+    | '@' IDENTIFIER                             # rpAttribute
     | '(' rp ')'                                 # rpParentheses
     | rp '/' rp                                  # rpChildren
     | rp '//' rp                                 # rpAll
@@ -43,15 +43,15 @@ f
     ;
 
 // File Name
-FileName: '"' + ((Letter | Digit | [_,. /-])+) + '"';
+FILENAME: '"' + ([a-zA-Z0-9_,. /-]+) + '"';
 
 // Identifier
-Identifier: Letter (Letter | Digit)*;
+IDENTIFIER: LETTER (LETTER | DIGIT)*;
 
 // Basic Fragments
-fragment Letter: [a-zA-Z];
+fragment LETTER: [a-zA-Z];
 
-fragment Digit: [0-9];
+fragment DIGIT: [0-9];
 
 // Ignore White Space
-WhiteSpace: [ \n\t\r] -> skip;
+WHITESPACE: [ \n\t\r]+ -> skip;
