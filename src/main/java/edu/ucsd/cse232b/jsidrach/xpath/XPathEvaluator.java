@@ -107,12 +107,8 @@ public class XPathEvaluator {
         NodeList nl = n.getChildNodes();
         for (int i = 0; i < nl.getLength(); ++i) {
             Node node = nl.item(i);
-            if (node.getNodeType() == Node.TEXT_NODE) {
-                String text = node.getTextContent();
-                if ((text != null) && (!text.trim().isEmpty())) {
-                    node.setTextContent(text.trim());
-                    return node;
-                }
+            if ((node.getNodeType() == Node.TEXT_NODE) && (node.getTextContent() != null)) {
+                return node;
             }
         }
         return null;

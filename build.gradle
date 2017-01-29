@@ -1,3 +1,7 @@
+//
+// Build dependencies
+//
+
 buildscript {
     // Dependencies repositories
     repositories {
@@ -11,10 +15,18 @@ buildscript {
     }
 }
 
+//
+// Gradle wrapper
+//
+
 task wrapper(type: Wrapper) {
   gradleVersion = '3.3'
   distributionUrl = 'https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip'
 }
+
+//
+// Plugins
+//
 
 // IntelliJ Idea project
 apply plugin: 'idea'
@@ -25,10 +37,18 @@ apply plugin: 'application'
 // ANTLR4 gradle wrapper
 apply plugin: 'me.champeau.gradle.antlr4'
 
-// Application
+//
+// Source code configuration
+//
+
 mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
 version = '1.0'
 sourceCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
+
+//
+// Dependencies
+//
 
 repositories {
     mavenCentral()
@@ -43,11 +63,9 @@ dependencies {
     compile 'org.antlr:antlr4-runtime:4.6'
 }
 
-// Ignore deprecation warnings introduced by ANTLR4
-compileJava {
-    options.encoding = 'UTF-8'
-    options.compilerArgs << '-Xlint:-unchecked' << '-Xlint:-deprecation'
-}
+//
+// ANTLR 4
+//
 
 // ANTLR4 configuration
 def generatedSources = 'target/generated-sources'
@@ -79,8 +97,10 @@ configurations {
 idea.module.sourceDirs += file(antlrGeneratedPath)
 idea.module.generatedSourceDirs += file(antlrGeneratedPath)
 
-// Create single application jars
-// From: http://www.mkyong.com/gradle/gradle-create-a-jar-file-with-dependencies/
+//
+// Application jars
+//
+
 def course = 'CSE 232B'
 def author = 'J. Sidrach'
 task xPathJar(type: Jar) {
@@ -95,7 +115,10 @@ task xPathJar(type: Jar) {
     with jar
 }
 
-// Generate documentation
+//
+// Documentation
+//
+
 task docs(type: Javadoc) {
     title = course + ' - Project Documentation - ' + author
     source = 'src/main/java'
@@ -103,5 +126,8 @@ task docs(type: Javadoc) {
     failOnError = false
 }
 
-// Generate docs and jars after build
+//
+// Automated actions after build
+//
+
 build.finalizedBy(docs, xPathJar)

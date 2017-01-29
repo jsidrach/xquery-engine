@@ -15,7 +15,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileInputStream;
 import java.io.StringWriter;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -36,6 +35,7 @@ public class IO {
         XPathLexer xPathLexer = new XPathLexer(ANTLRInput);
         CommonTokenStream tokens = new CommonTokenStream(xPathLexer);
         XPathParser xPathParser = new XPathParser(tokens);
+        // Parse using ap (Absolute Path) as root rule
         ParseTree xPathTree = xPathParser.ap();
         XPathVisitor xPathVisitor = new XPathVisitor();
         return xPathVisitor.visit(xPathTree);
@@ -44,19 +44,15 @@ public class IO {
     /**
      * Transforms a node into its XML string representation
      *
-     * @param n Node
+     * @param n  Node
+     * @param ts Transformer from node to string
      * @return String containing the XML plaintext representation of the node
      * @throws Exception Internal error
      */
-    public static String NodeToString(Node n) throws Exception {
+    private static String NodeToString(Node n, Transformer ts) throws Exception {
         StringWriter buffer = new StringWriter();
-        Transformer ts = TransformerFactory.newInstance().newTransformer();
-        ts.setOutputProperty(OutputKeys.METHOD, "xml");
-        ts.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        ts.setOutputProperty(OutputKeys.INDENT, "yes");
         ts.transform(new DOMSource(n), new StreamResult(buffer));
-        return buffer.toString();
+        return buffer.toString().trim();
     }
 
     /**
@@ -67,18 +63,23 @@ public class IO {
      * @throws Exception Internal error
      */
     public static String NodesToString(List<Node> ns) throws Exception {
-        List<String> nodesStr = new LinkedList<>();
-        for (Node n : ns) {
-            String nStr = IO.NodeToString(n).trim();
-            if (!nStr.isEmpty()) {
-                nodesStr.add(nStr);
-            }
-        }
-        String output = "<!-- Number of nodes: " + nodesStr.size() + " -->\n";
+        TransformerFactory tf = TransformerFactory.newInstance();
+        // Set indentation to two spaces
+        tf.setAttribute("indent-number", 2);
+        Transformer ts = tf.newTransformer();
+        // XML document
+        ts.setOutputProperty(OutputKeys.METHOD, "xml");
+        // Encoding
+        ts.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        // Do not include root node
+        ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        // Indent results
+        ts.setOutputProperty(OutputKeys.INDENT, "yes");
+        // Join the output of each node
+        String output = "<!-- Number of nodes: " + ns.size() + " -->\n";
         for (int i = 0; i < ns.size(); ++i) {
             output += "<!-- Node #" + (i + 1) + " -->\n";
-            output += nodesStr.get(i);
-            output += "\n";
+            output += IO.NodeToString(ns.get(i), ts) + "\n";
         }
         return output;
     }

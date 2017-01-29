@@ -86,7 +86,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApDoc(XPathParser.ApDocContext ctx) {
-        this.nodes = XPathEvaluator.root(ctx.FILENAME().getText());
+        this.nodes = XPathEvaluator.root(ctx.FileName().getText());
         return this.nodes;
     }
 
@@ -102,10 +102,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpTag(XPathParser.RpTagContext ctx) {
-        String tag = ctx.IDENTIFIER().getText();
+        String tag = ctx.Identifier().getText();
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            if (n.getNodeName().equals(tag)) {
+            if (XPathEvaluator.tag(n).equals(tag)) {
                 nodes.add(n);
             }
         }
@@ -162,12 +162,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     public List<Node> visitRpParent(XPathParser.RpParentContext ctx) {
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            Node p = n.getParentNode();
-            if (!nodes.contains(p)) {
-                nodes.add(p);
-            }
+            nodes.addAll(XPathEvaluator.parent(n));
         }
-        this.nodes = nodes;
+        this.nodes = XPathEvaluator.unique(nodes);
         return this.nodes;
     }
 
@@ -208,7 +205,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     public List<Node> visitRpAttribute(XPathParser.RpAttributeContext ctx) {
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.attrib(n, ctx.IDENTIFIER().getText()));
+            nodes.addAll(XPathEvaluator.attrib(n, ctx.Identifier().getText()));
         }
         this.nodes = nodes;
         return this.nodes;
