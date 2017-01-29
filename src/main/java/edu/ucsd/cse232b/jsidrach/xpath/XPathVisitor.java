@@ -69,8 +69,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
             nodes.addAll(children);
             q.addAll(children);
         }
-
         this.nodes = nodes;
+        visit(ctx.rp());
         return this.nodes;
     }
 
@@ -105,8 +105,11 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         String tag = ctx.Identifier().getText();
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            if (XPathEvaluator.tag(n).equals(tag)) {
-                nodes.add(n);
+            List<Node> children = XPathEvaluator.children(n);
+            for (Node c : children) {
+                if (XPathEvaluator.tag(c).equals(tag)) {
+                    nodes.add(c);
+                }
             }
         }
         this.nodes = nodes;
@@ -238,9 +241,15 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpChildren(XPathParser.RpChildrenContext ctx) {
-        visit(ctx.rp(0));
-        visit(ctx.rp(1));
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        // TODO: Review
+        List<Node> nodes = new LinkedList<>();
+        List<Node> children = visit(ctx.rp(0));
+        for (Node c : children) {
+            this.nodes = new LinkedList<>();
+            this.nodes.add(c);
+            nodes.addAll(visit(ctx.rp(1)));
+        }
+        this.nodes = XPathEvaluator.unique(nodes);
         return this.nodes;
     }
 
@@ -256,6 +265,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
+        // TODO: fix, review all...
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
             nodes.addAll(XPathEvaluator.children(n));
@@ -302,7 +312,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpPair(XPathParser.RpPairContext ctx) {
-        List<Node> original = new LinkedList<>(this.nodes);
+        List<Node> original = this.nodes;
         List<Node> nodes = new LinkedList<>();
         nodes.addAll(visit(ctx.rp(0)));
         this.nodes = original;

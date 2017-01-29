@@ -2,6 +2,8 @@ package edu.ucsd.cse232b.jsidrach.xpath;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 
+import java.io.FileInputStream;
+
 /**
  * XPathRunner - Command line utility for XPath
  * <p>
@@ -20,7 +22,8 @@ public class XPathRunner {
 
         // Print the result of executing the xpath query
         try {
-            System.out.println(IO.NodesToString(IO.XPathQuery(args[0])));
+            FileInputStream input = new FileInputStream(args[0]);
+            System.out.println(IO.NodesToString(IO.XPathQuery(input)));
         } catch (Exception e) {
             e.printStackTrace();
         }

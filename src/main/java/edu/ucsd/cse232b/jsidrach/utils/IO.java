@@ -23,15 +23,12 @@ import java.util.List;
 public class IO {
 
     /**
-     * Executes a XPath query given a file name containing it
+     * Executes a XPath query given an ANTLRInputStream
      *
-     * @param fileName Name of the file containing the XPath query
+     * @param ANTLRInput Input query
      * @return List of result nodes
-     * @throws Exception Exception if file is not found or has invalid syntax
      */
-    public static List<Node> XPathQuery(String fileName) throws Exception {
-        FileInputStream xPathInput = new FileInputStream(fileName);
-        ANTLRInputStream ANTLRInput = new ANTLRInputStream(xPathInput);
+    private static List<Node> XPathQuery(ANTLRInputStream ANTLRInput) {
         XPathLexer xPathLexer = new XPathLexer(ANTLRInput);
         CommonTokenStream tokens = new CommonTokenStream(xPathLexer);
         XPathParser xPathParser = new XPathParser(tokens);
@@ -39,6 +36,27 @@ public class IO {
         ParseTree xPathTree = xPathParser.ap();
         XPathVisitor xPathVisitor = new XPathVisitor();
         return xPathVisitor.visit(xPathTree);
+    }
+
+    /**
+     * Executes a XPath query given a file containing it
+     *
+     * @param file File containing the XPath query
+     * @return List of result nodes
+     * @throws Exception Exception if file is not found
+     */
+    public static List<Node> XPathQuery(FileInputStream file) throws Exception {
+        return XPathQuery(new ANTLRInputStream(file));
+    }
+
+    /**
+     * Executes a XPath query
+     *
+     * @param query XPath query string
+     * @return List of result nodes
+     */
+    public static List<Node> XPathQuery(String query) {
+        return XPathQuery(new ANTLRInputStream(query));
     }
 
     /**
