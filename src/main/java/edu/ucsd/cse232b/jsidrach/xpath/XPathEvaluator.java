@@ -23,7 +23,7 @@ public class XPathEvaluator {
      * Reads a XML file and loads its content into a list of nodes
      *
      * @param fn Name of the XML file (relative to the executable's current path)
-     * @return Root of the XML tree corresponding to the loaded document, as a node list
+     * @return Root of the XML tree corresponding to the loaded document, as a singleton list of nodes
      */
     static List<Node> root(String fn) {
         List<Node> nodes = new LinkedList<>();
