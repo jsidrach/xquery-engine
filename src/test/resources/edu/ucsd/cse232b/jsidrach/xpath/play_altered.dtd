@@ -1,8 +1,3 @@
-<!-- DTD for Shakespeare    J. Bosak    1994.03.01, 1997.01.02 -->
-<!-- Revised for case sensitivity 1997.09.10 -->
-<!-- Revised for XML 1.0 conformity 1998.01.27 (thanks to Eve Maler) -->
-
-<!-- <!ENTITY amp "&#38;#38;"> -->
 <!ELEMENT PLAY     (TITLE, FM, PERSONAE, SCNDESCR, PLAYSUBT, INDUCT?,
 										PROLOGUE?, ACT+, EPILOGUE?)>
 <!ELEMENT TITLE    (#PCDATA)>

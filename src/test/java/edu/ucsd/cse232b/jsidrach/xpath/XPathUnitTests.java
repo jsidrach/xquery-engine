@@ -33,15 +33,12 @@ public class XPathUnitTests extends XPathTests {
      */
     @Test
     public void VisitorAbsolutePathTests() {
-        // TODO: Change numTestCases to 2
-        // TODO: fill test resource files
         String[] methods = {
                 "children",
-                "all",
-                "doc"
+                "all"
         };
         String resourcesDir = "unit-tests-absolute-path/";
-        int numTestCases = 0;
+        int numTestCases = 2;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
         }
