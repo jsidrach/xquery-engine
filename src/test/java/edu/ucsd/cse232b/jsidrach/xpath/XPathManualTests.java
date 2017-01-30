@@ -25,13 +25,14 @@ public class XPathManualTests extends XPathTests {
         int numProvidedQueries = 5;
         for (int i = 1; i <= numProvidedQueries; ++i) {
             try {
-                String fileNameInput = baseNameInput + i;
-                String fileNameOutput = baseNameOutput + i;
-                List<Node> nodes = IO.XPathQuery(getResourceInput(fileNameInput));
-                Writer output = getResourceOutput(fileNameOutput);
+                String fileNameInput = baseNameInput + i + ".txt";
+                String fileNameOutput = baseNameOutput + i + ".xml";
+                List<Node> nodes = IO.XPathQuery(getResource(fileNameInput));
+                Writer output = getResourceWriter(fileNameOutput);
                 output.write(IO.NodesToString(nodes));
                 output.close();
             } catch (Exception e) {
+                e.printStackTrace();
                 fail("Failed (exception) " + baseNameInput + i);
             }
         }

@@ -13,8 +13,6 @@ public class XPathUnitTests extends XPathTests {
      */
     @Test
     public void EvaluatorTests() {
-        // TODO: Change numTestCases to 2
-        // TODO: fill test resource files
         String[] methods = {
                 "attrib",
                 "children",
@@ -24,7 +22,7 @@ public class XPathUnitTests extends XPathTests {
                 "unique"
         };
         String resourcesDir = "unit-tests-eval/";
-        int numTestCases = 0;
+        int numTestCases = 3;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
         }

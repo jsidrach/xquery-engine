@@ -1,9 +1,6 @@
 package edu.ucsd.cse232b.jsidrach.xpath;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,7 +28,7 @@ public class XPathEvaluator {
             // Remove quotes (first and last character)
             File xmlFile = new File(fn.substring(1, fn.length() - 1));
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-            // Ignore non-relevant whitespace
+            // Ignore non-relevant whitespace (only works if the XML has an associated DTD)
             docFactory.setIgnoringElementContentWhitespace(true);
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(xmlFile);
@@ -84,7 +81,10 @@ public class XPathEvaluator {
      */
     public static List<Node> parent(Node n) {
         List<Node> nodes = new LinkedList<>();
-        Node p = n.getParentNode();
+        // Attribute node's parent is accessed differently
+        Node p = (n.getNodeType() == Node.ATTRIBUTE_NODE) ?
+                ((Attr) n).getOwnerElement()
+                : n.getParentNode();
         if (p != null) {
             nodes.add(p);
         }
@@ -133,10 +133,11 @@ public class XPathEvaluator {
         if (n.getNodeType() != Node.ELEMENT_NODE) {
             return nodes;
         }
-        Node att = ((Element) n).getAttributeNode(attName);
-        if (att != null) {
-            nodes.add(att);
+        Element e = (Element) n;
+        if (!e.hasAttribute(attName)) {
+            return nodes;
         }
+        nodes.add(e.getAttributeNode(attName));
         return nodes;
     }
 }

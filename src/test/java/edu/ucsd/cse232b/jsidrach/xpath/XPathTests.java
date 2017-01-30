@@ -14,6 +14,7 @@ import java.io.Writer;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.Assert.fail;
 
@@ -23,40 +24,40 @@ import static org.junit.Assert.fail;
 abstract class XPathTests {
 
     /**
-     * Returns a FileInputStream with the contents of an input resource
+     * Returns a FileInputStream with the contents of a resource
      *
-     * @param name Name of the input resource (without path, assuming .txt extension)
-     * @return FileInputStream with the contents of the input resource
-     * @throws Exception Exception if input resource is not found
+     * @param name Name of the input resource (without path)
+     * @return FileInputStream with the contents of the resource
+     * @throws Exception Exception if the resource is not found
      */
-    FileInputStream getResourceInput(String name) throws Exception {
-        String filePath = "edu/ucsd/cse232b/jsidrach/xpath/" + name + ".txt";
+    FileInputStream getResource(String name) throws Exception {
+        String filePath = "edu/ucsd/cse232b/jsidrach/xpath/" + name;
         ClassLoader classLoader = getClass().getClassLoader();
         URI uri = new URI(classLoader.getResource(filePath).getFile());
         return new FileInputStream(uri.getPath());
     }
 
     /**
-     * Returns a Writer
+     * Returns a resource writer
      *
-     * @param name Name of the output resource (without path, assuming .xml extension)
+     * @param name Name of the output resource (without path)
      * @return Writer to the output resource
      * @throws Exception Exception if any output folder is missing
      */
-    Writer getResourceOutput(String name) throws Exception {
-        String filePath = "src/test/resources/edu/ucsd/cse232b/jsidrach/xpath/" + name + ".xml";
+    Writer getResourceWriter(String name) throws Exception {
+        String filePath = "src/test/resources/edu/ucsd/cse232b/jsidrach/xpath/" + name;
         return new BufferedWriter(new FileWriter(filePath));
     }
 
     /**
      * Loads an XML
      *
-     * @param name Name of the input resource (without path, assuming .xml extension)
+     * @param name Name of the resource (without path)
      * @return List of nodes corresponding to the children of the root of the loaded document
      * @throws Exception Exception if input resource is not found or it has invalid format
      */
-    List<Node> loadXMLResource(String name) throws Exception {
-        FileInputStream xmlFile = getResourceInput(name);
+    List<Node> loadResourceAsXML(String name) throws Exception {
+        FileInputStream xmlFile = getResource(name);
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         // Ignore non-relevant whitespace
         docFactory.setIgnoringElementContentWhitespace(true);
@@ -74,16 +75,30 @@ abstract class XPathTests {
     }
 
     /**
-     * Compares a list of nodes with an XML resource
-     * - the XML resource should have a root node and then all the result nodes
+     * Loads a resource into a string
+     *
+     * @param name Name of the input resource (without path)
+     * @return Resource as a string
+     * @throws Exception Exception if input resource is not found or it has invalid format
+     */
+    String loadResourceAsString(String name) throws Exception {
+        FileInputStream file = getResource(name);
+        Scanner s = new Scanner(file).useDelimiter("\\A");
+        return s.hasNext() ? s.next().trim() : "";
+    }
+
+    /**
+     * Compares a list of nodes with an string resource
      *
      * @param nodes List of nodes to compare with the resource
-     * @param name  Name of the resource to compare to (without path, assuming .xml extension)
+     * @param name  Name of the resource to compare to (without path)
      * @return true if the list of nodes is equal to the loaded resource, false otherwise
      * @throws Exception Exception if the resource is not found or has invalid format
      */
     Boolean nodesEqualToResource(List<Node> nodes, String name) throws Exception {
-        return IO.NodesToString(nodes).equals(IO.NodesToString(loadXMLResource(name)));
+        String s1 = IO.NodesToString(nodes).trim();
+        String s2 = loadResourceAsString(name);
+        return s1.equals(s2);
     }
 
     /**
@@ -101,11 +116,12 @@ abstract class XPathTests {
             try {
                 String input = resourcesPrefix + "-input-" + i;
                 String output = resourcesPrefix + "-output-" + i;
-                List<Node> nodes = IO.XPathQuery(getResourceInput(input));
-                if (!nodesEqualToResource(nodes, output)) {
+                List<Node> nodes = IO.XPathQuery(getResource(input + ".txt"));
+                if (!nodesEqualToResource(nodes, output + ".xml")) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 fail("Failed (exception) " + resourcesPrefix + "-" + i);
             }
         }

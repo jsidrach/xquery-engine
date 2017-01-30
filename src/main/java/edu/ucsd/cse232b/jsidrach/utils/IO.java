@@ -68,6 +68,11 @@ public class IO {
      * @throws Exception Internal error
      */
     private static String NodeToString(Node n, Transformer ts) throws Exception {
+        // Serialize attribute nodes manually
+        if (n.getNodeType() == Node.ATTRIBUTE_NODE) {
+            return "@" + n.toString().trim();
+        }
+        // Standard method
         StringWriter buffer = new StringWriter();
         ts.transform(new DOMSource(n), new StreamResult(buffer));
         return buffer.toString().trim();
