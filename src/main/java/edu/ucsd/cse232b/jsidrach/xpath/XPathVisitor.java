@@ -37,7 +37,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes resulting of the traversal of the relative path starting from the root of the document
      */
     @Override
     public List<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
@@ -54,7 +54,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes resulting of the traversal of the relative path starting at any node in the document
      */
     @Override
     public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
@@ -82,7 +82,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Singleton list containing the root element of the XML document
      */
     @Override
     public List<Node> visitApDoc(XPathParser.ApDocContext ctx) {
@@ -98,7 +98,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of children nodes that have the given identifier
      */
     @Override
     public List<Node> visitRpTag(XPathParser.RpTagContext ctx) {
@@ -124,7 +124,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of children nodes
      */
     @Override
     public List<Node> visitRpWildcard(XPathParser.RpWildcardContext ctx) {
@@ -144,7 +144,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes
      */
     @Override
     public List<Node> visitRpCurrent(XPathParser.RpCurrentContext ctx) {
@@ -159,7 +159,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of parent nodes
      */
     @Override
     public List<Node> visitRpParent(XPathParser.RpParentContext ctx) {
@@ -167,7 +167,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         for (Node n : this.nodes) {
             nodes.addAll(XPathEvaluator.parent(n));
         }
-        this.nodes = XPathEvaluator.unique(nodes);
+        this.nodes = XPathEvaluator.unique(nodes); // TODO: Check if this unique is really needed
         return this.nodes;
     }
 
@@ -179,16 +179,13 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of text nodes
      */
     @Override
     public List<Node> visitRpText(XPathParser.RpTextContext ctx) {
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            Node text = XPathEvaluator.txt(n);
-            if (text != null) {
-                nodes.add(text);
-            }
+            nodes.addAll(XPathEvaluator.txt(n));
         }
         this.nodes = nodes;
         return this.nodes;
@@ -202,13 +199,14 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of attribute nodes that have the given attribute name
      */
     @Override
     public List<Node> visitRpAttribute(XPathParser.RpAttributeContext ctx) {
         List<Node> nodes = new LinkedList<>();
+        String attId = ctx.Identifier().getText();
         for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.attrib(n, ctx.Identifier().getText()));
+            nodes.addAll(XPathEvaluator.attrib(n, attId));
         }
         this.nodes = nodes;
         return this.nodes;
@@ -222,7 +220,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes returned by the relative path inside the parentheses
      */
     @Override
     public List<Node> visitRpParentheses(XPathParser.RpParenthesesContext ctx) {
@@ -237,11 +235,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of distinct nodes obtained by the first relative path concatenated with the second relative path
      */
     @Override
     public List<Node> visitRpChildren(XPathParser.RpChildrenContext ctx) {
-        // TODO: Review
         List<Node> nodes = new LinkedList<>();
         List<Node> children = visit(ctx.rp(0));
         for (Node c : children) {
@@ -261,16 +258,26 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of distinct nodes obtained by the first relative path concatenated with the second relative path,
+     * union the list of nodes obtained by the first relative path concatenated with the second relative path,
+     * skipping any number of descendants
      */
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
-        // TODO: fix, review all...
         List<Node> nodes = new LinkedList<>();
-        for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.children(n));
+        LinkedList<Node> queue = new LinkedList<>();
+        visit(ctx.rp(0));
+        nodes.addAll(this.nodes);
+        queue.addAll(this.nodes);
+        while (!queue.isEmpty()) {
+            Node n = queue.poll();
+            List<Node> children = XPathEvaluator.children(n);
+            nodes.addAll(children);
+            queue.addAll(children);
         }
         this.nodes = XPathEvaluator.unique(nodes);
+        visit(ctx.rp(1));
+        this.nodes = XPathEvaluator.unique(this.nodes);
         return this.nodes;
     }
 
@@ -282,7 +289,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes by preserving only the relative paths that satisfy the filter
      */
     @Override
     public List<Node> visitRpFilter(XPathParser.RpFilterContext ctx) {
@@ -308,7 +315,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes resulting of the union of the lists of nodes produced by both relative paths
      */
     @Override
     public List<Node> visitRpPair(XPathParser.RpPairContext ctx) {
@@ -330,14 +337,17 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes if the relative path is not empty
+     * - an empty list otherwise
      */
     @Override
     public List<Node> visitFRelativePath(XPathParser.FRelativePathContext ctx) {
         List<Node> nodes = this.nodes;
-        List<Node> filter = visit(ctx.rp());
+        if (visit(ctx.rp()).isEmpty()) {
+            return new LinkedList<>();
+        }
         this.nodes = nodes;
-        return filter;
+        return this.nodes;
     }
 
     /**
@@ -350,7 +360,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes if there exists some x in the first relative path
+     * and some y in the second relative path that are equal
+     * - an empty list otherwise
      */
     @Override
     public List<Node> visitFValueEquality(XPathParser.FValueEqualityContext ctx) {
@@ -379,7 +391,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes if there exists some x in the first relative path
+     * and some y in the second relative path that reference the same node
+     * - an empty list otherwise
      */
     @Override
     public List<Node> visitFIdentityEquality(XPathParser.FIdentityEqualityContext ctx) {
@@ -407,7 +421,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes returned by the filter inside the parentheses
      */
     @Override
     public List<Node> visitFParentheses(XPathParser.FParenthesesContext ctx) {
@@ -423,7 +437,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes if both of the filters evaluate to true
+     * - an empty list otherwise
      */
     @Override
     public List<Node> visitFAnd(XPathParser.FAndContext ctx) {
@@ -442,7 +457,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes if any of the filters evaluates to true
+     * - an empty list otherwise
      */
     @Override
     public List<Node> visitFOr(XPathParser.FOrContext ctx) {
@@ -461,7 +477,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      * Note: filter functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Current list of nodes if the filter evaluates to false
+     * - an empty list otherwise
      */
     @Override
     public List<Node> visitFNot(XPathParser.FNotContext ctx) {

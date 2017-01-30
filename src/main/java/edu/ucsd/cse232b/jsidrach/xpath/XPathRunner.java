@@ -23,7 +23,7 @@ public class XPathRunner {
         // Print the result of executing the xpath query
         try {
             FileInputStream input = new FileInputStream(args[0]);
-            System.out.println(IO.NodesToString(IO.XPathQuery(input)));
+            System.out.print(IO.NodesToString(IO.XPathQuery(input)));
         } catch (Exception e) {
             e.printStackTrace();
         }

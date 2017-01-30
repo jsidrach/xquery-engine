@@ -28,11 +28,14 @@ public class XPathEvaluator {
     static List<Node> root(String fn) {
         List<Node> nodes = new LinkedList<>();
         try {
+            // Remove quotes (first and last character)
             File xmlFile = new File(fn.substring(1, fn.length() - 1));
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            // Ignore non-relevant whitespace
             docFactory.setIgnoringElementContentWhitespace(true);
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(xmlFile);
+            // Normalize document
             doc.getDocumentElement().normalize();
             nodes.add(doc.getDocumentElement());
         } catch (Exception e) {
@@ -64,10 +67,10 @@ public class XPathEvaluator {
      * @return List of node's children, ordered according to the document order
      */
     public static List<Node> children(Node n) {
-        NodeList nl = n.getChildNodes();
+        NodeList children = n.getChildNodes();
         List<Node> nodes = new LinkedList<>();
-        for (int i = 0; i < nl.getLength(); ++i) {
-            nodes.add(nl.item(i));
+        for (int i = 0; i < children.getLength(); ++i) {
+            nodes.add(children.item(i));
         }
         return nodes;
     }
@@ -76,7 +79,8 @@ public class XPathEvaluator {
      * Returns the parent of a node
      *
      * @param n Node
-     * @return Singleton list containing the parent of the element node, if it has a parent - an empty list otherwise
+     * @return Singleton list containing the parent of the element node, if it has a parent
+     * - an empty list otherwise
      */
     public static List<Node> parent(Node n) {
         List<Node> nodes = new LinkedList<>();
@@ -101,17 +105,19 @@ public class XPathEvaluator {
      * Returns the text node associated to an element node
      *
      * @param n Node
-     * @return Text node associated to the element node
+     * @return Singleton list containing the text node associated to the element node, if it has text
+     * - an empty list otherwise
      */
-    public static Node txt(Node n) {
-        NodeList nl = n.getChildNodes();
-        for (int i = 0; i < nl.getLength(); ++i) {
-            Node node = nl.item(i);
-            if ((node.getNodeType() == Node.TEXT_NODE) && (node.getTextContent() != null)) {
-                return node;
+    public static List<Node> txt(Node n) {
+        List<Node> nodes = new LinkedList<>();
+        List<Node> children = XPathEvaluator.children(n);
+        for (Node c : children) {
+            if ((c.getNodeType() == Node.TEXT_NODE) && (c.getTextContent() != null)) {
+                nodes.add(c);
+                return nodes;
             }
         }
-        return null;
+        return nodes;
     }
 
     /**
@@ -119,7 +125,8 @@ public class XPathEvaluator {
      *
      * @param n       Node
      * @param attName Node's attribute name
-     * @return Singleton list containing the attribute of the node, if it has such attribute - an empty list otherwise
+     * @return Singleton list containing the attribute of the node, if it has such attribute
+     * - an empty list otherwise
      */
     public static List<Node> attrib(Node n, String attName) {
         List<Node> nodes = new LinkedList<>();

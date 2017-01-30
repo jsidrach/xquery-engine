@@ -127,6 +127,14 @@ task docs(type: Javadoc) {
 }
 
 //
+// Tests
+//
+
+// Show output
+test.testLogging.showStandardStreams = true
+test.testLogging.exceptionFormat = 'full'
+
+//
 // Automated actions after build
 //
 
