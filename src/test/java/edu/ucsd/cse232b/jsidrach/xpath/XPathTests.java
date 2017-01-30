@@ -15,6 +15,8 @@ import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.junit.Assert.fail;
+
 /**
  * XPathTests - Base class for XPath tests
  */
@@ -82,5 +84,30 @@ abstract class XPathTests {
      */
     Boolean nodesEqualToResource(List<Node> nodes, String name) throws Exception {
         return IO.NodesToString(nodes).equals(IO.NodesToString(loadXMLResource(name)));
+    }
+
+    /**
+     * Evaluates a test suite, by executing for every resource the input XPath query,
+     * comparing the results to the output XML
+     *
+     * @param resourcesPrefix Resources prefix, relative to the test folder
+     *                        (src/main/test/java/edu/ucsd/cse232b/jsidrach/xpath)
+     * @param numTests        Number of resources contained in the test suite
+     *                        The names of the resources must be resourcePrefix-input-$i.txt and resourcePrefix-output.xml,
+     *                        for $i from 1 to numTests
+     */
+    void runTestSuite(String resourcesPrefix, int numTests) {
+        for (int i = 1; i <= numTests; ++i) {
+            try {
+                String input = resourcesPrefix + "-input-" + i;
+                String output = resourcesPrefix + "-output-" + i;
+                List<Node> nodes = IO.XPathQuery(getResourceInput(input));
+                if (!nodesEqualToResource(nodes, output)) {
+                    fail("Failed (assertion) " + resourcesPrefix + "-" + i);
+                }
+            } catch (Exception e) {
+                fail("Failed (exception) " + resourcesPrefix + "-" + i);
+            }
+        }
     }
 }

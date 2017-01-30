@@ -68,3 +68,6 @@ fabric.properties
 *.mtc1
 *.out
 *.synctex.gz
+
+## Dolphin
+*.directory

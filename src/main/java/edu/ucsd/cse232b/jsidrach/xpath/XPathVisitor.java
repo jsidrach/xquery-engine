@@ -167,7 +167,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         for (Node n : this.nodes) {
             nodes.addAll(XPathEvaluator.parent(n));
         }
-        this.nodes = XPathEvaluator.unique(nodes); // TODO: Check if this unique is really needed
+        this.nodes = nodes;
         return this.nodes;
     }
 
