@@ -59,16 +59,10 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
-        visit(ctx.doc());
         List<Node> nodes = new LinkedList<>();
-        LinkedList<Node> q = new LinkedList<>();
-        nodes.addAll(this.nodes);
-        q.addAll(this.nodes);
-        while (!q.isEmpty()) {
-            Node n = q.poll();
-            List<Node> children = XPathEvaluator.children(n);
-            nodes.addAll(children);
-            q.addAll(children);
+        visit(ctx.doc());
+        for (Node n : this.nodes) {
+            nodes.addAll(XPathEvaluator.descendantsOrSelf(n));
         }
         this.nodes = nodes;
         visit(ctx.rp());
@@ -104,8 +98,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpTag(XPathParser.RpTagContext ctx) {
-        String tag = ctx.Identifier().getText();
         List<Node> nodes = new LinkedList<>();
+        String tag = ctx.Identifier().getText();
         for (Node n : this.nodes) {
             List<Node> children = XPathEvaluator.children(n);
             for (Node c : children) {
@@ -267,15 +261,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
         List<Node> nodes = new LinkedList<>();
-        LinkedList<Node> queue = new LinkedList<>();
         visit(ctx.rp(0));
-        nodes.addAll(this.nodes);
-        queue.addAll(this.nodes);
-        while (!queue.isEmpty()) {
-            Node n = queue.poll();
-            List<Node> children = XPathEvaluator.children(n);
-            nodes.addAll(children);
-            queue.addAll(children);
+        for (Node n : this.nodes) {
+            nodes.addAll(XPathEvaluator.descendantsOrSelf(n));
         }
         this.nodes = nodes;
         visit(ctx.rp(1));
@@ -321,8 +309,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpPair(XPathParser.RpPairContext ctx) {
-        List<Node> original = this.nodes;
         List<Node> nodes = new LinkedList<>();
+        List<Node> original = this.nodes;
         nodes.addAll(visit(ctx.rp(0)));
         this.nodes = original;
         nodes.addAll(visit(ctx.rp(1)));

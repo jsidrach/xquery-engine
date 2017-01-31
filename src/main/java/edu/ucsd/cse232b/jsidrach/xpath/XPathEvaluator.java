@@ -58,16 +58,36 @@ public class XPathEvaluator {
     }
 
     /**
-     * Returns the list of children of an element node
+     * Returns the list of children of a node
      *
      * @param n Node
      * @return List of node's children, ordered according to the document order
      */
     public static List<Node> children(Node n) {
-        NodeList children = n.getChildNodes();
         List<Node> nodes = new LinkedList<>();
+        NodeList children = n.getChildNodes();
         for (int i = 0; i < children.getLength(); ++i) {
             nodes.add(children.item(i));
+        }
+        return nodes;
+    }
+
+    /**
+     * Returns a list containing the given node and all its descendants
+     *
+     * @param n Node
+     * @return List of node's descendants and itself, according to the document order
+     */
+    public static List<Node> descendantsOrSelf(Node n) {
+        List<Node> nodes = new LinkedList<>();
+        LinkedList<Node> queue = new LinkedList<>();
+        nodes.add(n);
+        queue.add(n);
+        while (!queue.isEmpty()) {
+            Node c = queue.poll();
+            List<Node> children = XPathEvaluator.children(c);
+            nodes.addAll(children);
+            queue.addAll(children);
         }
         return nodes;
     }

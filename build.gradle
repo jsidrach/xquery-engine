@@ -64,6 +64,50 @@ dependencies {
 }
 
 //
+// Application jars
+//
+
+def course = 'CSE 232B'
+def author = 'J. Sidrach'
+task xPathJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': course + ' - XPath Processor - ' + author,
+                   'Implementation-Version': version,
+                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
+    }
+    archiveName = 'xpath.jar'
+    destinationDir = file('demo')
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+
+//
+// Documentation
+//
+
+task docs(type: Javadoc) {
+    title = course + ' - Project Documentation - ' + author
+    source = sourceSets.main.allJava + sourceSets.test.allJava
+    excludes = ['**/antlr/**']
+    destinationDir = file('docs/javadoc')
+    failOnError = false
+}
+
+//
+// Tests
+//
+
+// Show output
+test.testLogging.showStandardStreams = true
+test.testLogging.exceptionFormat = 'full'
+
+//
+// Automated actions after build
+//
+
+build.finalizedBy(docs, xPathJar)
+
+//
 // ANTLR 4
 //
 
@@ -96,46 +140,3 @@ configurations {
 // Configure IntelliJ Idea to include ANTLR4 java output to src
 idea.module.sourceDirs += file(antlrGeneratedPath)
 idea.module.generatedSourceDirs += file(antlrGeneratedPath)
-
-//
-// Application jars
-//
-
-def course = 'CSE 232B'
-def author = 'J. Sidrach'
-task xPathJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': course + ' - XPath Processor - ' + author,
-                   'Implementation-Version': version,
-                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
-    }
-    archiveName = 'xpath.jar'
-    destinationDir = file('demo')
-    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
-
-//
-// Documentation
-//
-
-task docs(type: Javadoc) {
-    title = course + ' - Project Documentation - ' + author
-    source = 'src/main/java'
-    destinationDir = file('docs/javadoc')
-    failOnError = false
-}
-
-//
-// Tests
-//
-
-// Show output
-test.testLogging.showStandardStreams = true
-test.testLogging.exceptionFormat = 'full'
-
-//
-// Automated actions after build
-//
-
-build.finalizedBy(docs, xPathJar)
