@@ -114,7 +114,6 @@ public class XPathEvaluator {
         for (Node c : children) {
             if ((c.getNodeType() == Node.TEXT_NODE) && (c.getTextContent() != null)) {
                 nodes.add(c);
-                return nodes;
             }
         }
         return nodes;

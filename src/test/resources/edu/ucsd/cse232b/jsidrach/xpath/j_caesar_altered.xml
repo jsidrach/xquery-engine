@@ -6245,8 +6245,6 @@ LUCILIUS, and the army</STAGEDIR>
 
 <SPEECH>
 <SPEAKER>MESSALA</SPEAKER>
-<LINE>Octavius, then take him to follow thee,</LINE>
-<LINE>That did the latest service to my master.</LINE>
 </SPEECH>
 
 <SPEECH>
@@ -6255,9 +6253,9 @@ LUCILIUS, and the army</STAGEDIR>
 <LINE>All the conspirators save only he</LINE>
 <LINE>Did that they did in envy of great Caesar;</LINE>
 <LINE>He only, in a general honest thought</LINE>
-<LINE>And common good to all, made one of them.</LINE>
+<LINE c1="1">And common good to all, made one of them.</LINE>
 <LINE>His life was gentle, and the elements</LINE>
-<LINE>So mix'd in him that Nature might stand up</LINE>
+<LINE c2="0">So mix'd in him that Nature might stand up</LINE>
 <LINE>And say to all the world 'This was a man!'</LINE>
 </SPEECH>
 
@@ -6265,10 +6263,10 @@ LUCILIUS, and the army</STAGEDIR>
 <SPEAKER>OCTAVIUS</SPEAKER>
 <LINE>According to his virtue let us use him,</LINE>
 <LINE>With all respect and rites of burial.</LINE>
-<LINE>Within my tent his bones to-night shall lie,</LINE>
+<LINE c2="1">Within my tent his bones to-night shall lie,</LINE>
 <LINE>Most like a soldier, order'd honourably.</LINE>
 <LINE>So call the field to rest; and let's away,</LINE>
-<LINE>To part the glories of this happy day.</LINE>
+<LINE c1="1">To part the glories of this happy day.</LINE>
 </SPEECH>
 
 

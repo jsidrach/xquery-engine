@@ -49,7 +49,6 @@ public class XPathUnitTests extends XPathTests {
      */
     @Test
     public void VisitorRelativePathTests() {
-        // TODO: Change numTestCases to 2
         // TODO: fill test resource files
         String[] methods = {
                 "tag",
@@ -76,8 +75,6 @@ public class XPathUnitTests extends XPathTests {
      */
     @Test
     public void VisitorFilterTests() {
-        // TODO: Change numTestCases to 2
-        // TODO: fill test resource files
         String[] methods = {
                 "relative-path",
                 "value-equality",
@@ -88,7 +85,7 @@ public class XPathUnitTests extends XPathTests {
                 "not"
         };
         String resourcesDir = "unit-tests-filter/";
-        int numTestCases = 0;
+        int numTestCases = 2;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
         }

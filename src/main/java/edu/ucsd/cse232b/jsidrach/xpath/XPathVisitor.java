@@ -275,7 +275,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
             nodes.addAll(children);
             queue.addAll(children);
         }
-        this.nodes = XPathEvaluator.unique(nodes);
+        this.nodes = nodes;
         visit(ctx.rp(1));
         this.nodes = XPathEvaluator.unique(this.nodes);
         return this.nodes;
@@ -343,11 +343,9 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     @Override
     public List<Node> visitFRelativePath(XPathParser.FRelativePathContext ctx) {
         List<Node> nodes = this.nodes;
-        if (visit(ctx.rp()).isEmpty()) {
-            return new LinkedList<>();
-        }
+        List<Node> filter = visit(ctx.rp());
         this.nodes = nodes;
-        return this.nodes;
+        return filter;
     }
 
     /**
