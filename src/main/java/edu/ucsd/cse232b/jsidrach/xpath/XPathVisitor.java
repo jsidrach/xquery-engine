@@ -43,6 +43,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
     public List<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
         visit(ctx.doc());
         visit(ctx.rp());
+        this.nodes = XPathEvaluator.unique(this.nodes);
         return this.nodes;
     }
 
@@ -71,6 +72,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
         }
         this.nodes = nodes;
         visit(ctx.rp());
+        this.nodes = XPathEvaluator.unique(this.nodes);
         return this.nodes;
     }
 
