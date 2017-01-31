@@ -34,7 +34,7 @@ public class XPathEvaluator {
             Document doc = docBuilder.parse(xmlFile);
             // Normalize document
             doc.getDocumentElement().normalize();
-            nodes.add(doc.getDocumentElement());
+            nodes.add(doc);
         } catch (Exception e) {
             e.printStackTrace();
         }
