@@ -16,6 +16,7 @@ public class XPathUnitTests extends XPathTests {
         String[] methods = {
                 "attrib",
                 "children",
+                "descendants-or-self",
                 "parent",
                 "tag",
                 "txt",
@@ -49,7 +50,6 @@ public class XPathUnitTests extends XPathTests {
      */
     @Test
     public void VisitorRelativePathTests() {
-        // TODO: fill test resource files
         String[] methods = {
                 "tag",
                 "wildcard",
@@ -64,7 +64,7 @@ public class XPathUnitTests extends XPathTests {
                 "pair"
         };
         String resourcesDir = "unit-tests-relative-path/";
-        int numTestCases = 0;
+        int numTestCases = 2;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
         }

@@ -1,1 +1,1 @@
-doc("j_caesar_altered.xml")//.[not ((*) or (.))]
+doc("j_caesar_altered.xml")/(text(),PLAY/TITLE)

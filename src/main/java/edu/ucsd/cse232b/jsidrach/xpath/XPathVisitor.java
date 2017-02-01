@@ -59,12 +59,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApAll(XPathParser.ApAllContext ctx) {
-        List<Node> nodes = new LinkedList<>();
         visit(ctx.doc());
-        for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.descendantsOrSelf(n));
-        }
-        this.nodes = nodes;
+        this.nodes = XPathEvaluator.descendantsOrSelves(this.nodes);
         visit(ctx.rp());
         this.nodes = XPathEvaluator.unique(this.nodes);
         return this.nodes;
@@ -260,12 +256,8 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitRpAll(XPathParser.RpAllContext ctx) {
-        List<Node> nodes = new LinkedList<>();
         visit(ctx.rp(0));
-        for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.descendantsOrSelf(n));
-        }
-        this.nodes = nodes;
+        this.nodes = XPathEvaluator.descendantsOrSelves(this.nodes);
         visit(ctx.rp(1));
         this.nodes = XPathEvaluator.unique(this.nodes);
         return this.nodes;

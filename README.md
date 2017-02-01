@@ -3,10 +3,10 @@
 ## Milestone \#1
 
 * Build (requires gradle):
-```bash
-gradle build
-```
-This will run the tests, compile and place the XPath fat jar into the folder ```demo/```, and generate the javadoc documentation
+  ```bash
+  gradle build
+  ```
+  This will run the tests, compile and place the XPath fat jar into the folder ```demo/```, and generate the javadoc documentation
 
 * Run XPath:
   ```bash

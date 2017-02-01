@@ -73,23 +73,23 @@ public class XPathEvaluator {
     }
 
     /**
-     * Returns a list containing the given node and all its descendants
+     * Returns a list containing the given nodes and all its descendants
      *
-     * @param n Node
-     * @return List of node's descendants and itself, according to the document order
+     * @param nodes Nodes
+     * @return List of node's descendants and themselves, according to the document order
      */
-    public static List<Node> descendantsOrSelf(Node n) {
-        List<Node> nodes = new LinkedList<>();
+    public static List<Node> descendantsOrSelves(List<Node> nodes) {
         LinkedList<Node> queue = new LinkedList<>();
-        nodes.add(n);
-        queue.add(n);
+        List<Node> ns = new LinkedList<>();
+        ns.addAll(nodes);
+        queue.addAll(nodes);
         while (!queue.isEmpty()) {
             Node c = queue.poll();
             List<Node> children = XPathEvaluator.children(c);
-            nodes.addAll(children);
+            ns.addAll(children);
             queue.addAll(children);
         }
-        return nodes;
+        return ns;
     }
 
     /**
