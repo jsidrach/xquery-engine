@@ -132,7 +132,7 @@ public class XPathEvaluator {
         List<Node> nodes = new LinkedList<>();
         List<Node> children = XPathEvaluator.children(n);
         for (Node c : children) {
-            if ((c.getNodeType() == Node.TEXT_NODE) && (c.getTextContent() != null)) {
+            if ((c.getNodeType() == Node.TEXT_NODE) && (c.getTextContent() != null) && (!c.getTextContent().isEmpty())) {
                 nodes.add(c);
             }
         }

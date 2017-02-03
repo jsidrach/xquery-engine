@@ -20,8 +20,8 @@ public class XPathManualTests extends XPathTests {
     @Test
     public void ProvidedTests() {
         String baseFolder = "manual-tests-provided/";
-        String baseNameInput = baseFolder + "input-";
-        String baseNameOutput = baseFolder + "output-";
+        String baseNameInput = baseFolder + "m-input-";
+        String baseNameOutput = baseFolder + "m-output-";
         int numProvidedQueries = 5;
         for (int i = 1; i <= numProvidedQueries; ++i) {
             try {
