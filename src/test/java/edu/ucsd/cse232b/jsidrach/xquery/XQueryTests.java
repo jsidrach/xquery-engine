@@ -1,4 +1,4 @@
-package edu.ucsd.cse232b.jsidrach.xpath;
+package edu.ucsd.cse232b.jsidrach.xquery;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 import org.w3c.dom.Document;
@@ -19,9 +19,9 @@ import java.util.Scanner;
 import static org.junit.Assert.fail;
 
 /**
- * XPathTests - Base class for XPath tests
+ * XQueryTests - Base class for XQuery tests
  */
-abstract class XPathTests {
+abstract class XQueryTests {
 
     /**
      * Returns a FileInputStream with the contents of a resource
@@ -31,7 +31,7 @@ abstract class XPathTests {
      * @throws Exception Exception if the resource is not found
      */
     FileInputStream getResource(String name) throws Exception {
-        String filePath = "edu/ucsd/cse232b/jsidrach/xpath/" + name;
+        String filePath = "edu/ucsd/cse232b/jsidrach/xquery/" + name;
         ClassLoader classLoader = getClass().getClassLoader();
         URI uri = new URI(classLoader.getResource(filePath).getFile());
         return new FileInputStream(uri.getPath());
@@ -45,7 +45,7 @@ abstract class XPathTests {
      * @throws Exception Exception if any output folder is missing
      */
     Writer getResourceWriter(String name) throws Exception {
-        String filePath = "src/test/resources/edu/ucsd/cse232b/jsidrach/xpath/" + name;
+        String filePath = "src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/" + name;
         return new BufferedWriter(new FileWriter(filePath));
     }
 
@@ -102,11 +102,11 @@ abstract class XPathTests {
     }
 
     /**
-     * Evaluates a test suite, by executing for every resource the input XPath query,
+     * Evaluates a test suite, by executing for every resource the input XQuery query,
      * comparing the results to the output XML
      *
      * @param resourcesPrefix Resources prefix, relative to the test folder
-     *                        (src/main/test/java/edu/ucsd/cse232b/jsidrach/xpath)
+     *                        (src/main/test/java/edu/ucsd/cse232b/jsidrach/xquery)
      * @param numTests        Number of resources contained in the test suite
      *                        The names of the resources must be resourcePrefix-input-$i.txt and resourcePrefix-output.xml,
      *                        for $i from 1 to numTests
@@ -116,7 +116,7 @@ abstract class XPathTests {
             try {
                 String input = resourcesPrefix + "-input-" + i;
                 String output = resourcesPrefix + "-output-" + i;
-                List<Node> nodes = IO.XPathQuery(getResource(input + ".txt"));
+                List<Node> nodes = IO.XQueryQuery(getResource(input + ".txt"));
                 if (!nodesEqualToResource(nodes, output + ".xml")) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }

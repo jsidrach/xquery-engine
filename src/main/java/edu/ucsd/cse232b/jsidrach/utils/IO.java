@@ -1,8 +1,11 @@
 package edu.ucsd.cse232b.jsidrach.utils;
 
+import edu.ucsd.cse232b.jsidrach.antlr.XPathLexer;
+import edu.ucsd.cse232b.jsidrach.antlr.XPathParser;
+import edu.ucsd.cse232b.jsidrach.antlr.XQueryLexer;
+import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 import edu.ucsd.cse232b.jsidrach.xpath.XPathVisitor;
-import edu.ucsd.cse232b.jsidrach.xpath.parser.XPathLexer;
-import edu.ucsd.cse232b.jsidrach.xpath.parser.XPathParser;
+import edu.ucsd.cse232b.jsidrach.xquery.XQueryVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -21,6 +24,61 @@ import java.util.List;
  * IO - Utility functions to deal with Input/Output
  */
 public class IO {
+
+    /**
+     * Transforms a node into its XML string representation
+     *
+     * @param n  Node
+     * @param ts Transformer from node to string
+     * @return String containing the XML plaintext representation of the node
+     * @throws Exception Internal error
+     */
+    private static String NodeToString(Node n, Transformer ts) throws Exception {
+        // Serialize attribute nodes manually
+        if (n.getNodeType() == Node.ATTRIBUTE_NODE) {
+            return "@" + n.toString().trim();
+        }
+        // Standard method
+        StringWriter buffer = new StringWriter();
+        ts.transform(new DOMSource(n), new StreamResult(buffer));
+        return buffer.toString().trim();
+    }
+
+    /**
+     * Transforms a list of nodes into their XML string representation
+     *
+     * @param ns      List of nodes
+     * @param verbose Flag to print a comment with the number of output nodes and before each one
+     * @return String containing the XML plaintext representations of the nodes (without a common root)
+     * @throws Exception Internal error
+     */
+    public static String NodesToString(List<Node> ns, boolean verbose) throws Exception {
+        TransformerFactory tf = TransformerFactory.newInstance();
+        // Set indentation to two spaces
+        tf.setAttribute("indent-number", 2);
+        Transformer ts = tf.newTransformer();
+        // XML document
+        ts.setOutputProperty(OutputKeys.METHOD, "xml");
+        // Encoding
+        ts.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        // Do not include root node
+        ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        // Indent results
+        ts.setOutputProperty(OutputKeys.INDENT, "yes");
+        // Join the output of each node
+        String output = "";
+        if (verbose) {
+            output += "<!-- Number of nodes: " + ns.size() + " -->\n";
+        }
+        for (int i = 0; i < ns.size(); ++i) {
+            if (verbose) {
+                output += "<!-- Node #" + (i + 1) + " -->\n";
+            }
+            output += IO.NodeToString(ns.get(i), ts) + "\n";
+        }
+        return output;
+    }
+
 
     /**
      * Executes a XPath query given an ANTLRInputStream
@@ -60,50 +118,39 @@ public class IO {
     }
 
     /**
-     * Transforms a node into its XML string representation
+     * Executes a XQuery query given an ANTLRInputStream
      *
-     * @param n  Node
-     * @param ts Transformer from node to string
-     * @return String containing the XML plaintext representation of the node
-     * @throws Exception Internal error
+     * @param ANTLRInput Input query
+     * @return List of result nodes
      */
-    private static String NodeToString(Node n, Transformer ts) throws Exception {
-        // Serialize attribute nodes manually
-        if (n.getNodeType() == Node.ATTRIBUTE_NODE) {
-            return "@" + n.toString().trim();
-        }
-        // Standard method
-        StringWriter buffer = new StringWriter();
-        ts.transform(new DOMSource(n), new StreamResult(buffer));
-        return buffer.toString().trim();
+    private static List<Node> XQueryQuery(ANTLRInputStream ANTLRInput) {
+        XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
+        CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
+        XQueryParser xQueryParser = new XQueryParser(tokens);
+        // Parse using xq (XQuery) as root rule
+        ParseTree xQueryTree = xQueryParser.xq();
+        XQueryVisitor xQueryVisitor = new XQueryVisitor();
+        return xQueryVisitor.visit(xQueryTree);
     }
 
     /**
-     * Transforms a list of nodes into their XML string representation
+     * Executes a XQuery query given a file containing it
      *
-     * @param ns List of nodes
-     * @return String containing the XML plaintext representations of the nodes (without a common root)
-     * @throws Exception Internal error
+     * @param file File containing the XQuery query
+     * @return List of result nodes
+     * @throws Exception Exception if file is not found
      */
-    public static String NodesToString(List<Node> ns) throws Exception {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        // Set indentation to two spaces
-        tf.setAttribute("indent-number", 2);
-        Transformer ts = tf.newTransformer();
-        // XML document
-        ts.setOutputProperty(OutputKeys.METHOD, "xml");
-        // Encoding
-        ts.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        // Do not include root node
-        ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-        // Indent results
-        ts.setOutputProperty(OutputKeys.INDENT, "yes");
-        // Join the output of each node
-        String output = "<!-- Number of nodes: " + ns.size() + " -->\n";
-        for (int i = 0; i < ns.size(); ++i) {
-            output += "<!-- Node #" + (i + 1) + " -->\n";
-            output += IO.NodeToString(ns.get(i), ts) + "\n";
-        }
-        return output;
+    public static List<Node> XQueryQuery(FileInputStream file) throws Exception {
+        return XQueryQuery(new ANTLRInputStream(file));
+    }
+
+    /**
+     * Executes a XQuery query
+     *
+     * @param query XQuery query string
+     * @return List of result nodes
+     */
+    public static List<Node> XQueryQuery(String query) {
+        return XQueryQuery(new ANTLRInputStream(query));
     }
 }

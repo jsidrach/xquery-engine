@@ -41,7 +41,7 @@ apply plugin: 'me.champeau.gradle.antlr4'
 // Source code configuration
 //
 
-mainClassName = 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
+mainClassName = 'edu.ucsd.cse232b.jsidrach.xquery.XQueryRunner'
 version = '1.0'
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
@@ -80,6 +80,17 @@ task xPathJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+task xQueryJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': course + ' - XQuery Engine - ' + author,
+                'Implementation-Version': version,
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.xquery.XQueryRunner'
+    }
+    archiveName = 'xquery.jar'
+    destinationDir = file('demo')
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 
 //
 // Documentation
@@ -105,7 +116,7 @@ test.testLogging.exceptionFormat = 'full'
 // Automated actions after build
 //
 
-build.finalizedBy(docs, xPathJar)
+build.finalizedBy(docs, xPathJar, xQueryJar)
 
 //
 // ANTLR 4
@@ -114,7 +125,7 @@ build.finalizedBy(docs, xPathJar)
 // ANTLR4 configuration
 def generatedSources = 'target/generated-sources'
 def antlrGeneratedPath = generatedSources + '/antlr'
-def grammarGeneratedPath = antlrGeneratedPath + '/edu/ucsd/cse232b/jsidrach/xpath/parser'
+def grammarGeneratedPath = antlrGeneratedPath + '/edu/ucsd/cse232b/jsidrach/antlr'
 
 // Do not generate listener base classes
 antlr4.listener = false

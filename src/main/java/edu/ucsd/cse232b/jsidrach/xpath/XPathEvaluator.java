@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * XPathEvaluator - Collection of functions to evaluate an XPath expression
+ * XPathEvaluator - Collection of functions to evaluate a XPath expression
  * <p>
  * All methods are static and public, to be accessed by XPathVisitor
  * </p>
@@ -22,7 +22,7 @@ public class XPathEvaluator {
      * @param fn Name of the XML file (relative to the executable's current path)
      * @return Root of the XML tree corresponding to the loaded document, as a singleton list of nodes
      */
-    static List<Node> root(String fn) {
+    public static List<Node> root(String fn) {
         List<Node> nodes = new LinkedList<>();
         try {
             // Remove quotes (first and last character)
@@ -47,7 +47,7 @@ public class XPathEvaluator {
      * @param nodes List of nodes with possible duplicates
      * @return List of nodes without duplicates
      */
-    static List<Node> unique(List<Node> nodes) {
+    public static List<Node> unique(List<Node> nodes) {
         List<Node> uNodes = new LinkedList<>();
         for (Node n : nodes) {
             if (!uNodes.contains(n)) {

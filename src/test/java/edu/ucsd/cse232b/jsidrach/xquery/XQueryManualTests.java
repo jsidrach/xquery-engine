@@ -1,4 +1,4 @@
-package edu.ucsd.cse232b.jsidrach.xpath;
+package edu.ucsd.cse232b.jsidrach.xquery;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 import org.junit.Test;
@@ -10,9 +10,9 @@ import java.util.List;
 import static org.junit.Assert.fail;
 
 /**
- * XPathManualTests - Generates test XMLs, to be checked manually
+ * XQueryManualTests - Generates test XMLs, to be checked manually
  */
-public class XPathManualTests extends XPathTests {
+public class XQueryManualTests extends XQueryTests {
 
     /**
      * Generates the output of the provided test cases
@@ -22,14 +22,15 @@ public class XPathManualTests extends XPathTests {
         String baseFolder = "manual-tests-provided/";
         String baseNameInput = baseFolder + "m-input-";
         String baseNameOutput = baseFolder + "m-output-";
-        int numProvidedQueries = 5;
+        int numProvidedQueries = 0;
+        // TODO
         for (int i = 1; i <= numProvidedQueries; ++i) {
             try {
                 String fileNameInput = baseNameInput + i + ".txt";
                 String fileNameOutput = baseNameOutput + i + ".xml";
-                List<Node> nodes = IO.XPathQuery(getResource(fileNameInput));
+                List<Node> nodes = IO.XQueryQuery(getResource(fileNameInput));
                 Writer output = getResourceWriter(fileNameOutput);
-                output.write(IO.NodesToString(nodes, true));
+                output.write(IO.NodesToString(nodes, false));
                 output.close();
             } catch (Exception e) {
                 e.printStackTrace();
