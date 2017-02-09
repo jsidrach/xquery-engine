@@ -78,7 +78,7 @@ public class XPathVisitor extends XPathBaseVisitor<List<Node>> {
      */
     @Override
     public List<Node> visitApDoc(XPathParser.ApDocContext ctx) {
-        this.nodes = XPathEvaluator.root(ctx.FileName().getText());
+        this.nodes = XPathEvaluator.root(ctx.StringConstant().getText());
         return this.nodes;
     }
 

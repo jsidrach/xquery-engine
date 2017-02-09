@@ -123,7 +123,7 @@ public class IO {
      * @param ANTLRInput Input query
      * @return List of result nodes
      */
-    private static List<Node> XQueryQuery(ANTLRInputStream ANTLRInput) {
+    private static List<Node> XQueryQuery(ANTLRInputStream ANTLRInput) throws Exception {
         XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
         CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
         XQueryParser xQueryParser = new XQueryParser(tokens);
@@ -150,7 +150,7 @@ public class IO {
      * @param query XQuery query string
      * @return List of result nodes
      */
-    public static List<Node> XQueryQuery(String query) {
+    public static List<Node> XQueryQuery(String query) throws Exception {
         return XQueryQuery(new ANTLRInputStream(query));
     }
 }

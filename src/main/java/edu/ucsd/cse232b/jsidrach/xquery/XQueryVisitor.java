@@ -1,7 +1,6 @@
 package edu.ucsd.cse232b.jsidrach.xquery;
 
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
-import edu.ucsd.cse232b.jsidrach.xpath.XPathEvaluator;
 import org.w3c.dom.Node;
 
 import java.util.*;
@@ -22,26 +21,394 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     private Map<String, List<Node>> vars;
 
     /**
-     * Variables map stack
+     * Variables context stack
      */
-    private Stack<Map<String, List<Node>>> varsStack;
+    private Stack<Map<String, List<Node>>> varsContext;
 
     /**
-     * Current list of nodes (used mainly for XPath)
+     * Current list of nodes
      */
     private List<Node> nodes;
 
     /**
+     * XQuery Evaluator
+     */
+    private XQueryEvaluator xQueryEvaluator;
+
+    /**
      * Public constructor - Initializes the variables
      */
-    public XQueryVisitor() {
+    public XQueryVisitor() throws Exception {
         this.vars = new HashMap<>();
-        this.varsStack = new Stack<>();
+        this.varsContext = new Stack<>();
+        this.xQueryEvaluator = new XQueryEvaluator();
         this.nodes = new LinkedList<>();
     }
 
     /*
-     * XPath
+     * XQuery - Root Rules
+     */
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqVar(XQueryParser.XqVarContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqConstant(XQueryParser.XqConstantContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext ctx) {
+        // TODO
+        return null;
+    }
+
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqParentheses(XQueryParser.XqParenthesesContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqPair(XQueryParser.XqPairContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqChildren(XQueryParser.XqChildrenContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqAll(XQueryParser.XqAllContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqTag(XQueryParser.XqTagContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitXqLet(XQueryParser.XqLetContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /*
+     * XQuery - For Let Where Return (FLWR)
+     */
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitFor(XQueryParser.ForContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitLet(XQueryParser.LetContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitWhere(XQueryParser.WhereContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitReturn(XQueryParser.ReturnContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /*
+     * XQuery - Condition
+     */
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondValueEquality(XQueryParser.CondValueEqualityContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondEmpty(XQueryParser.CondEmptyContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondSome(XQueryParser.CondSomeContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondParentheses(XQueryParser.CondParenthesesContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondAnd(XQueryParser.CondAndContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondOr(XQueryParser.CondOrContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitCondNot(XQueryParser.CondNotContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /*
+     * XQuery - Variable
+     */
+
+    /**
+     * TODO
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return TODO
+     */
+    @Override
+    public List<Node> visitVariable(XQueryParser.VariableContext ctx) {
+        // TODO
+        return null;
+    }
+
+    /*
+     * XPath - Absolute Path
      */
 
     /**
@@ -58,7 +425,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public List<Node> visitApChildren(XQueryParser.ApChildrenContext ctx) {
         visit(ctx.doc());
         visit(ctx.rp());
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        this.nodes = XQueryEvaluator.unique(this.nodes);
         return this.nodes;
     }
 
@@ -75,9 +442,9 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public List<Node> visitApAll(XQueryParser.ApAllContext ctx) {
         visit(ctx.doc());
-        this.nodes = XPathEvaluator.descendantsOrSelves(this.nodes);
+        this.nodes = XQueryEvaluator.descendantsOrSelves(this.nodes);
         visit(ctx.rp());
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        this.nodes = XQueryEvaluator.unique(this.nodes);
         return this.nodes;
     }
 
@@ -93,9 +460,13 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public List<Node> visitApDoc(XQueryParser.ApDocContext ctx) {
-        this.nodes = XPathEvaluator.root(ctx.FileName().getText());
+        this.nodes = XQueryEvaluator.root(ctx.StringConstant().getText());
         return this.nodes;
     }
+
+    /*
+     * XPath - Relative Path
+     */
 
     /**
      * Relative path (tag)
@@ -112,9 +483,9 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         List<Node> nodes = new LinkedList<>();
         String tag = ctx.Identifier().getText();
         for (Node n : this.nodes) {
-            List<Node> children = XPathEvaluator.children(n);
+            List<Node> children = XQueryEvaluator.children(n);
             for (Node c : children) {
-                if (XPathEvaluator.tag(c).equals(tag)) {
+                if (XQueryEvaluator.tag(c).equals(tag)) {
                     nodes.add(c);
                 }
             }
@@ -137,7 +508,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public List<Node> visitRpWildcard(XQueryParser.RpWildcardContext ctx) {
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.children(n));
+            nodes.addAll(XQueryEvaluator.children(n));
         }
         this.nodes = nodes;
         return this.nodes;
@@ -172,7 +543,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public List<Node> visitRpParent(XQueryParser.RpParentContext ctx) {
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.parent(n));
+            nodes.addAll(XQueryEvaluator.parent(n));
         }
         this.nodes = nodes;
         return this.nodes;
@@ -192,7 +563,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public List<Node> visitRpText(XQueryParser.RpTextContext ctx) {
         List<Node> nodes = new LinkedList<>();
         for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.txt(n));
+            nodes.addAll(XQueryEvaluator.txt(n));
         }
         this.nodes = nodes;
         return this.nodes;
@@ -213,7 +584,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         List<Node> nodes = new LinkedList<>();
         String attId = ctx.Identifier().getText();
         for (Node n : this.nodes) {
-            nodes.addAll(XPathEvaluator.attrib(n, attId));
+            nodes.addAll(XQueryEvaluator.attrib(n, attId));
         }
         this.nodes = nodes;
         return this.nodes;
@@ -253,7 +624,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
             this.nodes.add(c);
             nodes.addAll(visit(ctx.rp(1)));
         }
-        this.nodes = XPathEvaluator.unique(nodes);
+        this.nodes = XQueryEvaluator.unique(nodes);
         return this.nodes;
     }
 
@@ -272,9 +643,9 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public List<Node> visitRpAll(XQueryParser.RpAllContext ctx) {
         visit(ctx.rp(0));
-        this.nodes = XPathEvaluator.descendantsOrSelves(this.nodes);
+        this.nodes = XQueryEvaluator.descendantsOrSelves(this.nodes);
         visit(ctx.rp(1));
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        this.nodes = XQueryEvaluator.unique(this.nodes);
         return this.nodes;
     }
 
@@ -324,6 +695,10 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         this.nodes = nodes;
         return this.nodes;
     }
+
+    /*
+     * XPath - Filter
+     */
 
     /**
      * Filter (relative path)

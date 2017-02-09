@@ -13,7 +13,7 @@ ap
 
 // Document
 doc
-    : 'doc(' FileName ')'                        # apDoc
+    : 'doc(' StringConstant ')'                  # apDoc
     ;
 
 // Relative Path
@@ -42,8 +42,8 @@ f
     | 'not' f                                    # fNot
     ;
 
-// File Name
-FileName: '"' + ([a-zA-Z0-9_,. /-]+) + '"';
+// File Name, Literal
+StringConstant: '"' + ([a-zA-Z0-9_,. /-]+) + '"';
 
 // Identifier
 Identifier: Letter (Letter | Digit)*;
