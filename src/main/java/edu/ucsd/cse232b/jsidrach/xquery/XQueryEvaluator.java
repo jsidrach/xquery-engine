@@ -42,9 +42,7 @@ public class XQueryEvaluator extends XPathEvaluator {
     public Node makeElem(String tag, List<Node> nodes) {
         Node elem = doc.createElement(tag);
         for (Node n : nodes) {
-            if (n != null) {
-                elem.appendChild(doc.importNode(n, true));
-            }
+            elem.appendChild(doc.importNode(n, true));
         }
         return elem;
     }

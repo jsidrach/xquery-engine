@@ -50,70 +50,80 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
 
     /**
-     * TODO
+     * XQuery (variable)
      * <pre>
-     * TODO
+     * [Var(C)]
+     *   → { C(Var) }
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Singleton list containing the value of the variable if it is present in the current context (C)
+     * - an empty list otherwise
      */
     @Override
-    public List<Node> visitXqVar(XQueryParser.XqVarContext ctx) {
-        // TODO
-        return null;
+    public List<Node> visitXqVariable(XQueryParser.XqVariableContext ctx) {
+        List<Node> var = vars.get(ctx.Variable().getText());
+        if (var == null) {
+            return new LinkedList<>();
+        }
+        return var;
     }
 
     /**
-     * TODO
+     * XQuery (constant)
      * <pre>
-     * TODO
+     * [StringConstant](C)
+     *   → { makeText(StringConstant) }
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Singleton list containing a new text node with the constant string as its content
      */
     @Override
     public List<Node> visitXqConstant(XQueryParser.XqConstantContext ctx) {
-        // TODO
-        return null;
+        String quotedText = ctx.StringConstant().getText();
+        String text = quotedText.substring(1, quotedText.length() - 1);
+        List<Node> nodes = new LinkedList<>();
+        nodes.add(xQueryEvaluator.makeText(text));
+        return nodes;
     }
 
     /**
-     * TODO
+     * XQuery (absolute path)
      * <pre>
-     * TODO
+     * [ap](C)
+     *   → [ap]
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes returned by the absolute path
      */
     @Override
     public List<Node> visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext ctx) {
-        // TODO
-        return null;
+        return visit(ctx.ap());
     }
 
 
     /**
-     * TODO
+     * XQuery (parentheses)
      * <pre>
-     * TODO
+     * [(xq)](C)
+     *   → [xq](C)
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes returned by the xquery query inside the parentheses
      */
     @Override
     public List<Node> visitXqParentheses(XQueryParser.XqParenthesesContext ctx) {
-        // TODO
-        return null;
+        return visit(ctx.xq());
     }
 
     /**
-     * TODO
+     * XQuery (pair)
      * <pre>
-     * TODO
+     * [xq1, xq2](C)
+     *   → [xq1](C), [xq2](C)
      * </pre>
      *
      * @param ctx Current parse tree context
@@ -126,9 +136,10 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery (children)
      * <pre>
-     * TODO
+     * [xq/rp](C)
+     *   → unique({ m | n ← [xq](C), m ← [rp](n) })
      * </pre>
      *
      * @param ctx Current parse tree context
@@ -141,9 +152,10 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery (all)
      * <pre>
-     * TODO
+     * [xq//rp](C)
+     *   → unique({ m | n ← [xq](C), m ← [.//rp](n) })
      * </pre>
      *
      * @param ctx Current parse tree context
@@ -156,22 +168,28 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery (tag)
      * <pre>
-     * TODO
+     * [&lt;tagName&gt;{ xq }&lt;/tagName&gt;](C)
+     *   → { makeElem(tagName, [xq](C)) }
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return Singleton list containing an element with tag tagName and the results of the xquery query as its content
      */
     @Override
     public List<Node> visitXqTag(XQueryParser.XqTagContext ctx) {
-        // TODO
-        return null;
+        List<Node> nodes = new LinkedList<>();
+        String tagName = ctx.Identifier(0).getText();
+        if (!tagName.equals(ctx.Identifier(1).getText())) {
+            return nodes;
+        }
+        nodes.add(xQueryEvaluator.makeElem(tagName, visit(ctx.xq())));
+        return nodes;
     }
 
     /**
-     * TODO
+     * XQuery (for let while return - FLWR)
      * <pre>
      * TODO
      * </pre>
@@ -186,7 +204,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery (let)
      * <pre>
      * TODO
      * </pre>
@@ -205,7 +223,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
 
     /**
-     * TODO
+     * XQuery - FLWR (for)
      * <pre>
      * TODO
      * </pre>
@@ -220,7 +238,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - FLWR (let)
      * <pre>
      * TODO
      * </pre>
@@ -235,7 +253,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - FLWR (where)
      * <pre>
      * TODO
      * </pre>
@@ -250,7 +268,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - FLWR (return)
      * <pre>
      * TODO
      * </pre>
@@ -269,10 +287,13 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
 
     /**
-     * TODO
+     * XQuery - Condition (value equality)
      * <pre>
-     * TODO
+     * [xq1 = xq2](C)
+     * [xq1 eq xq2](C)
+     *   → ∃ x ∈ [xq1](C) ∃ y ∈ [xq2](C) / x eq y
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -284,10 +305,13 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - Condition (identity equality)
      * <pre>
-     * TODO
+     * [xq1 == xq2](C)
+     * [xq1 is xq2](C)
+     *   → ∃ x ∈ [xq1](C) ∃ y ∈ [xq2](C) / x is y
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -299,10 +323,12 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - Condition (empty)
      * <pre>
-     * TODO
+     * [empty(xq)](C)
+     *   → [xq](C) = { }
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -314,10 +340,13 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - Condition (some)
      * <pre>
-     * TODO
+     * [some Var_1 in xq_1, ..., Var_n in xq_n satisfies Cond](C)
+     *   → ∃ v_1 ∈ [xq_1](C_0) ...  ∃ v_n ∈ [xq_n](C_n-1) / [Cond](C_n)
+     * where C_0 := C, C_i := { Var_i → v_i } ∪ C_i-1, i ∈ [1, ..., n]
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -329,25 +358,28 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - Condition (parentheses)
      * <pre>
-     * TODO
+     * [(Cond)](C)
+     *   → [Cond](C)
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes returned by the condition inside the parentheses
      */
     @Override
     public List<Node> visitCondParentheses(XQueryParser.CondParenthesesContext ctx) {
-        // TODO
-        return null;
+        return visit(ctx.cond());
     }
 
     /**
-     * TODO
+     * XQuery - Condition (and)
      * <pre>
-     * TODO
+     * [Cond1 and Cond2](C)
+     *   → [Cond1](C) ∧ [Cond2](C)
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -359,10 +391,12 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - Condition (or)
      * <pre>
-     * TODO
+     * [Cond1 or Cond2](C)
+     *   → [Cond1](C) ∨ [Cond2](C)
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -374,10 +408,12 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * TODO
+     * XQuery - Condition (not)
      * <pre>
-     * TODO
+     * [not Cond](C)
+     *   → ¬[Cond](C)
      * </pre>
+     * Note: condition functions should not change the current list of nodes
      *
      * @param ctx Current parse tree context
      * @return TODO
@@ -389,30 +425,11 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /*
-     * XQuery - Variable
-     */
-
-    /**
-     * TODO
-     * <pre>
-     * TODO
-     * </pre>
-     *
-     * @param ctx Current parse tree context
-     * @return TODO
-     */
-    @Override
-    public List<Node> visitVariable(XQueryParser.VariableContext ctx) {
-        // TODO
-        return null;
-    }
-
-    /*
      * XPath - Absolute Path
      */
 
     /**
-     * Absolute path (children)
+     * XPath - Absolute path (children)
      * <pre>
      * [doc(FileName)/rp]
      *   → [rp](root(FileName))
@@ -430,7 +447,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Absolute path (all)
+     * XPath - Absolute path (all)
      * <pre>
      * [doc(FileName)//rp]
      *   → [.//rp](root(FileName))
@@ -449,7 +466,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Absolute path (doc)
+     * XPath - Absolute path (doc)
      * <pre>
      * [doc(FileName)]
      *   → root(FileName)
@@ -469,7 +486,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
 
     /**
-     * Relative path (tag)
+     * XPath - Relative path (tag)
      * <pre>
      * [Identifier](n)
      *   → { c | c ← [∗](n) if tag(c) = Identifier }
@@ -495,7 +512,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (wildcard)
+     * XPath - Relative path (wildcard)
      * <pre>
      * [∗](n)
      *   → children(n)
@@ -515,7 +532,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (current)
+     * XPath - Relative path (current)
      * <pre>
      * [.](n)
      *   → { n }
@@ -530,7 +547,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (parent)
+     * XPath - Relative path (parent)
      * <pre>
      * [..](n)
      *   → parent(n)
@@ -550,7 +567,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (text)
+     * XPath - Relative path (text)
      * <pre>
      * [text()](n)
      *   → txt(n)
@@ -570,7 +587,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (attribute)
+     * XPath - Relative path (attribute)
      * <pre>
      * [@Identifier](n)
      *   → attrib(n, Identifier)
@@ -591,7 +608,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (parentheses)
+     * XPath - Relative path (parentheses)
      * <pre>
      * [(rp)](n)
      *   → [rp](n)
@@ -606,7 +623,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (children)
+     * XPath - Relative path (children)
      * <pre>
      * [rp1/rp2](n)
      *   → unique({ y | x ← [rp1](n), y ← [rp2](x) })
@@ -629,7 +646,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (all)
+     * XPath - Relative path (all)
      * <pre>
      * [rp1//rp2](n)
      *   → unique([rp1/rp2](n), [rp1/∗//rp2](n))
@@ -650,7 +667,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (filter)
+     * XPath - Relative path (filter)
      * <pre>
      * [rp[f]](n)
      *   → { x | x ← [rp](n) if [f](x) }
@@ -676,7 +693,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Relative path (pair)
+     * XPath - Relative path (pair)
      * <pre>
      * [rp1, rp2](n)
      *   → [rp1](n), [rp2](n)
@@ -701,7 +718,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
 
     /**
-     * Filter (relative path)
+     * XPath - Filter (relative path)
      * <pre>
      * [rp](n)
      *   → [rp](n) ≠ { }
@@ -721,7 +738,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Filter (value equality)
+     * XPath - Filter (value equality)
      * <pre>
      * [rp1 = rp2](n)
      * [rp1 eq rp2](n)
@@ -752,7 +769,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Filter (identity equality)
+     * XPath - Filter (identity equality)
      * <pre>
      * [rp1 == rp2](n)
      * [rp1 is rp2](n)
@@ -783,7 +800,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Filter (parentheses)
+     * XPath - Filter (parentheses)
      * <pre>
      * [(f)](n)
      *   → [f](n)
@@ -799,7 +816,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Filter (and)
+     * XPath - Filter (and)
      * <pre>
      * [f1 and f2](n)
      *   → [f1](n) ∧ [f2](n)
@@ -819,7 +836,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Filter (or)
+     * XPath - Filter (or)
      * <pre>
      * [f1 or f2](n)
      *   → [f1](n) ∨ [f2](n)
@@ -839,7 +856,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * Filter (not)
+     * XPath - Filter (not)
      * <pre>
      * [not f](n)
      *   → ¬[f](n)
