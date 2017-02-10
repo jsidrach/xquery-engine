@@ -18,6 +18,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileInputStream;
 import java.io.StringWriter;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -86,7 +87,7 @@ public class IO {
      * @param ANTLRInput Input query
      * @return List of result nodes
      */
-    private static List<Node> XPathQuery(ANTLRInputStream ANTLRInput) {
+    private static LinkedList<Node> XPathQuery(ANTLRInputStream ANTLRInput) {
         XPathLexer xPathLexer = new XPathLexer(ANTLRInput);
         CommonTokenStream tokens = new CommonTokenStream(xPathLexer);
         XPathParser xPathParser = new XPathParser(tokens);
@@ -103,7 +104,7 @@ public class IO {
      * @return List of result nodes
      * @throws Exception Exception if file is not found
      */
-    public static List<Node> XPathQuery(FileInputStream file) throws Exception {
+    public static LinkedList<Node> XPathQuery(FileInputStream file) throws Exception {
         return XPathQuery(new ANTLRInputStream(file));
     }
 
@@ -113,7 +114,7 @@ public class IO {
      * @param query XPath query string
      * @return List of result nodes
      */
-    public static List<Node> XPathQuery(String query) {
+    public static LinkedList<Node> XPathQuery(String query) {
         return XPathQuery(new ANTLRInputStream(query));
     }
 
@@ -123,7 +124,7 @@ public class IO {
      * @param ANTLRInput Input query
      * @return List of result nodes
      */
-    private static List<Node> XQueryQuery(ANTLRInputStream ANTLRInput) throws Exception {
+    private static LinkedList<Node> XQueryQuery(ANTLRInputStream ANTLRInput) throws Exception {
         XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
         CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
         XQueryParser xQueryParser = new XQueryParser(tokens);
@@ -140,7 +141,7 @@ public class IO {
      * @return List of result nodes
      * @throws Exception Exception if file is not found
      */
-    public static List<Node> XQueryQuery(FileInputStream file) throws Exception {
+    public static LinkedList<Node> XQueryQuery(FileInputStream file) throws Exception {
         return XQueryQuery(new ANTLRInputStream(file));
     }
 
@@ -150,7 +151,7 @@ public class IO {
      * @param query XQuery query string
      * @return List of result nodes
      */
-    public static List<Node> XQueryQuery(String query) throws Exception {
+    public static LinkedList<Node> XQueryQuery(String query) throws Exception {
         return XQueryQuery(new ANTLRInputStream(query));
     }
 }

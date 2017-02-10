@@ -28,7 +28,7 @@ public class XQueryManualTests extends XQueryTests {
             try {
                 String fileNameInput = baseNameInput + i + ".txt";
                 String fileNameOutput = baseNameOutput + i + ".xml";
-                List<Node> nodes = IO.XQueryQuery(getResource(fileNameInput));
+                LinkedList<Node> nodes = IO.XQueryQuery(getResource(fileNameInput));
                 Writer output = getResourceWriter(fileNameOutput);
                 output.write(IO.NodesToString(nodes, false));
                 output.close();

@@ -11,7 +11,7 @@ xq
     | xq ',' xq                                                                # xqPair
     | xq '/' rp                                                                # xqChildren
     | xq '//' rp                                                               # xqAll
-    | '<' Identifier '>{' xq '}</' Identifier '>'                              # xqTag
+    | '<' Identifier '>' '{' xq '}' '</' Identifier '>'                        # xqTag
     | forClause letClause? whereClause? returnClause                           # xqFLWR
     | letClause xq                                                             # xqLet
     ;

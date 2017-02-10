@@ -56,7 +56,7 @@ abstract class XQueryTests {
      * @return List of nodes corresponding to the children of the root of the loaded document
      * @throws Exception Exception if input resource is not found or it has invalid format
      */
-    List<Node> loadResourceAsXML(String name) throws Exception {
+    LinkedList<Node> loadResourceAsXML(String name) throws Exception {
         FileInputStream xmlFile = getResource(name);
         DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
         // Ignore non-relevant whitespace
@@ -66,7 +66,7 @@ abstract class XQueryTests {
         // Normalize document
         doc.getDocumentElement().normalize();
         // Add the children (XML resource should have a root which is ignored)
-        List<Node> nodes = new LinkedList<>();
+        LinkedList<Node> nodes = new LinkedList<>();
         NodeList nl = doc.getDocumentElement().getChildNodes();
         for (int i = 0; i < nl.getLength(); ++i) {
             nodes.add(nl.item(i));
@@ -116,7 +116,7 @@ abstract class XQueryTests {
             try {
                 String input = resourcesPrefix + "-input-" + i;
                 String output = resourcesPrefix + "-output-" + i;
-                List<Node> nodes = IO.XQueryQuery(getResource(input + ".txt"));
+                LinkedList<Node> nodes = IO.XQueryQuery(getResource(input + ".txt"));
                 if (!nodesEqualToResource(nodes, output + ".xml")) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }

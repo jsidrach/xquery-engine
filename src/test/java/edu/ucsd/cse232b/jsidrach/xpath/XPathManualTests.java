@@ -27,7 +27,7 @@ public class XPathManualTests extends XPathTests {
             try {
                 String fileNameInput = baseNameInput + i + ".txt";
                 String fileNameOutput = baseNameOutput + i + ".xml";
-                List<Node> nodes = IO.XPathQuery(getResource(fileNameInput));
+                LinkedList<Node> nodes = IO.XPathQuery(getResource(fileNameInput));
                 Writer output = getResourceWriter(fileNameOutput);
                 output.write(IO.NodesToString(nodes, true));
                 output.close();

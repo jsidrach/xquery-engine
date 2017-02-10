@@ -22,8 +22,8 @@ public class XPathEvaluator {
      * @param fn Name of the XML file (relative to the executable's current path)
      * @return Root of the XML tree corresponding to the loaded document, as a singleton list of nodes
      */
-    public static List<Node> root(String fn) {
-        List<Node> nodes = new LinkedList<>();
+    public static LinkedList<Node> root(String fn) {
+        LinkedList<Node> nodes = new LinkedList<>();
         try {
             // Remove quotes (first and last character)
             File xmlFile = new File(fn.substring(1, fn.length() - 1));
@@ -47,8 +47,8 @@ public class XPathEvaluator {
      * @param nodes List of nodes with possible duplicates
      * @return List of nodes without duplicates
      */
-    public static List<Node> unique(List<Node> nodes) {
-        List<Node> uNodes = new LinkedList<>();
+    public static LinkedList<Node> unique(List<Node> nodes) {
+        LinkedList<Node> uNodes = new LinkedList<>();
         for (Node n : nodes) {
             if (!uNodes.contains(n)) {
                 uNodes.add(n);
@@ -63,8 +63,8 @@ public class XPathEvaluator {
      * @param n Node
      * @return List of node's children, ordered according to the document order
      */
-    public static List<Node> children(Node n) {
-        List<Node> nodes = new LinkedList<>();
+    public static LinkedList<Node> children(Node n) {
+        LinkedList<Node> nodes = new LinkedList<>();
         NodeList children = n.getChildNodes();
         for (int i = 0; i < children.getLength(); ++i) {
             nodes.add(children.item(i));
@@ -78,14 +78,14 @@ public class XPathEvaluator {
      * @param nodes Nodes
      * @return List of node's descendants and themselves, according to the document order
      */
-    public static List<Node> descendantsOrSelves(List<Node> nodes) {
+    public static LinkedList<Node> descendantsOrSelves(List<Node> nodes) {
         LinkedList<Node> queue = new LinkedList<>();
-        List<Node> ns = new LinkedList<>();
+        LinkedList<Node> ns = new LinkedList<>();
         ns.addAll(nodes);
         queue.addAll(nodes);
         while (!queue.isEmpty()) {
             Node c = queue.poll();
-            List<Node> children = XPathEvaluator.children(c);
+            LinkedList<Node> children = XPathEvaluator.children(c);
             ns.addAll(children);
             queue.addAll(children);
         }
@@ -99,8 +99,8 @@ public class XPathEvaluator {
      * @return Singleton list containing the parent of the element node, if it has a parent
      * - an empty list otherwise
      */
-    public static List<Node> parent(Node n) {
-        List<Node> nodes = new LinkedList<>();
+    public static LinkedList<Node> parent(Node n) {
+        LinkedList<Node> nodes = new LinkedList<>();
         // Attribute node's parent is accessed differently
         Node p = (n.getNodeType() == Node.ATTRIBUTE_NODE) ?
                 ((Attr) n).getOwnerElement()
@@ -128,9 +128,9 @@ public class XPathEvaluator {
      * @return Singleton list containing the text node associated to the element node, if it has text
      * - an empty list otherwise
      */
-    public static List<Node> txt(Node n) {
-        List<Node> nodes = new LinkedList<>();
-        List<Node> children = XPathEvaluator.children(n);
+    public static LinkedList<Node> txt(Node n) {
+        LinkedList<Node> nodes = new LinkedList<>();
+        LinkedList<Node> children = XPathEvaluator.children(n);
         for (Node c : children) {
             if ((c.getNodeType() == Node.TEXT_NODE) && (c.getTextContent() != null) && (!c.getTextContent().isEmpty())) {
                 nodes.add(c);
@@ -147,8 +147,8 @@ public class XPathEvaluator {
      * @return Singleton list containing the attribute of the node, if it has such attribute
      * - an empty list otherwise
      */
-    public static List<Node> attrib(Node n, String attName) {
-        List<Node> nodes = new LinkedList<>();
+    public static LinkedList<Node> attrib(Node n, String attName) {
+        LinkedList<Node> nodes = new LinkedList<>();
         if (n.getNodeType() != Node.ELEMENT_NODE) {
             return nodes;
         }
