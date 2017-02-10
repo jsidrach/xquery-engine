@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.w3c.dom.Node;
 
 import java.io.Writer;
-import java.util.List;
+import java.util.LinkedList;
 
 import static org.junit.Assert.fail;
 
