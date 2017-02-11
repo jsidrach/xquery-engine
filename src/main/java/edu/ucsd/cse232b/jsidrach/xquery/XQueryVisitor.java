@@ -61,7 +61,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         if (var == null) {
             return new LinkedList<>();
         }
-        return var;
+        this.nodes = var;
+        return this.nodes;
     }
 
     /**
@@ -76,11 +77,12 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitXqConstant(XQueryParser.XqConstantContext ctx) {
+        LinkedList<Node> nodes = new LinkedList<>();
         String quotedText = ctx.StringConstant().getText();
         String text = quotedText.substring(1, quotedText.length() - 1);
-        LinkedList<Node> nodes = new LinkedList<>();
         nodes.add(xQueryEvaluator.makeText(text));
-        return nodes;
+        this.nodes = nodes;
+        return this.nodes;
     }
 
     /**
@@ -97,7 +99,6 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public LinkedList<Node> visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext ctx) {
         return visit(ctx.ap());
     }
-
 
     /**
      * XQuery (parentheses)
@@ -122,12 +123,17 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes resulting of the union of the lists of nodes produced by both xquery queries
      */
     @Override
     public LinkedList<Node> visitXqPair(XQueryParser.XqPairContext ctx) {
-        // TODO
-        return null;
+        LinkedList<Node> nodes = new LinkedList<>();
+        LinkedList<Node> original = this.nodes;
+        nodes.addAll(visit(ctx.xq(0)));
+        this.nodes = original;
+        nodes.addAll(visit(ctx.xq(1)));
+        this.nodes = nodes;
+        return this.nodes;
     }
 
     /**
@@ -138,12 +144,13 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of distinct nodes obtained by the xquery query concatenated with the relative path
      */
     @Override
     public LinkedList<Node> visitXqChildren(XQueryParser.XqChildrenContext ctx) {
-        // TODO
-        return null;
+        visit(ctx.xq());
+        this.nodes = XQueryEvaluator.unique(visit(ctx.rp()));
+        return this.nodes;
     }
 
     /**
@@ -154,12 +161,15 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of distinct nodes obtained by the xquery query concatenated with the relative path,
+     * union the list of nodes obtained by the xquery query concatenated with the relative path,
+     * skipping any number of descendants
      */
     @Override
     public LinkedList<Node> visitXqAll(XQueryParser.XqAllContext ctx) {
-        // TODO
-        return null;
+        this.nodes = XQueryEvaluator.descendantsOrSelves(visit(ctx.xq()));
+        this.nodes = XQueryEvaluator.unique(visit(ctx.rp()));
+        return this.nodes;
     }
 
     /**
@@ -176,11 +186,11 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public LinkedList<Node> visitXqTag(XQueryParser.XqTagContext ctx) {
         LinkedList<Node> nodes = new LinkedList<>();
         String tagName = ctx.Identifier(0).getText();
-        if (!tagName.equals(ctx.Identifier(1).getText())) {
-            return nodes;
+        if (tagName.equals(ctx.Identifier(1).getText())) {
+            nodes.add(xQueryEvaluator.makeElem(tagName, visit(ctx.xq())));
         }
-        nodes.add(xQueryEvaluator.makeElem(tagName, visit(ctx.xq())));
-        return nodes;
+        this.nodes = nodes;
+        return this.nodes;
     }
 
     /**
@@ -209,8 +219,11 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitXqLet(XQueryParser.XqLetContext ctx) {
-        // TODO
-        return null;
+        HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
+        visit(ctx.letClause());
+        visit(ctx.xq());
+        this.vars = vars;
+        return this.nodes;
     }
 
     /*
@@ -239,11 +252,19 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return null
      */
     @Override
     public LinkedList<Node> visitLet(XQueryParser.LetContext ctx) {
-        // TODO
+        int numVars = ctx.Variable().size();
+        for (int i = 0; i < numVars; ++i) {
+            String varName = ctx.Variable(i).getText();
+            HashMap<String, LinkedList<Node>> previousVars = new HashMap<>(this.vars);
+            LinkedList<Node> xquery = visit(ctx.xq(i));
+            this.vars = previousVars;
+            this.vars.put(varName, xquery);
+        }
+        // Return null to raise an exception if caller tries to use the result of visiting the let clause
         return null;
     }
 
@@ -258,8 +279,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitWhere(XQueryParser.WhereContext ctx) {
-        // TODO
-        return null;
+        return visit(ctx.cond());
     }
 
     /**
@@ -273,8 +293,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitReturn(XQueryParser.ReturnContext ctx) {
-        // TODO
-        return null;
+        return visit(ctx.xq());
     }
 
     /*
@@ -298,13 +317,10 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public LinkedList<Node> visitCondValueEquality(XQueryParser.CondValueEqualityContext ctx) {
         LinkedList<Node> nodes = this.nodes;
-        HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
         LinkedList<Node> l = visit(ctx.xq(0));
         this.nodes = nodes;
-        this.vars = vars;
         LinkedList<Node> r = visit(ctx.xq(1));
         this.nodes = nodes;
-        this.vars = vars;
         for (Node nl : l) {
             for (Node nr : r) {
                 if (nl.isEqualNode(nr)) {
@@ -332,13 +348,10 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public LinkedList<Node> visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext ctx) {
         LinkedList<Node> nodes = this.nodes;
-        HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
         LinkedList<Node> l = visit(ctx.xq(0));
         this.nodes = nodes;
-        this.vars = vars;
         LinkedList<Node> r = visit(ctx.xq(1));
         this.nodes = nodes;
-        this.vars = vars;
         for (Node nl : l) {
             for (Node nr : r) {
                 if (nl.isSameNode(nr)) {
@@ -364,10 +377,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public LinkedList<Node> visitCondEmpty(XQueryParser.CondEmptyContext ctx) {
         LinkedList<Node> nodes = this.nodes;
-        HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
         LinkedList<Node> xquery = visit(ctx.xq());
         this.nodes = nodes;
-        this.vars = vars;
         if (xquery.isEmpty()) {
             return this.nodes;
         }
@@ -497,8 +508,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public LinkedList<Node> visitApChildren(XQueryParser.ApChildrenContext ctx) {
         visit(ctx.doc());
-        visit(ctx.rp());
-        this.nodes = XQueryEvaluator.unique(this.nodes);
+        this.nodes = XQueryEvaluator.unique(visit(ctx.rp()));
         return this.nodes;
     }
 
@@ -514,10 +524,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitApAll(XQueryParser.ApAllContext ctx) {
-        visit(ctx.doc());
-        this.nodes = XQueryEvaluator.descendantsOrSelves(this.nodes);
-        visit(ctx.rp());
-        this.nodes = XQueryEvaluator.unique(this.nodes);
+        this.nodes = XQueryEvaluator.descendantsOrSelves(visit(ctx.doc()));
+        this.nodes = XQueryEvaluator.unique(visit(ctx.rp()));
         return this.nodes;
     }
 
@@ -690,14 +698,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitRpChildren(XQueryParser.RpChildrenContext ctx) {
-        LinkedList<Node> nodes = new LinkedList<>();
-        LinkedList<Node> children = visit(ctx.rp(0));
-        for (Node c : children) {
-            this.nodes = new LinkedList<>();
-            this.nodes.add(c);
-            nodes.addAll(visit(ctx.rp(1)));
-        }
-        this.nodes = XQueryEvaluator.unique(nodes);
+        visit(ctx.rp(0));
+        this.nodes = XQueryEvaluator.unique(visit(ctx.rp(1)));
         return this.nodes;
     }
 
@@ -715,10 +717,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitRpAll(XQueryParser.RpAllContext ctx) {
-        visit(ctx.rp(0));
-        this.nodes = XQueryEvaluator.descendantsOrSelves(this.nodes);
-        visit(ctx.rp(1));
-        this.nodes = XQueryEvaluator.unique(this.nodes);
+        this.nodes = XQueryEvaluator.descendantsOrSelves(visit(ctx.rp(0)));
+        this.nodes = XQueryEvaluator.unique(visit(ctx.rp(1)));
         return this.nodes;
     }
 

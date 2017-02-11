@@ -41,8 +41,7 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     @Override
     public LinkedList<Node> visitApChildren(XPathParser.ApChildrenContext ctx) {
         visit(ctx.doc());
-        visit(ctx.rp());
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        this.nodes = XPathEvaluator.unique(visit(ctx.rp()));
         return this.nodes;
     }
 
@@ -58,10 +57,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
      */
     @Override
     public LinkedList<Node> visitApAll(XPathParser.ApAllContext ctx) {
-        visit(ctx.doc());
-        this.nodes = XPathEvaluator.descendantsOrSelves(this.nodes);
-        visit(ctx.rp());
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        this.nodes = XPathEvaluator.descendantsOrSelves(visit(ctx.doc()));
+        this.nodes = XPathEvaluator.unique(visit(ctx.rp()));
         return this.nodes;
     }
 
@@ -230,14 +227,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
      */
     @Override
     public LinkedList<Node> visitRpChildren(XPathParser.RpChildrenContext ctx) {
-        LinkedList<Node> nodes = new LinkedList<>();
-        LinkedList<Node> children = visit(ctx.rp(0));
-        for (Node c : children) {
-            this.nodes = new LinkedList<>();
-            this.nodes.add(c);
-            nodes.addAll(visit(ctx.rp(1)));
-        }
-        this.nodes = XPathEvaluator.unique(nodes);
+        visit(ctx.rp(0));
+        this.nodes = XPathEvaluator.unique(visit(ctx.rp(1)));
         return this.nodes;
     }
 
@@ -255,10 +246,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
      */
     @Override
     public LinkedList<Node> visitRpAll(XPathParser.RpAllContext ctx) {
-        visit(ctx.rp(0));
-        this.nodes = XPathEvaluator.descendantsOrSelves(this.nodes);
-        visit(ctx.rp(1));
-        this.nodes = XPathEvaluator.unique(this.nodes);
+        this.nodes = XPathEvaluator.descendantsOrSelves(visit(ctx.rp(0)));
+        this.nodes = XPathEvaluator.unique(visit(ctx.rp(1)));
         return this.nodes;
     }
 
