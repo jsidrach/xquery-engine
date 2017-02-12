@@ -218,8 +218,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Relative path (children)
      * <pre>
-     * [rp1/rp2](n)
-     *   → unique({ y | x ← [rp1](n), y ← [rp2](x) })
+     * [rp_1/rp_2](n)
+     *   → unique({ y | x ← [rp_1](n), y ← [rp_2](x) })
      * </pre>
      *
      * @param ctx Current parse tree context
@@ -235,8 +235,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Relative path (all)
      * <pre>
-     * [rp1//rp2](n)
-     *   → unique([rp1/rp2](n), [rp1/∗//rp2](n))
+     * [rp_1//rp_2](n)
+     *   → unique([rp_1/rp_2](n), [rp_1/∗//rp_2](n))
      * </pre>
      *
      * @param ctx Current parse tree context
@@ -280,8 +280,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Relative path (pair)
      * <pre>
-     * [rp1, rp2](n)
-     *   → [rp1](n), [rp2](n)
+     * [rp_1, rp_2](n)
+     *   → [rp_1](n), [rp_2](n)
      * </pre>
      *
      * @param ctx Current parse tree context
@@ -321,9 +321,9 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Filter (value equality)
      * <pre>
-     * [rp1 = rp2](n)
-     * [rp1 eq rp2](n)
-     *   → ∃ x ∈ [rp1](n) ∃ y ∈ [rp2](n) / x eq y
+     * [rp_1 = rp_2](n)
+     * [rp_1 eq rp_2](n)
+     *   → ∃ x ∈ [rp_1](n) ∃ y ∈ [rp_2](n) / x eq y
      * </pre>
      * Note: filter functions should not change the current list of nodes
      *
@@ -352,9 +352,9 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Filter (identity equality)
      * <pre>
-     * [rp1 == rp2](n)
-     * [rp1 is rp2](n)
-     *   → ∃ x ∈ [rp1](n) ∃ y ∈ [rp2](n) / x is y
+     * [rp_1 == rp_2](n)
+     * [rp_1 is rp_2](n)
+     *   → ∃ x ∈ [rp_1](n) ∃ y ∈ [rp_2](n) / x is y
      * </pre>
      * Note: filter functions should not change the current list of nodes
      *
@@ -399,8 +399,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Filter (and)
      * <pre>
-     * [f1 and f2](n)
-     *   → [f1](n) ∧ [f2](n)
+     * [f_1 and f_2](n)
+     *   → [f_1](n) ∧ [f_2](n)
      * </pre>
      * Note: filter functions should not change the current list of nodes
      *
@@ -419,8 +419,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
     /**
      * Filter (or)
      * <pre>
-     * [f1 or f2](n)
-     *   → [f1](n) ∨ [f2](n)
+     * [f_1 or f_2](n)
+     *   → [f_1](n) ∨ [f_2](n)
      * </pre>
      * Note: filter functions should not change the current list of nodes
      *
