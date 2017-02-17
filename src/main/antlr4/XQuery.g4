@@ -12,7 +12,7 @@ xq
     | xq '/' rp                                                                # xqChildren
     | xq '//' rp                                                               # xqAll
     | '<' Identifier '>' '{' xq '}' '</' Identifier '>'                        # xqTag
-    | 'join' '(' xq ',' xq ',' attList ',' attList ')'                         # xqJoin
+    | 'join' '(' xq ',' xq ',' tagList ',' tagList ')'                         # xqJoin
     | letClause xq                                                             # xqLet
     | forClause letClause? whereClause? returnClause                           # xqFLWR
     ;
@@ -37,8 +37,8 @@ returnClause
     : 'return' xq
     ;
 
-// Attribute List
-attList
+// Tag List
+tagList
     : '[' (Identifier (',' Identifier)*)? ']'
     ;
 

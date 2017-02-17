@@ -1,12 +1,16 @@
 package edu.ucsd.cse232b.jsidrach.xquery;
 
+import edu.ucsd.cse232b.jsidrach.utils.IO;
 import edu.ucsd.cse232b.jsidrach.xpath.XPathEvaluator;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * XQueryEvaluator - Collection of functions to evaluate a XQuery expression
@@ -58,16 +62,30 @@ public class XQueryEvaluator extends XPathEvaluator {
     }
 
     /**
-     * Creates a singleton list from a node
+     * Calculates the key of a node - only depends on the values of the nodes in the tag list
      *
-     * @param node Node that will be contained in the singleton
-     * @return Singleton containing the given node
+     * @param node    Node to compute the key of
+     * @param tags    List of tags of the node the key depends on
+     * @param numTags Number of tags used of the list of tags
+     * @return Key of the node
      */
-    public LinkedList<Node> singleton(Node node) {
-        LinkedList<Node> singleton = new LinkedList<>();
-        if (node != null) {
-            singleton.add(node);
+    public static String keyNodeTags(Node node, List<TerminalNode> tags, int numTags) {
+        String key = "";
+        if (node.getNodeType() != Node.ELEMENT_NODE) {
+            return key;
         }
-        return singleton;
+        Element n = (Element) node;
+        for (int i = 0; i < numTags; ++i) {
+            String tag = tags.get(i).getText();
+            Node tagNode = n.getElementsByTagName(tag).item(0);
+            if (tagNode != null) {
+                try {
+                    key += IO.NodesToString(children(tagNode), false);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return key;
     }
 }

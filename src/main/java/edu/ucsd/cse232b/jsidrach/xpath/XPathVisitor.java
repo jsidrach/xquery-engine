@@ -266,8 +266,7 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
         LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Node> rp = visit(ctx.rp());
         for (Node n : rp) {
-            this.nodes = new LinkedList<>();
-            this.nodes.add(n);
+            this.nodes = XPathEvaluator.singleton(n);
             if (!visit(ctx.f()).isEmpty()) {
                 nodes.add(n);
             }

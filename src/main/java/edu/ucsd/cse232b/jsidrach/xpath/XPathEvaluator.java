@@ -159,4 +159,18 @@ public class XPathEvaluator {
         nodes.add(e.getAttributeNode(attName));
         return nodes;
     }
+
+    /**
+     * Creates a singleton list from a node
+     *
+     * @param node Node that will be contained in the singleton
+     * @return Singleton containing the given node
+     */
+    public static LinkedList<Node> singleton(Node node) {
+        LinkedList<Node> singleton = new LinkedList<>();
+        if (node != null) {
+            singleton.add(node);
+        }
+        return singleton;
+    }
 }
