@@ -246,6 +246,10 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         return this.nodes;
     }
 
+    /*
+     * XQuery - For Let Where Return (FLWR)
+     */
+
     /**
      * Iterates over a FLWR expression, storing the result in the parameter nodes
      *
@@ -278,10 +282,6 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
             }
         }
     }
-
-    /*
-     * XQuery - For Let Where Return (FLWR)
-     */
 
     /**
      * XQuery - FLWR (for)
@@ -352,6 +352,26 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public LinkedList<Node> visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
         return visit(ctx.xq());
+    }
+
+    /*
+     * XQuery - Join
+     */
+
+    /**
+     * XQuery - Join (attList)
+     * <pre>
+     * [Identifier, ..., Identifier](C)
+     * This rule should not be explicitly visited
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return null
+     */
+    @Override
+    public LinkedList<Node> visitAttList(XQueryParser.AttListContext ctx) {
+        // Return null to raise an exception if caller tries to use the result of visiting the attribute list
+        return null;
     }
 
     /*
