@@ -59,7 +59,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     public LinkedList<Node> visitXqVariable(XQueryParser.XqVariableContext ctx) {
         LinkedList<Node> var = vars.get(ctx.Variable().getText());
         if (var == null) {
-            return new LinkedList<>();
+            var = new LinkedList<>();
         }
         this.nodes = var;
         return this.nodes;
@@ -77,11 +77,9 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitXqConstant(XQueryParser.XqConstantContext ctx) {
-        LinkedList<Node> nodes = new LinkedList<>();
         String quotedText = ctx.StringConstant().getText();
         String text = quotedText.substring(1, quotedText.length() - 1);
-        nodes.add(xQueryEvaluator.makeText(text));
-        this.nodes = nodes;
+        this.nodes = xQueryEvaluator.singleton(xQueryEvaluator.makeText(text));
         return this.nodes;
     }
 
@@ -194,16 +192,16 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * XQuery (for let while return - FLWR)
+     * XQuery (join)
      * <pre>
      * TODO
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return TODO
+     * @return List of nodes returned by the join
      */
     @Override
-    public LinkedList<Node> visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
+    public LinkedList<Node> visitXqJoin(XQueryParser.XqJoinContext ctx) {
         // TODO
         return null;
     }
@@ -229,6 +227,58 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         return this.nodes;
     }
 
+    /**
+     * XQuery (for let while return - FLWR)
+     * <pre>
+     * TODO
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return List of nodes returned by the FLWR expression
+     */
+    @Override
+    public LinkedList<Node> visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
+        LinkedList<Node> nodes = new LinkedList<>();
+        HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
+        iterateFLWR(ctx, 0, nodes);
+        this.vars = vars;
+        this.nodes = nodes;
+        return this.nodes;
+    }
+
+    /**
+     * Iterates over a FLWR expression, storing the result in the parameter nodes
+     *
+     * @param ctx    Current parse tree context
+     * @param varNum Number of the variable of the forClause the function is currently iterating over
+     * @param nodes  Accumulative list of nodes returned by the return clause
+     */
+    private void iterateFLWR(XQueryParser.XqFLWRContext ctx, int varNum, LinkedList<Node> nodes) {
+        // Iteration over for clause finished
+        // One node selected for each variable
+        if (varNum == ctx.letClause().Variable().size()) {
+            HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
+            if (ctx.letClause() != null) {
+                visit(ctx.letClause());
+            }
+            // Add return nodes if the where clause evaluates to true
+            if ((ctx.whereClause() == null) || (!visit(ctx.whereClause()).isEmpty())) {
+                nodes.addAll(visit(ctx.returnClause()));
+            }
+            this.vars = vars;
+        }
+        // Still iterating through for clause variables
+        // Select one node for each variable
+        else {
+            String varName = ctx.forClause().Variable(varNum).getText();
+            LinkedList<Node> var = visit(ctx.forClause().xq(varNum));
+            for (Node n : var) {
+                vars.put(varName, xQueryEvaluator.singleton(n));
+                iterateFLWR(ctx, varNum + 1, nodes);
+            }
+        }
+    }
+
     /*
      * XQuery - For Let Where Return (FLWR)
      */
@@ -236,29 +286,32 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     /**
      * XQuery - FLWR (for)
      * <pre>
-     * TODO
-     * </pre>
-     *
-     * @param ctx Current parse tree context
-     * @return TODO
-     */
-    @Override
-    public LinkedList<Node> visitFor(XQueryParser.ForContext ctx) {
-        // TODO
-        return null;
-    }
-
-    /**
-     * XQuery - FLWR (let)
-     * <pre>
-     * TODO
+     * [let Var_1 in xq_1, ..., Var_n in xq_n](C)
+     * This rule should not be explicitly visited
      * </pre>
      *
      * @param ctx Current parse tree context
      * @return null
      */
     @Override
-    public LinkedList<Node> visitLet(XQueryParser.LetContext ctx) {
+    public LinkedList<Node> visitForClause(XQueryParser.ForClauseContext ctx) {
+        // Return null to raise an exception if caller tries to use the result of visiting the for clause
+        return null;
+    }
+
+    /**
+     * XQuery - FLWR (let)
+     * <pre>
+     * [let Var_1 := xq_1, ..., Var_n := xq_n](C)
+     *   → C_n
+     *   where C_0 := C, C_i := { Var_i → [xq_i](C_i-1) } ∪ C_i-1, i ∈ [1, ..., n]
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return null
+     */
+    @Override
+    public LinkedList<Node> visitLetClause(XQueryParser.LetClauseContext ctx) {
         int numVars = ctx.Variable().size();
         for (int i = 0; i < numVars; ++i) {
             String varName = ctx.Variable(i).getText();
@@ -282,7 +335,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * @return Condition function applied to the current context
      */
     @Override
-    public LinkedList<Node> visitWhere(XQueryParser.WhereContext ctx) {
+    public LinkedList<Node> visitWhereClause(XQueryParser.WhereClauseContext ctx) {
         return visit(ctx.cond());
     }
 
@@ -297,7 +350,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * @return List of nodes returned by the xquery query
      */
     @Override
-    public LinkedList<Node> visitReturn(XQueryParser.ReturnContext ctx) {
+    public LinkedList<Node> visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
         return visit(ctx.xq());
     }
 
@@ -742,8 +795,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Node> rp = visit(ctx.rp());
         for (Node n : rp) {
-            this.nodes = new LinkedList<>();
-            this.nodes.add(n);
+            this.nodes = xQueryEvaluator.singleton(n);
             if (!visit(ctx.f()).isEmpty()) {
                 nodes.add(n);
             }

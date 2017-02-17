@@ -56,4 +56,18 @@ public class XQueryEvaluator extends XPathEvaluator {
     public Node makeText(String content) {
         return doc.createTextNode(content);
     }
+
+    /**
+     * Creates a singleton list from a node
+     *
+     * @param node Node that will be contained in the singleton
+     * @return Singleton containing the given node
+     */
+    public LinkedList<Node> singleton(Node node) {
+        LinkedList<Node> singleton = new LinkedList<>();
+        if (node != null) {
+            singleton.add(node);
+        }
+        return singleton;
+    }
 }

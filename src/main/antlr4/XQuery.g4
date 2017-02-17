@@ -12,28 +12,34 @@ xq
     | xq '/' rp                                                                # xqChildren
     | xq '//' rp                                                               # xqAll
     | '<' Identifier '>' '{' xq '}' '</' Identifier '>'                        # xqTag
-    | forClause letClause? whereClause? returnClause                           # xqFLWR
+    | 'join' '(' xq ',' xq ',' attList ',' attList ')'                         # xqJoin
     | letClause xq                                                             # xqLet
+    | forClause letClause? whereClause? returnClause                           # xqFLWR
     ;
 
 // For Clause
 forClause
-    : 'for' Variable 'in' xq (',' Variable 'in' xq)*                           # for
+    : 'for' Variable 'in' xq (',' Variable 'in' xq)*
     ;
 
 // Let Clause
 letClause
-    : 'let' Variable ':=' xq (',' Variable ':=' xq)*                           # let
+    : 'let' Variable ':=' xq (',' Variable ':=' xq)*
     ;
 
 // Where Clause
 whereClause
-    : 'where' cond                                                             # where
+    : 'where' cond
     ;
 
 // Return Clause
 returnClause
-    : 'return' xq                                                              # return
+    : 'return' xq
+    ;
+
+// Attribute List
+attList
+    : '[' (Identifier (',' Identifier)*)? ']'
     ;
 
 // Condition
