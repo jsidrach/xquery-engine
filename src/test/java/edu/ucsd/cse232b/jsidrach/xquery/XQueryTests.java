@@ -96,7 +96,7 @@ abstract class XQueryTests {
      * @throws Exception Exception if the resource is not found or has invalid format
      */
     Boolean nodesEqualToResource(List<Node> nodes, String name) throws Exception {
-        String s1 = IO.NodesToString(nodes, true).trim();
+        String s1 = IO.NodesToString(nodes, false).trim();
         String s2 = loadResourceAsString(name);
         return s1.equals(s2);
     }

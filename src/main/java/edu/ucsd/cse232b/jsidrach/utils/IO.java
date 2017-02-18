@@ -58,14 +58,19 @@ public class IO {
         // Set indentation to two spaces
         tf.setAttribute("indent-number", 2);
         Transformer ts = tf.newTransformer();
-        // XML document
+        // Standard XML document
         ts.setOutputProperty(OutputKeys.METHOD, "xml");
+        ts.setOutputProperty(OutputKeys.STANDALONE, "yes");
         // Encoding
         ts.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-        // Do not include root node
-        ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
         // Indent results
         ts.setOutputProperty(OutputKeys.INDENT, "yes");
+        // Do not include xml declaration if there is more than one root node
+        if (verbose || (ns.size() != 1)) {
+            ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        } else {
+            ts.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
+        }
         // Join the output of each node
         String output = "";
         if (verbose) {

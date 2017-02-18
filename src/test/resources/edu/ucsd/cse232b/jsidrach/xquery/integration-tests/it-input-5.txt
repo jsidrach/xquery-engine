@@ -1,0 +1,7 @@
+<result>
+{
+for $a in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//PERSONAE, $b in $a/PGROUP/PERSONA
+where ($b/text() = $a/../ACT/SCENE/SPEECH/SPEAKER/text())
+return <PERSONA>{$b/text()}</PERSONA>
+}
+</result>
