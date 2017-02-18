@@ -1,0 +1,6 @@
+for $s in document("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//SPEAKER
+return <speaks>{<who>{$s/text()}</who>,
+                for $a in document("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//ACT
+                where some $s1 in $a//SPEAKER satisfies $s1 eq $s
+                return <when>{$a/TITLE/text()}</when>}
+       </speaks>

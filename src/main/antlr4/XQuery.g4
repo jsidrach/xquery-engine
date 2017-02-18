@@ -11,7 +11,7 @@ xq
     | xq ',' xq                                                                # xqPair
     | xq '/' rp                                                                # xqChildren
     | xq '//' rp                                                               # xqAll
-    | '<' Identifier '>' '{' xq '}' '</' Identifier '>'                        # xqTag
+    | '<' Identifier '>' '{' xq '}' '<' '/' Identifier '>'                     # xqTag
     | 'join' '(' xq ',' xq ',' tagList ',' tagList ')'                         # xqJoin
     | letClause xq                                                             # xqLet
     | forClause letClause? whereClause? returnClause                           # xqFLWR
@@ -24,7 +24,7 @@ forClause
 
 // Let Clause
 letClause
-    : 'let' Variable ':=' xq (',' Variable ':=' xq)*
+    : 'let' Variable ':' '=' xq (',' Variable ':' '=' xq)*
     ;
 
 // Where Clause
@@ -46,7 +46,7 @@ tagList
 cond
     : xq ('=' | 'eq') xq                                                       # condValueEquality
     | xq ('==' | 'is') xq                                                      # condIdentityEquality
-    | 'empty(' xq ')'                                                          # condEmpty
+    | 'empty' '(' xq ')'                                                       # condEmpty
     | 'some' Variable 'in' xq (',' Variable 'in' xq)* 'satisfies' cond         # condSome
     | '(' cond ')'                                                             # condParentheses
     | cond 'and' cond                                                          # condAnd

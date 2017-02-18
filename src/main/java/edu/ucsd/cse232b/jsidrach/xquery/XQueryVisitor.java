@@ -208,7 +208,6 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         LinkedList<Node> right = visit(ctx.xq(1));
         List<TerminalNode> leftTags = ctx.tagList(0).Identifier();
         List<TerminalNode> rightTags = ctx.tagList(1).Identifier();
-        int numTags = Math.min(leftTags.size(), rightTags.size());
         // Hash join
         // Heuristic - hash the result with the lowest number of nodes, stored in left
         if (right.size() < left.size()) {
@@ -223,7 +222,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         HashMap<String, LinkedList<Node>> eqVars = new HashMap<>();
         for (Node l : left) {
             // Key only depends on the values of the nodes in the tag list
-            String key = XQueryEvaluator.keyNodeTags(l, leftTags, numTags);
+            String key = XQueryEvaluator.keyNodeTags(l, leftTags);
             if (eqVars.containsKey(key)) {
                 eqVars.get(key).add(l.cloneNode(true));
             } else {
@@ -232,7 +231,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         }
         // Iterate through the right nodes
         for (Node r : right) {
-            String key = XQueryEvaluator.keyNodeTags(r, rightTags, numTags);
+            String key = XQueryEvaluator.keyNodeTags(r, rightTags);
             // Join into a new node containing the children of both left and right
             if (eqVars.containsKey(key)) {
                 LinkedList<Node> rChildren = XQueryEvaluator.children(r);
@@ -309,7 +308,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     private void iterateFLWR(XQueryParser.XqFLWRContext ctx, int varNum, LinkedList<Node> nodes) {
         // Iteration over for clause finished
         // One node selected for each variable
-        if (varNum == ctx.letClause().Variable().size()) {
+        if (varNum == ctx.forClause().Variable().size()) {
             HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
             if (ctx.letClause() != null) {
                 visit(ctx.letClause());

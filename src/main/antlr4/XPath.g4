@@ -7,43 +7,43 @@ package edu.ucsd.cse232b.jsidrach.antlr;
 
 // Absolute path
 ap
-    : doc '/' rp                                 # apChildren
-    | doc '//' rp                                # apAll
+    : doc '/' rp                                           # apChildren
+    | doc '//' rp                                          # apAll
     ;
 
 // Document
 doc
-    : 'doc(' StringConstant ')'                  # apDoc
+    : ('doc' | 'document') '(' StringConstant ')'          # apDoc
     ;
 
 // Relative Path
 rp
-    : Identifier                                 # rpTag
-    | '*'                                        # rpWildcard
-    | '.'                                        # rpCurrent
-    | '..'                                       # rpParent
-    | 'text()'                                   # rpText
-    | '@' Identifier                             # rpAttribute
-    | '(' rp ')'                                 # rpParentheses
-    | rp '/' rp                                  # rpChildren
-    | rp '//' rp                                 # rpAll
-    | rp '[' f ']'                               # rpFilter
-    | rp ',' rp                                  # rpPair
+    : Identifier                                           # rpTag
+    | '*'                                                  # rpWildcard
+    | '.'                                                  # rpCurrent
+    | '..'                                                 # rpParent
+    | 'text()'                                             # rpText
+    | '@' Identifier                                       # rpAttribute
+    | '(' rp ')'                                           # rpParentheses
+    | rp '/' rp                                            # rpChildren
+    | rp '//' rp                                           # rpAll
+    | rp '[' f ']'                                         # rpFilter
+    | rp ',' rp                                            # rpPair
     ;
 
 // Path Filter
 f
-    : rp                                         # fRelativePath
-    | rp ('=' | 'eq') rp                         # fValueEquality
-    | rp ('==' | 'is') rp                        # fIdentityEquality
-    | '(' f ')'                                  # fParentheses
-    | f 'and' f                                  # fAnd
-    | f 'or' f                                   # fOr
-    | 'not' f                                    # fNot
+    : rp                                                   # fRelativePath
+    | rp ('=' | 'eq') rp                                   # fValueEquality
+    | rp ('==' | 'is') rp                                  # fIdentityEquality
+    | '(' f ')'                                            # fParentheses
+    | f 'and' f                                            # fAnd
+    | f 'or' f                                             # fOr
+    | 'not' f                                              # fNot
     ;
 
 // File Name, Literal
-StringConstant: '"' + ([a-zA-Z0-9_,. /-]+) + '"';
+StringConstant: '"' + ([a-zA-Z0-9_,.!?; /\-]+) + '"';
 
 // Identifier
 Identifier: Letter (Letter | Digit)*;

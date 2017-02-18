@@ -36,7 +36,7 @@ public class XPathEvaluator {
             doc.getDocumentElement().normalize();
             nodes.add(doc);
         } catch (Exception e) {
-            e.printStackTrace();
+            return new LinkedList<>();
         }
         return nodes;
     }

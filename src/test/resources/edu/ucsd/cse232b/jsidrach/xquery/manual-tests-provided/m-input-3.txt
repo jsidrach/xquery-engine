@@ -1,0 +1,10 @@
+<acts>
+{
+    for $a in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//ACT
+    where empty ( for $sp in $a/SCENE/SPEECH/SPEAKER
+                  where $sp/text() = "CASCA"
+                  return <speaker> {$sp/text()}</speaker>
+                )
+    return <act>{$a/TITLE/text()}</act>
+}
+</acts>

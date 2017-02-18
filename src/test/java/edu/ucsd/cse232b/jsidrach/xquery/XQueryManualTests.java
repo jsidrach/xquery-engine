@@ -22,8 +22,7 @@ public class XQueryManualTests extends XQueryTests {
         String baseFolder = "manual-tests-provided/";
         String baseNameInput = baseFolder + "m-input-";
         String baseNameOutput = baseFolder + "m-output-";
-        int numProvidedQueries = 0;
-        // TODO
+        int numProvidedQueries = 6;
         for (int i = 1; i <= numProvidedQueries; ++i) {
             try {
                 String fileNameInput = baseNameInput + i + ".txt";

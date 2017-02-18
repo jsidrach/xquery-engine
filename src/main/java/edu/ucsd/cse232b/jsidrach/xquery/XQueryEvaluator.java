@@ -64,20 +64,18 @@ public class XQueryEvaluator extends XPathEvaluator {
     /**
      * Calculates the key of a node - only depends on the values of the nodes in the tag list
      *
-     * @param node    Node to compute the key of
-     * @param tags    List of tags of the node the key depends on
-     * @param numTags Number of tags used of the list of tags
+     * @param node Node to compute the key of
+     * @param tags List of tags of the node the key depends on
      * @return Key of the node
      */
-    public static String keyNodeTags(Node node, List<TerminalNode> tags, int numTags) {
+    public static String keyNodeTags(Node node, List<TerminalNode> tags) {
         String key = "";
         if (node.getNodeType() != Node.ELEMENT_NODE) {
             return key;
         }
         Element n = (Element) node;
-        for (int i = 0; i < numTags; ++i) {
-            String tag = tags.get(i).getText();
-            Node tagNode = n.getElementsByTagName(tag).item(0);
+        for (TerminalNode tag : tags) {
+            Node tagNode = n.getElementsByTagName(tag.getText()).item(0);
             if (tagNode != null) {
                 try {
                     key += IO.NodesToString(children(tagNode), false);
