@@ -11,11 +11,6 @@ import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor<String> {
 
     /**
-     * Current string representation of the abstract syntax tree
-     */
-    private String query;
-
-    /**
      * Current level of indentation
      */
     private int level;
@@ -26,6 +21,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
     private int spacesPerLevel;
 
     /**
+     * Extra spaces
+     */
+    private int extraSpaces = 0;
+
+    /**
      * Flag to check if the current FLWR expression can be rewritten
      */
     private boolean rewriteFLWR;
@@ -34,59 +34,64 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * Public constructor - Initializes the variables
      */
     public XQueryOptimizer() {
-        this.query = "";
         this.level = 0;
         this.spacesPerLevel = 2;
+        this.extraSpaces = 0;
         this.rewriteFLWR = false;
     }
 
     /**
-     * Appends a query string to the output
+     * Indents a string at the current level
      *
-     * @param query   Query string to be appended to the output
-     * @param inline  Flag to ignore the indentation
-     * @param newline Flag to add a new line at the end of the query string
+     * @param s String to be indented
+     * @return String Indented string
      */
-    private void output(String query, boolean inline, boolean newline) {
-        if (!inline) {
-            int spaces = this.spacesPerLevel * this.level;
-            for (int i = 0; i < spaces; ++i) {
-                this.query += " ";
-            }
+    private String indent(String s) {
+        String q = "";
+        int spaces = this.spacesPerLevel * this.level + this.extraSpaces;
+        for (int i = 0; i < spaces; ++i) {
+            q += " ";
         }
-        this.query += query;
-        if (newline) {
-            this.query += "\n";
-        }
+        q += s;
+        return q;
     }
 
     /**
-     * Appends a query string to the output, with indentation and adding a new line at the end of the query string
+     * Creates a new line at the current level
      *
-     * @param query Query string to be appended to the output
+     * @param s String with the contents of the line
+     * @return Indented string, with a new line at the end
      */
-    private void line(String query) {
-        this.output(query, false, true);
+    private String line(String s) {
+        return indent(s + System.lineSeparator());
     }
 
     /**
-     * Appends a query string to the output, without indentation and without a new line at the end of the query string
+     * Trims the left whitespace of the string
      *
-     * @param query Query string to be appended to the output
+     * @param s String to be trimmed from the left
+     * @return String String with the left whitespace removed
      */
-    private void inline(String query) {
-        this.output(query, true, false);
-    }
-
-    /**
-     * Trims the right whitespace of the current query string
-     */
-    private void rTrim() {
-        int i = this.query.length() - 1;
-        while ((i >= 0) && (Character.isWhitespace(this.query.charAt(i)))) {
-            i--;
+    private String lTrim(String s) {
+        int i = 0;
+        while ((i < s.length()) && (Character.isWhitespace(s.charAt(i)))) {
+            ++i;
         }
-        this.query = this.query.substring(0, i + 1);
+        return s.substring(i, s.length());
+    }
+
+    /**
+     * Trims the right whitespace of the string
+     *
+     * @param s String to be trimmed from the right
+     * @return String String with the right whitespace removed
+     */
+    private String rTrim(String s) {
+        int i = s.length() - 1;
+        while ((i >= 0) && (Character.isWhitespace(s.charAt(i)))) {
+            --i;
+        }
+        return s.substring(0, i + 1);
     }
 
     /*
@@ -101,8 +106,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqVariable(XQueryParser.XqVariableContext ctx) {
-        line(ctx.Variable().getText());
-        return this.query;
+        return line(ctx.Variable().getText());
     }
 
     /**
@@ -113,8 +117,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqConstant(XQueryParser.XqConstantContext ctx) {
-        line(ctx.StringConstant().getText());
-        return this.query;
+        return line(ctx.StringConstant().getText());
     }
 
     /**
@@ -125,10 +128,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext ctx) {
-        output("", false, false);
-        visit(ctx.ap());
-        inline("\n");
-        return this.query;
+        return line(visit(ctx.ap()));
     }
 
     /**
@@ -139,12 +139,13 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqParentheses(XQueryParser.XqParenthesesContext ctx) {
-        line("(");
-        ++level;
-        visit(ctx.xq());
-        --level;
-        line(")");
-        return this.query;
+        String q = "";
+        q += indent("(");
+        ++this.extraSpaces;
+        q += lTrim(visit(ctx.xq()));
+        --this.extraSpaces;
+        q = rTrim(q) + ")";
+        return q;
     }
 
     /**
@@ -155,11 +156,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqPair(XQueryParser.XqPairContext ctx) {
-        visit(ctx.xq(0));
-        rTrim();
-        output(",", true, true);
-        visit(ctx.xq(1));
-        return this.query;
+        String q = "";
+        q += visit(ctx.xq(0));
+        q = rTrim(q) + "," + System.lineSeparator();
+        q += visit(ctx.xq(1));
+        return q;
     }
 
     /**
@@ -170,14 +171,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqChildren(XQueryParser.XqChildrenContext ctx) {
-        visit(ctx.xq());
-        rTrim();
-        ++level;
-        output("/", true, false);
-        visit(ctx.rp());
-        inline("\n");
-        --level;
-        return this.query;
+        String q = "";
+        q += visit(ctx.xq());
+        q = rTrim(q) + "/";
+        q += visit(ctx.rp()) + System.lineSeparator();
+        return q;
     }
 
     /**
@@ -188,14 +186,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqAll(XQueryParser.XqAllContext ctx) {
-        visit(ctx.xq());
-        rTrim();
-        ++level;
-        output("//", true, false);
-        visit(ctx.rp());
-        inline("\n");
-        --level;
-        return this.query;
+        String q = "";
+        q += visit(ctx.xq());
+        q = rTrim(q) + "//";
+        q += visit(ctx.rp()) + System.lineSeparator();
+        return q;
     }
 
     /**
@@ -206,12 +201,13 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqTag(XQueryParser.XqTagContext ctx) {
-        line("<" + ctx.Identifier(0).getText() + ">{");
+        String q = "";
+        q += line("<" + ctx.Identifier(0).getText() + ">{");
         ++level;
-        visit(ctx.xq());
+        q += visit(ctx.xq());
         --level;
-        line("}</" + ctx.Identifier(0).getText() + ">");
-        return this.query;
+        q += line("}</" + ctx.Identifier(0).getText() + ">");
+        return q;
     }
 
     /**
@@ -222,28 +218,20 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqJoin(XQueryParser.XqJoinContext ctx) {
-        line("join");
-        line("(");
-        ++level;
-        visit(ctx.xq(0));
-        --level;
-        rTrim();
-        output(",", true, true);
-        ++level;
-        visit(ctx.xq(1));
-        --level;
-        rTrim();
-        output(",", true, true);
-        ++level;
-        visit(ctx.tagList(0));
-        --level;
-        rTrim();
-        output(",", true, true);
-        ++level;
-        visit(ctx.tagList(1));
-        --level;
-        line(")");
-        return this.query;
+        String q = "";
+        String join = "join(";
+        q += indent(join);
+        this.extraSpaces += join.length();
+        q += visit(ctx.xq(0)).trim();
+        q += "," + System.lineSeparator();
+        q += visit(ctx.xq(1));
+        q = rTrim(q) + "," + System.lineSeparator();
+        q += visit(ctx.tagList(0));
+        q = rTrim(q) + "," + System.lineSeparator();
+        q += visit(ctx.tagList(1));
+        q = rTrim(q) + ")" + System.lineSeparator();
+        this.extraSpaces -= join.length();
+        return q;
     }
 
     /**
@@ -254,11 +242,12 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqLet(XQueryParser.XqLetContext ctx) {
-        visit(ctx.letClause());
+        String q = "";
+        q += visit(ctx.letClause());
         ++level;
-        visit(ctx.xq());
+        q += visit(ctx.xq());
         --level;
-        return this.query;
+        return q;
     }
 
     /**
@@ -272,15 +261,16 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
-        visit(ctx.forClause());
+        String q = "";
+        q += visit(ctx.forClause());
         if (ctx.letClause() != null) {
-            visit(ctx.letClause());
+            q += visit(ctx.letClause());
         }
         if (ctx.whereClause() != null) {
-            visit(ctx.whereClause());
+            q += visit(ctx.whereClause());
         }
-        visit(ctx.returnClause());
-        return this.query;
+        q += visit(ctx.returnClause());
+        return q;
     }
 
     /*
@@ -296,20 +286,28 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitForClause(XQueryParser.ForClauseContext ctx) {
-        line("for");
-        ++level;
+        String q = "";
+        String f = "for ";
+        q += indent(f);
+        this.extraSpaces += f.length();
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            line(ctx.Variable(i).getText() + " in ");
-            ++level;
-            visit(ctx.xq(i));
-            if (i != (ctx.Variable().size() - 1)) {
-                rTrim();
-                output(",", true, true);
+            String s = ctx.Variable(i).getText() + " in ";
+            if (i != 0) {
+                q += indent(s);
             }
-            --level;
+            else {
+                q += s;
+            }
+            this.extraSpaces += s.length();
+            q += visit(ctx.xq(i)).trim();
+            if (i != (ctx.Variable().size() - 1)) {
+                q += ",";
+            }
+            q += System.lineSeparator();
+            this.extraSpaces -= s.length();
         }
-        --level;
-        return this.query;
+        this.extraSpaces -= f.length();
+        return q;
     }
 
     /**
@@ -321,20 +319,28 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitLetClause(XQueryParser.LetClauseContext ctx) {
-        line("let");
-        ++level;
+        String q = "";
+        String let = "let ";
+        q += indent(let);
+        this.extraSpaces += let.length();
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            line(ctx.Variable(i).getText() + " := ");
-            ++level;
-            visit(ctx.xq(i));
-            if (i != (ctx.Variable().size() - 1)) {
-                rTrim();
-                output(",", true, true);
+            String s = ctx.Variable(i).getText() + " := ";
+            if (i != 0) {
+                q += indent(s);
             }
-            --level;
+            else {
+                q += s;
+            }
+            this.extraSpaces += s.length();
+            q += visit(ctx.xq(i)).trim();
+            if (i != (ctx.Variable().size() - 1)) {
+                q += ",";
+            }
+            q += System.lineSeparator();
+            this.extraSpaces -= s.length();
         }
-        --level;
-        return this.query;
+        this.extraSpaces -= let.length();
+        return q;
     }
 
     /**
@@ -346,11 +352,13 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitWhereClause(XQueryParser.WhereClauseContext ctx) {
-        line("where");
-        ++level;
-        visit(ctx.cond());
-        --level;
-        return this.query;
+        String q = "";
+        String where = "where ";
+        q += indent(where);
+        this.extraSpaces += where.length();
+        q += lTrim(visit(ctx.cond()));
+        this.extraSpaces -= where.length();
+        return q;
     }
 
     /**
@@ -362,11 +370,13 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
-        line("return");
-        ++level;
-        visit(ctx.xq());
-        --level;
-        return this.query;
+        String q = "";
+        String r = "return ";
+        q += indent(r);
+        this.extraSpaces += r.length();
+        q += lTrim(visit(ctx.xq()));
+        this.extraSpaces -= r.length();
+        return q;
     }
 
     /*
@@ -381,16 +391,16 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitTagList(XQueryParser.TagListContext ctx) {
-        String tagList = "[";
+        String q = "";
+        q += "[";
         for (int i = 0; i < ctx.Identifier().size(); ++i) {
-            tagList += ctx.Identifier(i).getText();
+            q += ctx.Identifier(i).getText();
             if (i != (ctx.Identifier().size() - 1)) {
-                tagList += ", ";
+                q += ", ";
             }
         }
-        tagList += "]";
-        line(tagList);
-        return this.query;
+        q += "]";
+        return line(q);
     }
 
     /*
@@ -405,10 +415,16 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondValueEquality(XQueryParser.CondValueEqualityContext ctx) {
-        visit(ctx.xq(0));
-        line("=");
-        visit(ctx.xq(1));
-        return this.query;
+        String q = "";
+        String eq = "= ";
+        this.extraSpaces += eq.length();
+        q += visit(ctx.xq(0));
+        this.extraSpaces -= eq.length();
+        q += indent(eq);
+        this.extraSpaces += eq.length();
+        q += lTrim(visit(ctx.xq(1)));
+        this.extraSpaces -= eq.length();
+        return q;
     }
 
     /**
@@ -419,10 +435,16 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext ctx) {
-        visit(ctx.xq(0));
-        line("==");
-        visit(ctx.xq(1));
-        return this.query;
+        String q = "";
+        String is = "== ";
+        this.extraSpaces += is.length();
+        q += visit(ctx.xq(0));
+        this.extraSpaces -= is.length();
+        q += indent(is);
+        this.extraSpaces += is.length();
+        q += lTrim(visit(ctx.xq(1)));
+        this.extraSpaces -= is.length();
+        return q;
     }
 
     /**
@@ -433,13 +455,14 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondEmpty(XQueryParser.CondEmptyContext ctx) {
-        line("empty");
-        line("(");
-        ++level;
-        visit(ctx.xq());
-        --level;
-        line(")");
-        return this.query;
+        String q = "";
+        String empty = "empty(";
+        q += indent(empty);
+        this.extraSpaces += empty.length();
+        q += visit(ctx.xq()).trim();
+        q += ")" + System.lineSeparator();
+        this.extraSpaces -= empty.length();
+        return q;
     }
 
     /**
@@ -450,24 +473,33 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondSome(XQueryParser.CondSomeContext ctx) {
-        line("some");
-        ++level;
+        String q = "";
+        String some = "some ";
+        q += indent(some);
+        this.extraSpaces += some.length();
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            line(ctx.Variable(i).getText() + " in ");
-            ++level;
-            visit(ctx.xq(i));
-            if (i != (ctx.Variable().size() - 1)) {
-                rTrim();
-                output(",", true, true);
+            String s = ctx.Variable(i).getText() + " in ";
+            if (i != 0) {
+                q += indent(s);
             }
-            --level;
+            else {
+                q += s;
+            }
+            this.extraSpaces += s.length();
+            q += visit(ctx.xq(i)).trim();
+            if (i != (ctx.Variable().size() - 1)) {
+                q += ",";
+            }
+            q += System.lineSeparator();
+            this.extraSpaces -= s.length();
         }
-        --level;
-        line("satisfies");
-        ++level;
-        visit(ctx.cond());
-        --level;
-        return this.query;
+        this.extraSpaces -= some.length();
+        String satisfies = "satisfies ";
+        q += indent(satisfies);
+        this.extraSpaces += satisfies.length();
+        q += lTrim(visit(ctx.cond()));
+        this.extraSpaces -= satisfies.length();
+        return q;
     }
 
     /**
@@ -478,12 +510,13 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondParentheses(XQueryParser.CondParenthesesContext ctx) {
-        line("(");
-        ++level;
-        visit(ctx.cond());
-        --level;
-        line(")");
-        return this.query;
+        String q = "";
+        q += indent("(");
+        ++this.extraSpaces;
+        q += lTrim(visit(ctx.cond()));
+        --this.extraSpaces;
+        q = rTrim(q) + ")";
+        return q;
     }
 
     /**
@@ -494,10 +527,16 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondAnd(XQueryParser.CondAndContext ctx) {
-        visit(ctx.cond(0));
-        line("or");
-        visit(ctx.cond(1));
-        return this.query;
+        String q = "";
+        String and = "and ";
+        this.extraSpaces += and.length();
+        q += visit(ctx.cond(0));
+        this.extraSpaces -= and.length();
+        q += indent(and);
+        this.extraSpaces += and.length();
+        q += lTrim(visit(ctx.cond(1)));
+        this.extraSpaces -= and.length();
+        return q;
     }
 
     /**
@@ -508,10 +547,16 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondOr(XQueryParser.CondOrContext ctx) {
-        visit(ctx.cond(0));
-        line("or");
-        visit(ctx.cond(1));
-        return this.query;
+        String q = "";
+        String or = "or ";
+        this.extraSpaces += or.length();
+        q += visit(ctx.cond(0));
+        this.extraSpaces -= or.length();
+        q += indent(or);
+        this.extraSpaces += or.length();
+        q += lTrim(visit(ctx.cond(1)));
+        this.extraSpaces -= or.length();
+        return q;
     }
 
     /**
@@ -522,9 +567,13 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitCondNot(XQueryParser.CondNotContext ctx) {
-        line("not");
-        visit(ctx.cond());
-        return this.query;
+        String q = "";
+        String not = "not ";
+        q += indent(not);
+        this.extraSpaces += not.length();
+        q += lTrim(visit(ctx.cond()));
+        this.extraSpaces -= not.length();
+        return q;
     }
 
     /*
@@ -539,10 +588,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitApChildren(XQueryParser.ApChildrenContext ctx) {
-        visit(ctx.doc());
-        inline("/");
-        visit(ctx.rp());
-        return this.query;
+        return visit(ctx.doc()) + "/" + visit(ctx.rp());
     }
 
     /**
@@ -553,10 +599,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitApAll(XQueryParser.ApAllContext ctx) {
-        visit(ctx.doc());
-        inline("//");
-        visit(ctx.rp());
-        return this.query;
+        return visit(ctx.doc()) + "//" + visit(ctx.rp());
     }
 
     /**
@@ -567,8 +610,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitApDoc(XQueryParser.ApDocContext ctx) {
-        inline("doc(" + ctx.StringConstant().getText() + ")");
-        return this.query;
+        return "doc(" + ctx.StringConstant().getText() + ")";
     }
 
     /*
@@ -583,8 +625,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpTag(XQueryParser.RpTagContext ctx) {
-        inline(ctx.Identifier().getText());
-        return this.query;
+        return ctx.Identifier().getText();
     }
 
     /**
@@ -595,8 +636,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpWildcard(XQueryParser.RpWildcardContext ctx) {
-        inline("*");
-        return this.query;
+        return "*";
     }
 
     /**
@@ -607,8 +647,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpCurrent(XQueryParser.RpCurrentContext ctx) {
-        inline(".");
-        return this.query;
+        return ".";
     }
 
     /**
@@ -619,8 +658,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpParent(XQueryParser.RpParentContext ctx) {
-        inline("..");
-        return this.query;
+        return "..";
     }
 
     /**
@@ -631,8 +669,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpText(XQueryParser.RpTextContext ctx) {
-        inline("text()");
-        return this.query;
+        return "text()";
     }
 
     /**
@@ -643,8 +680,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpAttribute(XQueryParser.RpAttributeContext ctx) {
-        inline("@" + ctx.Identifier().getText());
-        return this.query;
+        return "@" + ctx.Identifier().getText();
     }
 
     /**
@@ -655,10 +691,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpParentheses(XQueryParser.RpParenthesesContext ctx) {
-        inline("(");
-        visit(ctx.rp());
-        inline(")");
-        return this.query;
+        return "(" + visit(ctx.rp()) + ")";
     }
 
     /**
@@ -669,10 +702,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpChildren(XQueryParser.RpChildrenContext ctx) {
-        visit(ctx.rp(0));
-        inline("/");
-        visit(ctx.rp(1));
-        return this.query;
+        return visit(ctx.rp(0)) + "/" + visit(ctx.rp(1));
     }
 
     /**
@@ -683,10 +713,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpAll(XQueryParser.RpAllContext ctx) {
-        visit(ctx.rp(0));
-        inline("//");
-        visit(ctx.rp(1));
-        return this.query;
+        return visit(ctx.rp(0)) + "//" + visit(ctx.rp(1));
     }
 
     /**
@@ -697,11 +724,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpFilter(XQueryParser.RpFilterContext ctx) {
-        visit(ctx.rp());
-        inline("[");
-        visit(ctx.f());
-        inline("]");
-        return this.query;
+        return visit(ctx.rp()) + "[" + visit(ctx.f()) + "]";
     }
 
     /**
@@ -712,12 +735,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpPair(XQueryParser.RpPairContext ctx) {
-        inline("(");
-        visit(ctx.rp(0));
-        inline(", ");
-        visit(ctx.rp(1));
-        inline(")");
-        return this.query;
+        return "(" + visit(ctx.rp(0)) + ", " + visit(ctx.rp(1)) + ")";
     }
 
     /*
@@ -732,8 +750,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFRelativePath(XQueryParser.FRelativePathContext ctx) {
-        visit(ctx.rp());
-        return this.query;
+        return visit(ctx.rp());
     }
 
     /**
@@ -744,10 +761,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFValueEquality(XQueryParser.FValueEqualityContext ctx) {
-        visit(ctx.rp(0));
-        inline(" = ");
-        visit(ctx.rp(1));
-        return this.query;
+        return visit(ctx.rp(0)) + " = " + visit(ctx.rp(1));
     }
 
     /**
@@ -758,10 +772,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFIdentityEquality(XQueryParser.FIdentityEqualityContext ctx) {
-        visit(ctx.rp(0));
-        inline(" == ");
-        visit(ctx.rp(1));
-        return this.query;
+        return visit(ctx.rp(0)) + " == " + visit(ctx.rp(1));
     }
 
     /**
@@ -772,10 +783,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFParentheses(XQueryParser.FParenthesesContext ctx) {
-        inline("(");
-        visit(ctx.f());
-        inline(")");
-        return this.query;
+        return "(" + visit(ctx.f()) + ")";
     }
 
     /**
@@ -786,10 +794,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFAnd(XQueryParser.FAndContext ctx) {
-        visit(ctx.f(0));
-        inline(" and ");
-        visit(ctx.f(1));
-        return this.query;
+        return visit(ctx.f(0)) + " and " + visit(ctx.f(1));
     }
 
     /**
@@ -800,10 +805,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFOr(XQueryParser.FOrContext ctx) {
-        visit(ctx.f(0));
-        inline(" or ");
-        visit(ctx.f(1));
-        return this.query;
+        return visit(ctx.f(0)) + " or " + visit(ctx.f(1));
     }
 
     /**
@@ -814,8 +816,6 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitFNot(XQueryParser.FNotContext ctx) {
-        inline(" not ");
-        visit(ctx.f());
-        return this.query;
+        return "not " + visit(ctx.f());
     }
 }
