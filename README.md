@@ -36,3 +36,19 @@ This will run all tests, compile and place the fat jars into the folder ```demo/
   ./xquery.sh
   ```
   The resulting document will be stored in ```xquery-output.xml``` and displayed in the terminal
+
+## Milestone \#3
+
+* Run optimized XQuery:
+  ```bash
+  cd demo/
+  ```
+  Save the XQuery query in ```optimized-xquery-input.txt```
+
+  To run the XQuery query, execute
+  ```bash
+  ./optimized-xquery.sh
+  ```
+  The optimized rewritten query will be stored in ```optimized-xquery-rewritten.txt```
+  
+  The resulting document will be stored in ```optimized-xquery-output.xml``` and displayed in the terminal

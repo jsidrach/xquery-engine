@@ -117,8 +117,14 @@ abstract class XQueryTests {
                 String input = resourcesPrefix + "-input-" + i;
                 String output = resourcesPrefix + "-output-" + i;
                 LinkedList<Node> nodes = IO.XQueryQuery(getResource(input + ".txt"));
+                // Compare using standard engine
                 if (!nodesEqualToResource(nodes, output + ".xml")) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
+                }
+                // Compare using optimized engine
+                nodes = IO.XQueryQuery(IO.XQueryOptimizedQuery(getResource(input + ".txt")));
+                if (!nodesEqualToResource(nodes, output + ".xml")) {
+                    fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

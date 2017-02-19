@@ -5,6 +5,7 @@ import edu.ucsd.cse232b.jsidrach.antlr.XPathParser;
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryLexer;
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 import edu.ucsd.cse232b.jsidrach.xpath.XPathVisitor;
+import edu.ucsd.cse232b.jsidrach.xquery.XQueryOptimizer;
 import edu.ucsd.cse232b.jsidrach.xquery.XQueryVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -158,5 +159,43 @@ public class IO {
      */
     public static LinkedList<Node> XQueryQuery(String query) throws Exception {
         return XQueryQuery(new ANTLRInputStream(query));
+    }
+
+    /**
+     * Executes a XQuery optimized query given an ANTLRInputStream
+     *
+     * @param ANTLRInput Input query
+     * @return Rewritten query
+     */
+    private static String XQueryOptimizedQuery(ANTLRInputStream ANTLRInput) throws Exception {
+        XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
+        CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
+        XQueryParser xQueryParser = new XQueryParser(tokens);
+        // Parse using xq (XQuery) as root rule
+        ParseTree xQueryTree = xQueryParser.xq();
+        // Optimize query
+        XQueryOptimizer xQueryVisitor = new XQueryOptimizer();
+        return xQueryVisitor.visit(xQueryTree);
+    }
+
+    /**
+     * Executes a XQuery optimized query given a file containing it
+     *
+     * @param file File containing the XQuery query
+     * @return Rewritten query
+     * @throws Exception Exception if file is not found
+     */
+    public static String XQueryOptimizedQuery(FileInputStream file) throws Exception {
+        return XQueryOptimizedQuery(new ANTLRInputStream(file));
+    }
+
+    /**
+     * Executes a XQuery optimized query
+     *
+     * @param query XQuery query string
+     * @return Rewritten query
+     */
+    public static String XQueryOptimizedQuery(String query) throws Exception {
+        return XQueryOptimizedQuery(new ANTLRInputStream(query));
     }
 }

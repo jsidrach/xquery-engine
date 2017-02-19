@@ -356,7 +356,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      * </pre>
      *
      * @param ctx Current parse tree context
-     * @return n⟵ull
+     * @return null
      */
     @Override
     public LinkedList<Node> visitLetClause(XQueryParser.LetClauseContext ctx) {

@@ -91,6 +91,17 @@ task xQueryJar(type: Jar) {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
+task optimizedXQueryJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': course + ' - Optimized XQuery Engine - ' + author,
+                'Implementation-Version': version,
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.xquery.XQueryOptimizedRunner'
+    }
+    archiveName = 'optimized-xquery.jar'
+    destinationDir = file('demo')
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
 
 //
 // Documentation
@@ -110,13 +121,12 @@ task docs(type: Javadoc) {
 
 // Show output
 test.testLogging.showStandardStreams = true
-test.testLogging.exceptionFormat = 'full'
 
 //
 // Automated actions after build
 //
 
-build.finalizedBy(docs, xPathJar, xQueryJar)
+build.finalizedBy(docs, xPathJar, xQueryJar, optimizedXQueryJar)
 
 //
 // ANTLR 4
