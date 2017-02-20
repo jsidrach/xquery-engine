@@ -14,7 +14,7 @@ public class XQueryIntegrationTests extends XQueryTests {
     public void IntegrationTests() {
         String resourcesDir = "integration-tests/it";
         int numTestCases = 5;
-        // TODO: Add test cases from PDF, think of new test cases
+        // TODO: Add test cases from PDF, think of new test cases -> 6, 7, 8, 9, 10, 11, 12
         runTestSuite(resourcesDir, numTestCases);
     }
 
