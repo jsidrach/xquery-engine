@@ -122,9 +122,14 @@ abstract class XQueryTests {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }
                 // Compare using optimized engine
-                nodes = IO.XQueryQuery(IO.XQueryOptimizedQuery(getResource(input + ".txt")));
+                String optimizedQuery = IO.XQueryOptimizedQuery(getResource(input + ".txt"));
+                nodes = IO.XQueryQuery(optimizedQuery);
                 if (!nodesEqualToResource(nodes, output + ".xml")) {
                     fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
+                }
+                // Check that the query optimizer is idempotent
+                if (!optimizedQuery.equals(IO.XQueryOptimizedQuery(optimizedQuery))) {
+                    fail("Failed (optimized, idempotent) " + resourcesPrefix + "-" + i);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

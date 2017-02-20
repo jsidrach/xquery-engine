@@ -294,8 +294,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
             String s = ctx.Variable(i).getText() + " in ";
             if (i != 0) {
                 q += indent(s);
-            }
-            else {
+            } else {
                 q += s;
             }
             this.extraSpaces += s.length();
@@ -327,8 +326,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
             String s = ctx.Variable(i).getText() + " := ";
             if (i != 0) {
                 q += indent(s);
-            }
-            else {
+            } else {
                 q += s;
             }
             this.extraSpaces += s.length();
@@ -481,8 +479,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
             String s = ctx.Variable(i).getText() + " in ";
             if (i != 0) {
                 q += indent(s);
-            }
-            else {
+            } else {
                 q += s;
             }
             this.extraSpaces += s.length();
@@ -735,7 +732,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitRpPair(XQueryParser.RpPairContext ctx) {
-        return "(" + visit(ctx.rp(0)) + ", " + visit(ctx.rp(1)) + ")";
+        return visit(ctx.rp(0)) + ", " + visit(ctx.rp(1));
     }
 
     /*
