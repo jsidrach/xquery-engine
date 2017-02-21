@@ -5,6 +5,7 @@ import edu.ucsd.cse232b.jsidrach.antlr.XPathParser;
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryLexer;
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 import edu.ucsd.cse232b.jsidrach.xpath.XPathVisitor;
+import edu.ucsd.cse232b.jsidrach.xquery.XQueryFormatter;
 import edu.ucsd.cse232b.jsidrach.xquery.XQueryOptimizer;
 import edu.ucsd.cse232b.jsidrach.xquery.XQueryVisitor;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -162,7 +163,7 @@ public class IO {
     }
 
     /**
-     * Executes a XQuery optimized query given an ANTLRInputStream
+     * Optimizes a XQuery query given an ANTLRInputStream
      *
      * @param ANTLRInput Input query
      * @return Rewritten query
@@ -175,11 +176,11 @@ public class IO {
         ParseTree xQueryTree = xQueryParser.xq();
         // Optimize query
         XQueryOptimizer xQueryVisitor = new XQueryOptimizer();
-        return xQueryVisitor.visit(xQueryTree);
+        return XQueryFormattedQuery(xQueryVisitor.visit(xQueryTree));
     }
 
     /**
-     * Executes a XQuery optimized query given a file containing it
+     * Optimizes a XQuery query given a file containing it
      *
      * @param file File containing the XQuery query
      * @return Rewritten query
@@ -190,12 +191,50 @@ public class IO {
     }
 
     /**
-     * Executes a XQuery optimized query
+     * Optimizes a XQuery query
      *
      * @param query XQuery query string
      * @return Rewritten query
      */
     public static String XQueryOptimizedQuery(String query) throws Exception {
         return XQueryOptimizedQuery(new ANTLRInputStream(query));
+    }
+
+    /**
+     * Formats a XQuery query given an ANTLRInputStream
+     *
+     * @param ANTLRInput Input query
+     * @return Formatted query
+     */
+    private static String XQueryFormattedQuery(ANTLRInputStream ANTLRInput) throws Exception {
+        XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
+        CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
+        XQueryParser xQueryParser = new XQueryParser(tokens);
+        // Parse using xq (XQuery) as root rule
+        ParseTree xQueryTree = xQueryParser.xq();
+        // Format query
+        XQueryFormatter xQueryVisitor = new XQueryFormatter();
+        return xQueryVisitor.visit(xQueryTree);
+    }
+
+    /**
+     * Formats a XQuery query given a file containing it
+     *
+     * @param file File containing the XQuery query
+     * @return Formatted query
+     * @throws Exception Exception if file is not found
+     */
+    public static String XQueryFormattedQuery(FileInputStream file) throws Exception {
+        return XQueryFormattedQuery(new ANTLRInputStream(file));
+    }
+
+    /**
+     * Formats a XQuery query
+     *
+     * @param query XQuery query string
+     * @return Formatted query
+     */
+    public static String XQueryFormattedQuery(String query) throws Exception {
+        return XQueryFormattedQuery(new ANTLRInputStream(query));
     }
 }

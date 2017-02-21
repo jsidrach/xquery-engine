@@ -1,4 +1,4 @@
-package edu.ucsd.cse232b.jsidrach.xquery;
+package edu.ucsd.cse232b.jsidrach.apps;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 
@@ -19,9 +19,8 @@ public class XQueryOptimizedRunner {
             System.out.println("java -jar <jar_file> <xquery_query>");
             return;
         }
-
         // Print the result of executing the xquery optimized query into stdout,
-        // and the intermediate rewritten query into stderr
+        // and the formatted intermediate rewritten query into stderr
         try {
             FileInputStream input = new FileInputStream(args[0]);
             String rewrittenQuery = IO.XQueryOptimizedQuery(input);

@@ -73,10 +73,10 @@ task xPathJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': course + ' - XPath Processor - ' + author,
                    'Implementation-Version': version,
-                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.xpath.XPathRunner'
+                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XPathRunner'
     }
     archiveName = 'xpath.jar'
-    destinationDir = file('demo')
+    destinationDir = file('demo/xpath')
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -84,21 +84,32 @@ task xQueryJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': course + ' - XQuery Engine - ' + author,
                 'Implementation-Version': version,
-                'Main-Class': 'edu.ucsd.cse232b.jsidrach.xquery.XQueryRunner'
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryRunner'
     }
     archiveName = 'xquery.jar'
-    destinationDir = file('demo')
+    destinationDir = file('demo/xquery')
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
-task optimizedXQueryJar(type: Jar) {
+task xQueryOptimized(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': course + ' - Optimized XQuery Engine - ' + author,
+        attributes 'Implementation-Title': course + ' - XQuery Optimized Engine - ' + author,
                 'Implementation-Version': version,
-                'Main-Class': 'edu.ucsd.cse232b.jsidrach.xquery.XQueryOptimizedRunner'
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryOptimizedRunner'
     }
     archiveName = 'optimized-xquery.jar'
-    destinationDir = file('demo')
+    destinationDir = file('demo/optimized-xquery')
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
+task xQueryFormatter(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': course + ' - XQuery Formatter - ' + author,
+                'Implementation-Version': version,
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryFormatterRunner'
+    }
+    archiveName = 'formatter.jar'
+    destinationDir = file('demo/formatter')
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
     with jar
 }
@@ -119,14 +130,26 @@ task docs(type: Javadoc) {
 // Tests
 //
 
-// Show output
-test.testLogging.showStandardStreams = true
+test {
+    // Show output
+    testLogging.showStandardStreams = true
+    testLogging.exceptionFormat = 'full'
+    // Show test progress
+    afterTest { descriptor, result ->
+        def className = descriptor.getClassName().substring(descriptor.getClassName().lastIndexOf('.') + 1)
+        if (result.resultType == TestResult.ResultType.FAILURE) {
+            logger.lifecycle("[ERROR] + " + className + "." + descriptor.getName())
+        } else {
+            logger.lifecycle("[OK] " + className + "." + descriptor.getName())
+        }
+    }
+}
 
 //
 // Automated actions after build
 //
 
-build.finalizedBy(docs, xPathJar, xQueryJar, optimizedXQueryJar)
+build.finalizedBy(docs, xPathJar, xQueryJar, xQueryOptimized, xQueryFormatter)
 
 //
 // ANTLR 4

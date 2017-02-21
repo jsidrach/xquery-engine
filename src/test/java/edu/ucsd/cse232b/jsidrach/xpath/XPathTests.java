@@ -114,10 +114,10 @@ abstract class XPathTests {
     void runTestSuite(String resourcesPrefix, int numTests) {
         for (int i = 1; i <= numTests; ++i) {
             try {
-                String input = resourcesPrefix + "-input-" + i;
-                String output = resourcesPrefix + "-output-" + i;
-                LinkedList<Node> nodes = IO.XPathQuery(getResource(input + ".txt"));
-                if (!nodesEqualToResource(nodes, output + ".xml")) {
+                String input = resourcesPrefix + "-input-" + i + ".txt";
+                String output = resourcesPrefix + "-output-" + i + ".xml";
+                LinkedList<Node> nodes = IO.XPathQuery(getResource(input));
+                if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }
             } catch (Exception e) {

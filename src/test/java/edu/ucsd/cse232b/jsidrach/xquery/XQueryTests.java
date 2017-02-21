@@ -98,6 +98,10 @@ abstract class XQueryTests {
     Boolean nodesEqualToResource(List<Node> nodes, String name) throws Exception {
         String s1 = IO.NodesToString(nodes, false).trim();
         String s2 = loadResourceAsString(name);
+        if (!s1.equals(s2)) {
+            System.out.println(s1);
+            System.out.println(s2);
+        }
         return s1.equals(s2);
     }
 
@@ -114,20 +118,30 @@ abstract class XQueryTests {
     void runTestSuite(String resourcesPrefix, int numTests) {
         for (int i = 1; i <= numTests; ++i) {
             try {
-                String input = resourcesPrefix + "-input-" + i;
-                String output = resourcesPrefix + "-output-" + i;
-                LinkedList<Node> nodes = IO.XQueryQuery(getResource(input + ".txt"));
+                String input = resourcesPrefix + "-input-" + i + ".txt";
+                String output = resourcesPrefix + "-output-" + i + ".xml";
+                LinkedList<Node> nodes = IO.XQueryQuery(getResource(input));
                 // Compare using standard engine
-                if (!nodesEqualToResource(nodes, output + ".xml")) {
+                if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }
+                // Compare formatted query
+                String formattedQuery = IO.XQueryFormattedQuery(getResource(input));
+                nodes = IO.XQueryQuery(formattedQuery);
+                if (!nodesEqualToResource(nodes, output)) {
+                    fail("Failed (formatted, assertion) " + resourcesPrefix + "-" + i);
+                }
+                // Check that the query formatter is idempotent
+                if (!formattedQuery.equals(IO.XQueryFormattedQuery(formattedQuery))) {
+                    fail("Failed (formatted, idempotent) " + resourcesPrefix + "-" + i);
+                }
                 // Compare using optimized engine
-                String optimizedQuery = IO.XQueryOptimizedQuery(getResource(input + ".txt"));
+                String optimizedQuery = IO.XQueryOptimizedQuery(getResource(input));
                 nodes = IO.XQueryQuery(optimizedQuery);
-                if (!nodesEqualToResource(nodes, output + ".xml")) {
+                if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
                 }
-                // Check that the optimized query is idempotent
+                // Check that the query optimizer is idempotent
                 if (!optimizedQuery.equals(IO.XQueryOptimizedQuery(optimizedQuery))) {
                     fail("Failed (optimized, idempotent) " + resourcesPrefix + "-" + i);
                 }

@@ -1,17 +1,17 @@
-package edu.ucsd.cse232b.jsidrach.xquery;
+package edu.ucsd.cse232b.jsidrach.apps;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 
 import java.io.FileInputStream;
 
 /**
- * XQueryRunner - Command line utility for XQuery
+ * XQueryFormatterRunner - Command line utility for XQueryFormatter
  * <p>
  * The executable takes one argument only,
  * the name of the file containing the XQuery query
  * </p>
  */
-public class XQueryRunner {
+public class XQueryFormatterRunner {
     public static void main(String[] args) {
         // Check number of arguments
         if (args.length != 1) {
@@ -19,11 +19,11 @@ public class XQueryRunner {
             System.out.println("java -jar <jar_file> <xquery_query>");
             return;
         }
-
-        // Print the result of executing the xquery query
+        // Print the formatted xquery query
         try {
             FileInputStream input = new FileInputStream(args[0]);
-            System.out.print(IO.NodesToString(IO.XQueryQuery(input), false));
+            String formattedQuery = IO.XQueryFormattedQuery(input);
+            System.out.print(formattedQuery);
         } catch (Exception e) {
             e.printStackTrace();
         }

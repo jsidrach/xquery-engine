@@ -11,21 +11,6 @@ import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor<String> {
 
     /**
-     * Current level of indentation
-     */
-    private int level;
-
-    /**
-     * Spaces per level
-     */
-    private int spacesPerLevel;
-
-    /**
-     * Extra spaces
-     */
-    private int extraSpaces = 0;
-
-    /**
      * Flag to check if the current FLWR expression can be rewritten
      */
     private boolean rewriteFLWR;
@@ -34,64 +19,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * Public constructor - Initializes the variables
      */
     public XQueryOptimizer() {
-        this.level = 0;
-        this.spacesPerLevel = 2;
-        this.extraSpaces = 0;
         this.rewriteFLWR = false;
-    }
-
-    /**
-     * Indents a string at the current level
-     *
-     * @param s String to be indented
-     * @return String Indented string
-     */
-    private String indent(String s) {
-        String q = "";
-        int spaces = this.spacesPerLevel * this.level + this.extraSpaces;
-        for (int i = 0; i < spaces; ++i) {
-            q += " ";
-        }
-        q += s;
-        return q;
-    }
-
-    /**
-     * Creates a new line at the current level
-     *
-     * @param s String with the contents of the line
-     * @return Indented string, with a new line at the end
-     */
-    private String line(String s) {
-        return indent(s + System.lineSeparator());
-    }
-
-    /**
-     * Trims the left whitespace of the string
-     *
-     * @param s String to be trimmed from the left
-     * @return String String with the left whitespace removed
-     */
-    private String lTrim(String s) {
-        int i = 0;
-        while ((i < s.length()) && (Character.isWhitespace(s.charAt(i)))) {
-            ++i;
-        }
-        return s.substring(i, s.length());
-    }
-
-    /**
-     * Trims the right whitespace of the string
-     *
-     * @param s String to be trimmed from the right
-     * @return String String with the right whitespace removed
-     */
-    private String rTrim(String s) {
-        int i = s.length() - 1;
-        while ((i >= 0) && (Character.isWhitespace(s.charAt(i)))) {
-            --i;
-        }
-        return s.substring(0, i + 1);
     }
 
     /*
@@ -102,152 +30,113 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (variable)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqVariable(XQueryParser.XqVariableContext ctx) {
-        return line(ctx.Variable().getText());
+        return ctx.Variable().getText();
     }
 
     /**
      * XQuery (constant)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqConstant(XQueryParser.XqConstantContext ctx) {
-        return line(ctx.StringConstant().getText());
+        return ctx.StringConstant().getText();
     }
 
     /**
      * XQuery (absolute path)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext ctx) {
-        return line(visit(ctx.ap()));
+        return visit(ctx.ap());
     }
 
     /**
      * XQuery (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqParentheses(XQueryParser.XqParenthesesContext ctx) {
-        String q = "";
-        q += indent("(");
-        ++this.extraSpaces;
-        q += lTrim(visit(ctx.xq()));
-        --this.extraSpaces;
-        q = rTrim(q) + ")";
-        return q;
+        return "(" + visit(ctx.xq()) + ")";
     }
 
     /**
      * XQuery (pair)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqPair(XQueryParser.XqPairContext ctx) {
-        String q = "";
-        q += visit(ctx.xq(0));
-        q = rTrim(q) + "," + System.lineSeparator();
-        q += visit(ctx.xq(1));
-        return q;
+        return visit(ctx.xq(0)) + "," + visit(ctx.xq(1));
     }
 
     /**
      * XQuery (children)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqChildren(XQueryParser.XqChildrenContext ctx) {
-        String q = "";
-        q += visit(ctx.xq());
-        q = rTrim(q) + "/";
-        q += visit(ctx.rp()) + System.lineSeparator();
-        return q;
+        return visit(ctx.xq()) + "/" + visit(ctx.rp());
     }
 
     /**
      * XQuery (all)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqAll(XQueryParser.XqAllContext ctx) {
-        String q = "";
-        q += visit(ctx.xq());
-        q = rTrim(q) + "//";
-        q += visit(ctx.rp()) + System.lineSeparator();
-        return q;
+        return visit(ctx.xq()) + "//" + visit(ctx.rp());
     }
 
     /**
      * XQuery (tag)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqTag(XQueryParser.XqTagContext ctx) {
-        String q = "";
-        q += line("<" + ctx.Identifier(0).getText() + ">{");
-        ++level;
-        q += visit(ctx.xq());
-        --level;
-        q += line("}</" + ctx.Identifier(0).getText() + ">");
-        return q;
+        return "<" + ctx.Identifier(0).getText() + ">{" + visit(ctx.xq()) + "}</" + ctx.Identifier(0).getText() + ">";
     }
 
     /**
      * XQuery (join)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqJoin(XQueryParser.XqJoinContext ctx) {
-        String q = "";
-        String join = "join(";
-        q += indent(join);
-        this.extraSpaces += join.length();
-        q += visit(ctx.xq(0)).trim();
-        q += "," + System.lineSeparator();
-        q += visit(ctx.xq(1));
-        q = rTrim(q) + "," + System.lineSeparator();
-        q += visit(ctx.tagList(0));
-        q = rTrim(q) + "," + System.lineSeparator();
-        q += visit(ctx.tagList(1));
-        q = rTrim(q) + ")" + System.lineSeparator();
-        this.extraSpaces -= join.length();
-        return q;
+        return " join("
+                + visit(ctx.xq(0)) + "," + visit(ctx.xq(1)) + ","
+                + visit(ctx.tagList(0)) + "," + visit(ctx.tagList(1))
+                + ")";
     }
 
     /**
      * XQuery (let)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqLet(XQueryParser.XqLetContext ctx) {
-        String q = "";
-        q += visit(ctx.letClause());
-        ++level;
-        q += visit(ctx.xq());
-        --level;
-        return q;
+        return visit(ctx.letClause()) + " " + visit(ctx.xq());
     }
 
     /**
@@ -257,7 +146,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * TODO: Create new string if it can be optimized
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
@@ -282,30 +171,18 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitForClause(XQueryParser.ForClauseContext ctx) {
         String q = "";
-        String f = "for ";
-        q += indent(f);
-        this.extraSpaces += f.length();
+        q += " for ";
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            String s = ctx.Variable(i).getText() + " in ";
-            if (i != 0) {
-                q += indent(s);
-            } else {
-                q += s;
-            }
-            this.extraSpaces += s.length();
-            q += visit(ctx.xq(i)).trim();
+            q += ctx.Variable(i).getText() + " in " + visit(ctx.xq(i));
             if (i != (ctx.Variable().size() - 1)) {
                 q += ",";
             }
-            q += System.lineSeparator();
-            this.extraSpaces -= s.length();
         }
-        this.extraSpaces -= f.length();
         return q;
     }
 
@@ -314,30 +191,18 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitLetClause(XQueryParser.LetClauseContext ctx) {
         String q = "";
-        String let = "let ";
-        q += indent(let);
-        this.extraSpaces += let.length();
+        q += " let ";
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            String s = ctx.Variable(i).getText() + " := ";
-            if (i != 0) {
-                q += indent(s);
-            } else {
-                q += s;
-            }
-            this.extraSpaces += s.length();
-            q += visit(ctx.xq(i)).trim();
+            q += ctx.Variable(i).getText() + ":=" + visit(ctx.xq(i));
             if (i != (ctx.Variable().size() - 1)) {
                 q += ",";
             }
-            q += System.lineSeparator();
-            this.extraSpaces -= s.length();
         }
-        this.extraSpaces -= let.length();
         return q;
     }
 
@@ -346,17 +211,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitWhereClause(XQueryParser.WhereClauseContext ctx) {
-        String q = "";
-        String where = "where ";
-        q += indent(where);
-        this.extraSpaces += where.length();
-        q += lTrim(visit(ctx.cond()));
-        this.extraSpaces -= where.length();
-        return q;
+        return " where " + visit(ctx.cond());
     }
 
     /**
@@ -364,17 +223,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
-        String q = "";
-        String r = "return ";
-        q += indent(r);
-        this.extraSpaces += r.length();
-        q += lTrim(visit(ctx.xq()));
-        this.extraSpaces -= r.length();
-        return q;
+        return " return " + visit(ctx.xq());
     }
 
     /*
@@ -385,7 +238,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Join (tagList)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitTagList(XQueryParser.TagListContext ctx) {
@@ -394,11 +247,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
         for (int i = 0; i < ctx.Identifier().size(); ++i) {
             q += ctx.Identifier(i).getText();
             if (i != (ctx.Identifier().size() - 1)) {
-                q += ", ";
+                q += ",";
             }
         }
         q += "]";
-        return line(q);
+        return q;
     }
 
     /*
@@ -409,93 +262,52 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (value equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondValueEquality(XQueryParser.CondValueEqualityContext ctx) {
-        String q = "";
-        String eq = "= ";
-        this.extraSpaces += eq.length();
-        q += visit(ctx.xq(0));
-        this.extraSpaces -= eq.length();
-        q += indent(eq);
-        this.extraSpaces += eq.length();
-        q += lTrim(visit(ctx.xq(1)));
-        this.extraSpaces -= eq.length();
-        return q;
+        return visit(ctx.xq(0)) + "=" + visit(ctx.xq(1));
     }
 
     /**
      * XQuery - Condition (identity equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext ctx) {
-        String q = "";
-        String is = "== ";
-        this.extraSpaces += is.length();
-        q += visit(ctx.xq(0));
-        this.extraSpaces -= is.length();
-        q += indent(is);
-        this.extraSpaces += is.length();
-        q += lTrim(visit(ctx.xq(1)));
-        this.extraSpaces -= is.length();
-        return q;
+        return visit(ctx.xq(0)) + "==" + visit(ctx.xq(1));
     }
 
     /**
      * XQuery - Condition (empty)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondEmpty(XQueryParser.CondEmptyContext ctx) {
-        String q = "";
-        String empty = "empty(";
-        q += indent(empty);
-        this.extraSpaces += empty.length();
-        q += visit(ctx.xq()).trim();
-        q += ")" + System.lineSeparator();
-        this.extraSpaces -= empty.length();
-        return q;
+        return " empty(" + visit(ctx.xq()) + ")";
     }
 
     /**
      * XQuery - Condition (some)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondSome(XQueryParser.CondSomeContext ctx) {
         String q = "";
-        String some = "some ";
-        q += indent(some);
-        this.extraSpaces += some.length();
+        q += " some ";
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            String s = ctx.Variable(i).getText() + " in ";
-            if (i != 0) {
-                q += indent(s);
-            } else {
-                q += s;
-            }
-            this.extraSpaces += s.length();
-            q += visit(ctx.xq(i)).trim();
+            q += ctx.Variable(i).getText() + " in " + visit(ctx.xq(1));
             if (i != (ctx.Variable().size() - 1)) {
                 q += ",";
             }
-            q += System.lineSeparator();
-            this.extraSpaces -= s.length();
         }
-        this.extraSpaces -= some.length();
-        String satisfies = "satisfies ";
-        q += indent(satisfies);
-        this.extraSpaces += satisfies.length();
-        q += lTrim(visit(ctx.cond()));
-        this.extraSpaces -= satisfies.length();
+        q += " satisfies " + visit(ctx.cond());
         return q;
     }
 
@@ -503,74 +315,44 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondParentheses(XQueryParser.CondParenthesesContext ctx) {
-        String q = "";
-        q += indent("(");
-        ++this.extraSpaces;
-        q += lTrim(visit(ctx.cond()));
-        --this.extraSpaces;
-        q = rTrim(q) + ")";
-        return q;
+        return "(" + visit(ctx.cond()) + ")";
     }
 
     /**
      * XQuery - Condition (and)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondAnd(XQueryParser.CondAndContext ctx) {
-        String q = "";
-        String and = "and ";
-        this.extraSpaces += and.length();
-        q += visit(ctx.cond(0));
-        this.extraSpaces -= and.length();
-        q += indent(and);
-        this.extraSpaces += and.length();
-        q += lTrim(visit(ctx.cond(1)));
-        this.extraSpaces -= and.length();
-        return q;
+        return visit(ctx.cond(0)) + " and " + visit(ctx.cond(1));
     }
 
     /**
      * XQuery - Condition (or)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondOr(XQueryParser.CondOrContext ctx) {
-        String q = "";
-        String or = "or ";
-        this.extraSpaces += or.length();
-        q += visit(ctx.cond(0));
-        this.extraSpaces -= or.length();
-        q += indent(or);
-        this.extraSpaces += or.length();
-        q += lTrim(visit(ctx.cond(1)));
-        this.extraSpaces -= or.length();
-        return q;
+        return visit(ctx.cond(0)) + " or " + visit(ctx.cond(1));
     }
 
     /**
      * XQuery - Condition (not)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitCondNot(XQueryParser.CondNotContext ctx) {
-        String q = "";
-        String not = "not ";
-        q += indent(not);
-        this.extraSpaces += not.length();
-        q += lTrim(visit(ctx.cond()));
-        this.extraSpaces -= not.length();
-        return q;
+        return " not " + visit(ctx.cond());
     }
 
     /*
@@ -581,7 +363,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Absolute path (children)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitApChildren(XQueryParser.ApChildrenContext ctx) {
@@ -592,7 +374,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Absolute path (all)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitApAll(XQueryParser.ApAllContext ctx) {
@@ -603,7 +385,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Absolute path (doc)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitApDoc(XQueryParser.ApDocContext ctx) {
@@ -618,7 +400,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (tag)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpTag(XQueryParser.RpTagContext ctx) {
@@ -629,7 +411,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (wildcard)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpWildcard(XQueryParser.RpWildcardContext ctx) {
@@ -640,7 +422,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (current)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpCurrent(XQueryParser.RpCurrentContext ctx) {
@@ -651,7 +433,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (parent)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpParent(XQueryParser.RpParentContext ctx) {
@@ -662,7 +444,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (text)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpText(XQueryParser.RpTextContext ctx) {
@@ -673,7 +455,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (attribute)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpAttribute(XQueryParser.RpAttributeContext ctx) {
@@ -684,7 +466,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpParentheses(XQueryParser.RpParenthesesContext ctx) {
@@ -695,7 +477,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (children)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpChildren(XQueryParser.RpChildrenContext ctx) {
@@ -706,7 +488,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (all)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpAll(XQueryParser.RpAllContext ctx) {
@@ -717,7 +499,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (filter)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpFilter(XQueryParser.RpFilterContext ctx) {
@@ -728,11 +510,11 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (pair)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitRpPair(XQueryParser.RpPairContext ctx) {
-        return visit(ctx.rp(0)) + ", " + visit(ctx.rp(1));
+        return visit(ctx.rp(0)) + "," + visit(ctx.rp(1));
     }
 
     /*
@@ -743,7 +525,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (relative path)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFRelativePath(XQueryParser.FRelativePathContext ctx) {
@@ -754,29 +536,29 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (value equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFValueEquality(XQueryParser.FValueEqualityContext ctx) {
-        return visit(ctx.rp(0)) + " = " + visit(ctx.rp(1));
+        return visit(ctx.rp(0)) + "=" + visit(ctx.rp(1));
     }
 
     /**
      * XPath - Filter (identity equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFIdentityEquality(XQueryParser.FIdentityEqualityContext ctx) {
-        return visit(ctx.rp(0)) + " == " + visit(ctx.rp(1));
+        return visit(ctx.rp(0)) + "==" + visit(ctx.rp(1));
     }
 
     /**
      * XPath - Filter (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFParentheses(XQueryParser.FParenthesesContext ctx) {
@@ -787,7 +569,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (and)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFAnd(XQueryParser.FAndContext ctx) {
@@ -798,7 +580,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (or)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFOr(XQueryParser.FOrContext ctx) {
@@ -809,10 +591,10 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (not)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the current abstract syntax tree
+     * @return String representation of the optimized abstract syntax tree
      */
     @Override
     public String visitFNot(XQueryParser.FNotContext ctx) {
-        return "not " + visit(ctx.f());
+        return " not " + visit(ctx.f());
     }
 }
