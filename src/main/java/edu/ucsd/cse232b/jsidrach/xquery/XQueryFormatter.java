@@ -197,7 +197,7 @@ public class XQueryFormatter extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
         ++level;
         q += visit(ctx.xq());
         --level;
-        q += line("}</" + ctx.Identifier(0).getText() + ">");
+        q += line("}</" + ctx.Identifier(1).getText() + ">");
         return q;
     }
 

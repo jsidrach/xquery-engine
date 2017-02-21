@@ -98,10 +98,6 @@ abstract class XQueryTests {
     Boolean nodesEqualToResource(List<Node> nodes, String name) throws Exception {
         String s1 = IO.NodesToString(nodes, false).trim();
         String s2 = loadResourceAsString(name);
-        if (!s1.equals(s2)) {
-            System.out.println(s1);
-            System.out.println(s2);
-        }
         return s1.equals(s2);
     }
 

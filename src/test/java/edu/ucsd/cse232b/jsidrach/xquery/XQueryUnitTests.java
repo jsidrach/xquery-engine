@@ -17,14 +17,14 @@ public class XQueryUnitTests extends XQueryTests {
                 "variable",
                 "string-constant",
                 "parentheses",
-                "pair"/*,
+                "pair",
                 "children",
                 "all",
                 "tag",
-                "let"*/ // TODO: Create all tests (3 per method)
+                "let"
         };
         String resourcesDir = "unit-tests-xquery/";
-        int numTestCases = 1;
+        int numTestCases = 3;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
         }

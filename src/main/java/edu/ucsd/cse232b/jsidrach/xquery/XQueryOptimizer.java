@@ -111,7 +111,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      */
     @Override
     public String visitXqTag(XQueryParser.XqTagContext ctx) {
-        return "<" + ctx.Identifier(0).getText() + ">{" + visit(ctx.xq()) + "}</" + ctx.Identifier(0).getText() + ">";
+        return "<" + ctx.Identifier(0).getText() + ">{" + visit(ctx.xq()) + "}</" + ctx.Identifier(1).getText() + ">";
     }
 
     /**

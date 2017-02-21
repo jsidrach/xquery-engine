@@ -1,1 +1,4 @@
-TODO
+let $a := ((("t", ("e")), "s"), "t")
+<result>{
+  $a
+}</result>

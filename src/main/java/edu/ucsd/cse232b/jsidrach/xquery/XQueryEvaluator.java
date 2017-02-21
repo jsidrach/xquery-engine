@@ -3,6 +3,7 @@ package edu.ucsd.cse232b.jsidrach.xquery;
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 import edu.ucsd.cse232b.jsidrach.xpath.XPathEvaluator;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -44,9 +45,14 @@ public class XQueryEvaluator extends XPathEvaluator {
      * @return New element node with the given tag and all the given nodes as its children
      */
     public Node makeElem(String tag, LinkedList<Node> nodes) {
-        Node elem = doc.createElement(tag);
+        Element elem = doc.createElement(tag);
         for (Node n : nodes) {
-            elem.appendChild(doc.importNode(n, true));
+            Node c = doc.importNode(n, true);
+            if (c.getNodeType() == Node.ATTRIBUTE_NODE) {
+                elem.setAttributeNode((Attr) c);
+            } else {
+                elem.appendChild(c);
+            }
         }
         return elem;
     }

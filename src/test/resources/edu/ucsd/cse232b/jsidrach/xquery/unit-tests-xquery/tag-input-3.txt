@@ -1,1 +1,3 @@
-TODO
+<result>{
+doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar_altered.xml")//@f
+}</result>
