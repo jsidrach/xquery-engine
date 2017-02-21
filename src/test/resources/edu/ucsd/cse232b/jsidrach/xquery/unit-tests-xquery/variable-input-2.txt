@@ -1,1 +1,4 @@
-TODO
+<tag>{
+  let $a := "String"
+  $a
+}</tag>

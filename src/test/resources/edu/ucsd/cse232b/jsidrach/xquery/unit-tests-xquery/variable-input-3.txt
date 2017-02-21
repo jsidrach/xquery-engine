@@ -1,1 +1,4 @@
-TODO
+<result>{
+  let $a := doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")/., $a := $a//P, $a := $a/text()
+  $a
+}</result>

@@ -1,1 +1,6 @@
-TODO
+<result>{
+(let $a := "a", $b := "b"
+($a, $b)
+),
+$a
+}</result>

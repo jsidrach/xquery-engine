@@ -13,19 +13,18 @@ public class XQueryUnitTests extends XQueryTests {
      */
     @Test
     public void VisitorXQueryTests() {
-        String[] methods = {/*
+        String[] methods = {
                 "variable",
                 "string-constant",
-                "ap",
                 "parentheses",
-                "pair",
+                "pair"/*,
                 "children",
                 "all",
                 "tag",
                 "let"*/ // TODO: Create all tests (3 per method)
         };
         String resourcesDir = "unit-tests-xquery/";
-        int numTestCases = 3;
+        int numTestCases = 1;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
         }

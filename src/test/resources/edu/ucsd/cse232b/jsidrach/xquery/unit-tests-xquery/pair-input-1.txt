@@ -1,1 +1,4 @@
-TODO
+<result>{
+<t1>{$t}</t1>,
+<t2>{$t}</t2>
+}</result>

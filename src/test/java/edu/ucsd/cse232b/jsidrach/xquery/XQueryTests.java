@@ -127,7 +127,7 @@ abstract class XQueryTests {
                 if (!nodesEqualToResource(nodes, output + ".xml")) {
                     fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
                 }
-                // Check that the query optimizer is idempotent
+                // Check that the optimized query is idempotent
                 if (!optimizedQuery.equals(IO.XQueryOptimizedQuery(optimizedQuery))) {
                     fail("Failed (optimized, idempotent) " + resourcesPrefix + "-" + i);
                 }
