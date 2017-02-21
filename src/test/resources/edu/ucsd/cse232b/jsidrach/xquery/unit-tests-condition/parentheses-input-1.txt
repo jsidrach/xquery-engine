@@ -1,0 +1,7 @@
+<nums>{
+let $nums := ("0", "1")
+for $a in $nums, $b in $nums, $c in $nums
+let $n := ($a, $b, $c)
+where (not ($a = $b)) or $b = $c
+return <num>{$n}</num>
+}</nums>

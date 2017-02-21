@@ -87,7 +87,6 @@ public class IO {
         return output;
     }
 
-
     /**
      * Executes a XPath query given an ANTLRInputStream
      *

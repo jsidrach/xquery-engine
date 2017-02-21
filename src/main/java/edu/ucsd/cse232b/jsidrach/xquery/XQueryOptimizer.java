@@ -302,7 +302,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
         String q = "";
         q += " some ";
         for (int i = 0; i < ctx.Variable().size(); ++i) {
-            q += ctx.Variable(i).getText() + " in " + visit(ctx.xq(1));
+            q += ctx.Variable(i).getText() + " in " + visit(ctx.xq(i));
             if (i != (ctx.Variable().size() - 1)) {
                 q += ",";
             }

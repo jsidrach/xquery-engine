@@ -1,0 +1,6 @@
+<nums>{
+for $a in ("1", "2", "3"),
+    $b in ("1", "2", "3")
+where $a eq $b
+return <num>{$a, $b}</num>
+}</nums>

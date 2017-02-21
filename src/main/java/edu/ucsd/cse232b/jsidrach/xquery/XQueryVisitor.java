@@ -363,9 +363,9 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         int numVars = ctx.Variable().size();
         for (int i = 0; i < numVars; ++i) {
             String varName = ctx.Variable(i).getText();
-            HashMap<String, LinkedList<Node>> previousVars = new HashMap<>(this.vars);
+            HashMap<String, LinkedList<Node>> vars = new HashMap<>(this.vars);
             LinkedList<Node> xquery = visit(ctx.xq(i));
-            this.vars = previousVars;
+            this.vars = vars;
             this.vars.put(varName, xquery);
         }
         // Return null to raise an exception if caller tries to use the result of visiting the let clause
@@ -530,9 +530,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         int numVars = ctx.Variable().size();
         for (int i = 0; i < numVars; ++i) {
             String varName = ctx.Variable(i).getText();
-            HashMap<String, LinkedList<Node>> previousVars = new HashMap<>(this.vars);
             LinkedList<Node> xquery = visit(ctx.xq(i));
-            this.vars = previousVars;
             this.vars.put(varName, xquery);
         }
         LinkedList<Node> cond = visit(ctx.cond());

@@ -1,0 +1,7 @@
+<from1to7>{
+let $nums := ("0", "1")
+for $a in $nums, $b in $nums, $c in $nums
+let $n := ($a, $b, $c)
+where not ($a = "0" and $b = "0" and $c = "0")
+return <num>{$n}</num>
+}</from1to7>

@@ -1,0 +1,8 @@
+<nums>{
+let $nums1 := ("0", "1"),
+    $nums2 := ("1", "2")
+for $a in <n>{$nums1}</n>/*,
+    $b in <n>{$nums2}</n>/*
+where $a = $b
+return <num>{$a, $b}</num>
+}</nums>

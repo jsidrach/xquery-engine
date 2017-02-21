@@ -1,0 +1,5 @@
+let $nums := ("1", "2", "3", "4", "5", "6", "7", "8", "9"),
+    $q := <n>{<a>{<c>{$nums}</c>}</a>,<b>{<d>{$nums}</d>}</b>}</n>
+for $a in $q/*
+where empty($a/c)
+return <num>{$a}</num>

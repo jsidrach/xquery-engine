@@ -1,0 +1,6 @@
+<nums>{
+for $a in ("1", "2", "3"),
+    $b in ("1", "3", "5")
+where $a = "1" or $b = "1" or $a = $b
+return <num>{$a, $b}</num>
+}</nums>

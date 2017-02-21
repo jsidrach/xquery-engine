@@ -1,0 +1,7 @@
+<nums>{
+let $nums := ("0", "1")
+for $a in <n>{$nums}</n>/*,
+    $b in <n>{$nums}</n>/*
+where $a == $b
+return <num>{$a, $b}</num>
+}</nums>

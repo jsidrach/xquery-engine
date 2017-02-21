@@ -1,0 +1,7 @@
+<nums>{
+let $nums := ("0", "1")
+for $a in $nums,
+    $b in $nums
+where $a is $b
+return <num>{$a, $b}</num>
+}</nums>

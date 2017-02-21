@@ -36,7 +36,7 @@ public class XQueryUnitTests extends XQueryTests {
     @Test
     public void VisitorFLWRTests() {
         String resourcesDir = "unit-tests-flwr/";
-        int numTestCases = 0; // TODO: Create all tests (9)
+        int numTestCases = 0; // TODO: Create flwr tests (9)
         runTestSuite(resourcesDir, numTestCases);
     }
 
@@ -45,7 +45,7 @@ public class XQueryUnitTests extends XQueryTests {
      */
     @Test
     public void VisitorConditionTests() {
-        String[] methods = {/*
+        String[] methods = {
                 "value-equality",
                 "identity-equality",
                 "empty",
@@ -53,9 +53,9 @@ public class XQueryUnitTests extends XQueryTests {
                 "parentheses",
                 "and",
                 "or",
-                "not"*/ // TODO: Create all tests (3 per method)
+                "not"
         };
-        String resourcesDir = "unit-tests-flwr/";
+        String resourcesDir = "unit-tests-condition/";
         int numTestCases = 3;
         for (String m : methods) {
             runTestSuite(resourcesDir + m, numTestCases);
@@ -68,7 +68,7 @@ public class XQueryUnitTests extends XQueryTests {
     @Test
     public void VisitorJoinTests() {
         String resourcesDir = "unit-tests-join/";
-        int numTestCases = 0; // TODO: Create all tests (9)
+        int numTestCases = 0; // TODO: Create join tests (9)
         runTestSuite(resourcesDir, numTestCases);
     }
 }
