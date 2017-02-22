@@ -1,0 +1,9 @@
+<results>
+{
+    for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book
+    return
+    <result>
+        { $b/title, $b/author }
+    </result>
+}
+</results>

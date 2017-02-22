@@ -1,0 +1,26 @@
+for $tuple in join(
+                    join(for $b1 in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+                             $aj in $b1/author/first/text(),
+                             $a1 in $b1/author,
+                             $af1 in $a1/first/text(),
+                             $al1 in $a1/last/text()
+                         where $al1 eq "Stevens"
+                         return <tuple>{<b1>{$b1}</b1>,<af1>{$af1}</af1>,<al1>{$al1}</al1>}</tuple>,
+                         for $b2 in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+                             $a21 in $b2/author,
+                             $af21 in $a21/first/text(),
+                             $al21 in $a21/last/text(),
+                             $a22 in $b2/author,
+                             $af22 in $a22/first/text(),
+                             $al22 in $a22/last/text()
+                         return <tuple>{<b2>{$b2}</b2>,<af21>{$af21}</af21>,<al21>{$al21}</al21>,<af22>{$af22}</af22>,<al22>{$al22}</al22>}</tuple>,
+                         [af1, al1], [af21, al21]
+                        ),
+                    for $b3 in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+                        $a3 in $b3/author,
+                        $af3 in $a3/first/text(),
+                        $al3 in $a3/last/text()
+                    return <tuple>{<b3>{$b3}</b3>,<af3>{$af3}</af3>,<al3>{$al3}</al3>}</tuple>,
+                    [af22, al22], [af3, al3]
+)
+return <triplet>{$tuple/b1/*, $tuple/b2/*, $tuple/b3/*}</triplet>

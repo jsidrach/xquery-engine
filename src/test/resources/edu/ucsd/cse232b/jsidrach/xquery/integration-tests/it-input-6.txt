@@ -1,0 +1,8 @@
+<bib>
+{
+    for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book
+    where $b/publisher/text() = "Addison-Wesley" and $b/year/text() = "1992"
+    return
+        <book>{ $b/title, $b/year }</book>
+}
+</bib>

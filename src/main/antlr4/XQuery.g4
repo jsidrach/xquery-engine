@@ -8,9 +8,9 @@ xq
     | StringConstant                                                           # xqConstant
     | ap                                                                       # xqAbsolutePath
     | '(' xq ')'                                                               # xqParentheses
-    | xq ',' xq                                                                # xqPair
     | xq '/' rp                                                                # xqChildren
     | xq '//' rp                                                               # xqAll
+    | xq ',' xq                                                                # xqPair
     | '<' Identifier '>' '{' xq '}' '</' Identifier '>'                        # xqTag
     | 'join' '(' xq ',' xq ',' tagList ',' tagList ')'                         # xqJoin
     | letClause xq                                                             # xqLet

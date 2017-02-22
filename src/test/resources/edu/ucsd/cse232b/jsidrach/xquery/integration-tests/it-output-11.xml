@@ -1,9 +1,15 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<result>
-  <TITLE>ACT I</TITLE>
-  <TITLE>ACT II</TITLE>
-  <TITLE>ACT III</TITLE>
-  <TITLE>ACT IV</TITLE>
-  <TITLE>ACT V</TITLE>
-  <TITLE>Dramatis Personae</TITLE>
-</result>
+<book-with-prices>
+  <title>TCP/IP Illustrated</title>
+  <price-review>65.95</price-review>
+  <price>65.95</price>
+</book-with-prices>
+<book-with-prices>
+  <title>Advanced Programming in the Unix environment</title>
+  <price-review>65.95</price-review>
+  <price>65.95</price>
+</book-with-prices>
+<book-with-prices>
+  <title>Data on the Web</title>
+  <price-review>34.95</price-review>
+  <price>39.95</price>
+</book-with-prices>

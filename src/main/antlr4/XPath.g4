@@ -46,7 +46,7 @@ f
 StringConstant: '"' + ((~('"'))+) + '"';
 
 // Identifier
-Identifier: Letter (Letter | Digit)*;
+Identifier: Letter (Letter | Digit | '-')*;
 
 // Basic Fragments
 fragment Letter: [a-zA-Z];

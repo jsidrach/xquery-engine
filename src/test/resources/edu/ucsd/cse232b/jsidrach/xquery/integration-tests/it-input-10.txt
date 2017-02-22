@@ -1,5 +1,17 @@
-<result>
-{
-document("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//(ACT,PERSONAE)/TITLE
-}
-</result>
+<bib>
+{(
+    for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book
+    where not empty($b/author)
+    return
+    <book>
+        { $b/title, $b/author }
+    </book>
+),(
+    for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book
+    where not empty($b/editor)
+    return
+    <reference>
+        { $b/title, $b/editor/affiliation}
+    </reference>
+)}
+</bib>

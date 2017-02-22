@@ -112,27 +112,6 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
-     * XQuery (pair)
-     * <pre>
-     * [xq_1, xq_2](C)
-     *   → [xq_1](C), [xq_2](C)
-     * </pre>
-     *
-     * @param ctx Current parse tree context
-     * @return List of nodes resulting of the union of the lists of nodes produced by both xquery queries
-     */
-    @Override
-    public LinkedList<Node> visitXqPair(XQueryParser.XqPairContext ctx) {
-        LinkedList<Node> nodes = new LinkedList<>();
-        LinkedList<Node> original = this.nodes;
-        nodes.addAll(visit(ctx.xq(0)));
-        this.nodes = original;
-        nodes.addAll(visit(ctx.xq(1)));
-        this.nodes = nodes;
-        return this.nodes;
-    }
-
-    /**
      * XQuery (children)
      * <pre>
      * [xq/rp](C)
@@ -169,6 +148,27 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     }
 
     /**
+     * XQuery (pair)
+     * <pre>
+     * [xq_1, xq_2](C)
+     *   → [xq_1](C), [xq_2](C)
+     * </pre>
+     *
+     * @param ctx Current parse tree context
+     * @return List of nodes resulting of the union of the lists of nodes produced by both xquery queries
+     */
+    @Override
+    public LinkedList<Node> visitXqPair(XQueryParser.XqPairContext ctx) {
+        LinkedList<Node> nodes = new LinkedList<>();
+        LinkedList<Node> original = this.nodes;
+        nodes.addAll(visit(ctx.xq(0)));
+        this.nodes = original;
+        nodes.addAll(visit(ctx.xq(1)));
+        this.nodes = nodes;
+        return this.nodes;
+    }
+
+    /**
      * XQuery (tag)
      * <pre>
      * [&lt;tagName&gt;{ xq }&lt;/tagName&gt;](C)
@@ -201,6 +201,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
      */
     @Override
     public LinkedList<Node> visitXqJoin(XQueryParser.XqJoinContext ctx) {
+        // Hash join
+        // Hash the right join always so optimized queries outputs the result in the same order
         LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Node> original = this.nodes;
         LinkedList<Node> left = visit(ctx.xq(0));
@@ -208,40 +210,31 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         LinkedList<Node> right = visit(ctx.xq(1));
         List<TerminalNode> leftTags = ctx.tagList(0).Identifier();
         List<TerminalNode> rightTags = ctx.tagList(1).Identifier();
-        // Hash join
-        // Heuristic - hash the result with the lowest number of nodes, stored in left
-        if (right.size() < left.size()) {
-            LinkedList<Node> swap = left;
-            List<TerminalNode> swapTags = leftTags;
-            left = right;
-            leftTags = rightTags;
-            right = swap;
-            rightTags = swapTags;
-        }
-        // Add all left nodes to the hash
+        // Add all right nodes to the hash
         HashMap<String, LinkedList<Node>> eqVars = new HashMap<>();
-        for (Node l : left) {
+        for (Node r : right) {
             // Key only depends on the values of the nodes in the tag list
-            String key = XQueryEvaluator.keyNodeTags(l, leftTags);
+            String key = XQueryEvaluator.keyNodeTags(r, rightTags);
             if (eqVars.containsKey(key)) {
-                eqVars.get(key).add(l.cloneNode(true));
+                eqVars.get(key).add(r);
             } else {
-                eqVars.put(key, XQueryEvaluator.singleton(l.cloneNode(true)));
+                eqVars.put(key, XQueryEvaluator.singleton(r));
             }
         }
-        // Iterate through the right nodes
-        for (Node r : right) {
-            String key = XQueryEvaluator.keyNodeTags(r, rightTags);
+        // Iterate through the left nodes
+        for (Node l : left) {
+            String key = XQueryEvaluator.keyNodeTags(l, leftTags);
             // Join into a new node containing the children of both left and right
             if (eqVars.containsKey(key)) {
-                LinkedList<Node> rChildren = XQueryEvaluator.children(r);
-                LinkedList<Node> ls = eqVars.get(key);
-                for (Node l : ls) {
-                    for (Node rChild : rChildren) {
-                        l.appendChild(rChild.cloneNode(true));
+                LinkedList<Node> lChildren = XQueryEvaluator.children(l);
+                LinkedList<Node> rs = eqVars.get(key);
+                for (Node r : rs) {
+                    Node joined = r.cloneNode(true);
+                    for (Node lChild : lChildren) {
+                        joined.appendChild(lChild.cloneNode(true));
                     }
+                    nodes.add(joined);
                 }
-                nodes.addAll(ls);
             }
         }
         this.nodes = nodes;

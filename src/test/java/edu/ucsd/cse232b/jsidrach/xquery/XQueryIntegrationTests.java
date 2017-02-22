@@ -13,8 +13,7 @@ public class XQueryIntegrationTests extends XQueryTests {
     @Test
     public void IntegrationTests() {
         String resourcesDir = "integration-tests/it";
-        int numTestCases = 5;
-        // TODO: Add test cases PDF, think of new integration test cases -> 6 to 12
+        int numTestCases = 13;
         runTestSuite(resourcesDir, numTestCases);
     }
 

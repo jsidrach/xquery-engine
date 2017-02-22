@@ -1,5 +1,15 @@
-<result>
-{
-document("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//(ACT,PERSONAE)/TITLE
-}
-</result>
+for $tuple in join((for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+                        $tb in $b/title
+                   return <tuple>{<b>{$b}</b>,<tb>{$tb}</tb>}</tuple>),
+                   (for $a in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/reviews.xml")/reviews/entry,
+                        $ta in $a/title
+                    return <tuple>{<a>{$a}</a>,<ta>{$ta}</ta>}</tuple>),
+                    [tb], [ta])
+return
+    <book-with-prices>
+    {
+      $tuple/tb/*,
+      <price-review>{ $tuple/a/*/price/text() }</price-review>,
+      <price>{ $tuple/b/*/price/text() }</price>
+    }
+    </book-with-prices>

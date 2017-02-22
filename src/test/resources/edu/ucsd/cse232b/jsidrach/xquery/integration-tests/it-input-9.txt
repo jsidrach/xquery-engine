@@ -1,0 +1,14 @@
+<books-with-prices>
+{
+for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+    $a in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/reviews.xml")/reviews/entry
+where $b/title = $a/title
+    return
+        <book-with-prices>
+            { $b/title,
+             <price-review>{ $a/price/text() }</price-review>,
+             <price>{ $b/price/text() }</price>
+            }
+        </book-with-prices>
+}
+</books-with-prices>

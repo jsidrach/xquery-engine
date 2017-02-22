@@ -1,5 +1,20 @@
-<result>
-{
-document("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/j_caesar.xml")//(ACT,PERSONAE)/TITLE
-}
-</result>
+for $b1 in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+    $aj in $b1/author/first/text(),
+    $a1 in $b1/author,
+    $af1 in $a1/first/text(),
+    $al1 in $a1/last/text(),
+    $b2 in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+    $a21 in $b2/author,
+    $af21 in $a21/first/text(),
+    $al21 in $a21/last/text(),
+    $a22 in $b2/author,
+    $af22 in $a22/first/text(),
+    $al22 in $a22/last/text(),
+    $b3 in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+    $a3 in $b3/author,
+    $af3 in $a3/first/text(),
+    $al3 in $a3/last/text()
+where $al1 eq "Stevens" and
+    $af1 eq $af21 and $al1 eq $al21 and
+    $af22 eq $af3 and $al22 eq $al3
+return <triplet> {$b1, $b2, $b3} </triplet>
