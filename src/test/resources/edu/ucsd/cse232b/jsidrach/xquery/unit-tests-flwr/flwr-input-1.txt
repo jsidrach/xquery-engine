@@ -1,0 +1,7 @@
+let $c := <t>{"end"}</t>
+(
+(for $a in ("A", "B", "C"),
+     $b in ("1", "2", "3")
+ let $c := <t>{$a,$b}</t>
+     return $c),
+$c)

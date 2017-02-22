@@ -1,0 +1,10 @@
+let $d := ("0", "1")
+for $d in (
+  for $d in (
+    (for $d in $d
+    return $d),
+    let $d := ("2", "3")
+    (for $d in $d
+    return $d)
+  ) return $d
+) return $d

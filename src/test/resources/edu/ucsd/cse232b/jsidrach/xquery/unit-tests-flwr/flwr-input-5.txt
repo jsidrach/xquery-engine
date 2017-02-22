@@ -1,0 +1,7 @@
+for $b in doc("src/test/resources/edu/ucsd/cse232b/jsidrach/xquery/books.xml")/bib/book,
+    $t in $b/title,
+    $a in $b/author
+let $r :=
+<result>{"Title: ", $t/text(), ". Author: ", $a/first/text(), " ", $a/last/text()}</result>
+where $a/last/text() = "Stevens"
+return $r

@@ -173,4 +173,40 @@ public class XPathEvaluator {
         }
         return singleton;
     }
+
+    /**
+     * Checks whether there exists one node on the first list that is equal to one node on the second list
+     *
+     * @param ls First list of nodes
+     * @param rs Second list of nodes
+     * @return ∃ l ∈ ls ∃ r ∈ rs / l eq r
+     */
+    public static boolean existsEqual(LinkedList<Node> ls, LinkedList<Node> rs) {
+        for (Node l : ls) {
+            for (Node r : rs) {
+                if (l.isEqualNode(r)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks whether there exists one node on the first list that is the same as one node on the second list
+     *
+     * @param ls First list of nodes
+     * @param rs Second list of nodes
+     * @return ∃ l ∈ ls ∃ r ∈ rs / l is r
+     */
+    public static boolean existsSame(LinkedList<Node> ls, LinkedList<Node> rs) {
+        for (Node l : ls) {
+            for (Node r : rs) {
+                if (l.isSameNode(r)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

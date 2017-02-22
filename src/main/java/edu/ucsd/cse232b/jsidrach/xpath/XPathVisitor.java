@@ -338,12 +338,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
         this.nodes = nodes;
         LinkedList<Node> r = visit(ctx.rp(1));
         this.nodes = nodes;
-        for (Node nl : l) {
-            for (Node nr : r) {
-                if (nl.isEqualNode(nr)) {
-                    return this.nodes;
-                }
-            }
+        if (XPathEvaluator.existsEqual(l, r)) {
+            return this.nodes;
         }
         return new LinkedList<>();
     }
@@ -369,12 +365,8 @@ public class XPathVisitor extends XPathBaseVisitor<LinkedList<Node>> {
         this.nodes = nodes;
         LinkedList<Node> r = visit(ctx.rp(1));
         this.nodes = nodes;
-        for (Node nl : l) {
-            for (Node nr : r) {
-                if (nl.isSameNode(nr)) {
-                    return this.nodes;
-                }
-            }
+        if (XPathEvaluator.existsSame(l, r)) {
+            return this.nodes;
         }
         return new LinkedList<>();
     }

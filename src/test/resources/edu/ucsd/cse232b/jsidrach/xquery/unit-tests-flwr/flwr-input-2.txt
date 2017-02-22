@@ -1,0 +1,6 @@
+for $a in (for $a in ("0", "1")
+           let $a := ($a, "2")
+           return $a),
+    $a in ($a, "3")
+let $a := <t>{$a}</t>
+return $a

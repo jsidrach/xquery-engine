@@ -35,8 +35,8 @@ public class XQueryUnitTests extends XQueryTests {
      */
     @Test
     public void VisitorFLWRTests() {
-        String resourcesDir = "unit-tests-flwr/";
-        int numTestCases = 0; // TODO: Create flwr tests (9)
+        String resourcesDir = "unit-tests-flwr/flwr";
+        int numTestCases = 6;
         runTestSuite(resourcesDir, numTestCases);
     }
 

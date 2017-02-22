@@ -440,12 +440,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         this.nodes = nodes;
         LinkedList<Node> r = visit(ctx.xq(1));
         this.nodes = nodes;
-        for (Node nl : l) {
-            for (Node nr : r) {
-                if (nl.isEqualNode(nr)) {
-                    return this.nodes;
-                }
-            }
+        if (XQueryEvaluator.existsEqual(l, r)) {
+            return this.nodes;
         }
         return new LinkedList<>();
     }
@@ -471,12 +467,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         this.nodes = nodes;
         LinkedList<Node> r = visit(ctx.xq(1));
         this.nodes = nodes;
-        for (Node nl : l) {
-            for (Node nr : r) {
-                if (nl.isSameNode(nr)) {
-                    return this.nodes;
-                }
-            }
+        if (XQueryEvaluator.existsSame(l, r)) {
+            return this.nodes;
         }
         return new LinkedList<>();
     }
@@ -930,12 +922,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         this.nodes = nodes;
         LinkedList<Node> r = visit(ctx.rp(1));
         this.nodes = nodes;
-        for (Node nl : l) {
-            for (Node nr : r) {
-                if (nl.isEqualNode(nr)) {
-                    return this.nodes;
-                }
-            }
+        if (XQueryEvaluator.existsEqual(l, r)) {
+            return this.nodes;
         }
         return new LinkedList<>();
     }
@@ -961,12 +949,8 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
         this.nodes = nodes;
         LinkedList<Node> r = visit(ctx.rp(1));
         this.nodes = nodes;
-        for (Node nl : l) {
-            for (Node nr : r) {
-                if (nl.isSameNode(nr)) {
-                    return this.nodes;
-                }
-            }
+        if (XQueryEvaluator.existsSame(l, r)) {
+            return this.nodes;
         }
         return new LinkedList<>();
     }
