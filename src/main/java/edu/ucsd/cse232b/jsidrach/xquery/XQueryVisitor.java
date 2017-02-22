@@ -202,7 +202,7 @@ public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVis
     @Override
     public LinkedList<Node> visitXqJoin(XQueryParser.XqJoinContext ctx) {
         // Hash join
-        // Hash the right join always so optimized queries outputs the result in the same order
+        // Hash always the right sub-query so the optimized query result has the same order as the original FLWR
         LinkedList<Node> nodes = new LinkedList<>();
         LinkedList<Node> original = this.nodes;
         LinkedList<Node> left = visit(ctx.xq(0));

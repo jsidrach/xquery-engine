@@ -43,7 +43,7 @@ f
     ;
 
 // File Name, Literal
-StringConstant: '"' + ((~('"'))+) + '"';
+StringConstant: '"' (~'"')* '"';
 
 // Identifier
 Identifier: Letter (Letter | Digit | '-')*;
