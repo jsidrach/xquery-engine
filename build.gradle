@@ -41,7 +41,7 @@ apply plugin: 'me.champeau.gradle.antlr4'
 // Source code configuration
 //
 
-mainClassName = 'edu.ucsd.cse232b.jsidrach.xquery.XQueryRunner'
+mainClassName = 'edu.ucsd.cse232b.jsidrach.apps.XQueryOptimized'
 version = '1.0'
 sourceCompatibility = 1.8
 compileJava.options.encoding = 'UTF-8'
@@ -71,9 +71,9 @@ def course = 'CSE 232B'
 def author = 'J. Sidrach'
 task xPathJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': course + ' - XPath Processor - ' + author,
+        attributes 'Implementation-Title': course + ' - XPath Engine - ' + author,
                    'Implementation-Version': version,
-                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XPathRunner'
+                   'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XPath'
     }
     archiveName = 'xpath.jar'
     destinationDir = file('demo/xpath')
@@ -84,7 +84,7 @@ task xQueryJar(type: Jar) {
     manifest {
         attributes 'Implementation-Title': course + ' - XQuery Engine - ' + author,
                 'Implementation-Version': version,
-                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryRunner'
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQuery'
     }
     archiveName = 'xquery.jar'
     destinationDir = file('demo/xquery')
@@ -95,7 +95,7 @@ task xQueryOptimized(type: Jar) {
     manifest {
         attributes 'Implementation-Title': course + ' - XQuery Optimized Engine - ' + author,
                 'Implementation-Version': version,
-                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryOptimizedRunner'
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryOptimized'
     }
     archiveName = 'optimized-xquery.jar'
     destinationDir = file('demo/optimized-xquery')
@@ -106,7 +106,7 @@ task xQueryFormatter(type: Jar) {
     manifest {
         attributes 'Implementation-Title': course + ' - XQuery Formatter - ' + author,
                 'Implementation-Version': version,
-                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.XQueryFormatterRunner'
+                'Main-Class': 'edu.ucsd.cse232b.jsidrach.apps.FormatterXQuery'
     }
     archiveName = 'formatter.jar'
     destinationDir = file('demo/formatter')

@@ -1,11 +1,11 @@
-package edu.ucsd.cse232b.jsidrach.xquery;
+package edu.ucsd.cse232b.jsidrach.xquery.optimizer;
 
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 
 /**
- * XQueryFormatter - Formatter for xquery queries
+ * XQueryFormatter - formats (prettifies) xquery queries
  */
-public class XQueryFormatter extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor<String> {
+public class XQueryFormatter extends XQuerySerializer {
 
     /**
      * Current level of indentation

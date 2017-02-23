@@ -1,17 +1,18 @@
 package edu.ucsd.cse232b.jsidrach.apps;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
+import edu.ucsd.cse232b.jsidrach.utils.XQueryEngine;
 
 import java.io.FileInputStream;
 
 /**
- * XQueryOptimizedRunner - Command line utility for XQuery
+ * XQuery - Command line utility for XQueryEngine
  * <p>
  * The executable takes one argument only,
  * the name of the file containing the XQuery query
  * </p>
  */
-public class XQueryOptimizedRunner {
+public class XQuery {
     public static void main(String[] args) {
         // Check number of arguments
         if (args.length != 1) {
@@ -19,13 +20,10 @@ public class XQueryOptimizedRunner {
             System.out.println("java -jar <jar_file> <xquery_query>");
             return;
         }
-        // Print the result of executing the xquery optimized query into stdout,
-        // and the formatted intermediate rewritten query into stderr
+        // Print the result of executing the xquery query
         try {
             FileInputStream input = new FileInputStream(args[0]);
-            String rewrittenQuery = IO.XQueryOptimizedQuery(input);
-            System.err.print(rewrittenQuery);
-            System.out.print(IO.NodesToString(IO.XQueryQuery(rewrittenQuery), false));
+            System.out.print(IO.NodesToString(XQueryEngine.Query(input), false));
         } catch (Exception e) {
             e.printStackTrace();
         }

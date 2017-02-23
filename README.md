@@ -49,7 +49,7 @@ This will run all tests, compile and place the fat jars into sub-folders of ```d
   ```bash
   ./optimized-xquery.sh
   ```
-  The optimized rewritten query will be stored in ```rewritten.txt```
+  The intermediate rewritten queries will be stored in ```rewritten.txt```
   
   The resulting document will be stored in ```output.xml``` and displayed in the terminal
 

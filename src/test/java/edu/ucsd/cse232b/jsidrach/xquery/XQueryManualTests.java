@@ -1,6 +1,7 @@
 package edu.ucsd.cse232b.jsidrach.xquery;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
+import edu.ucsd.cse232b.jsidrach.utils.XQueryEngine;
 import org.junit.Test;
 import org.w3c.dom.Node;
 
@@ -27,7 +28,7 @@ public class XQueryManualTests extends XQueryTests {
             try {
                 String fileNameInput = baseNameInput + i + ".txt";
                 String fileNameOutput = baseNameOutput + i + ".xml";
-                LinkedList<Node> nodes = IO.XQueryQuery(getResource(fileNameInput));
+                LinkedList<Node> nodes = XQueryEngine.Query(getResource(fileNameInput));
                 Writer output = getResourceWriter(fileNameOutput);
                 output.write(IO.NodesToString(nodes, false));
                 output.close();

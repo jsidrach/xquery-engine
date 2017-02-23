@@ -1,6 +1,7 @@
 package edu.ucsd.cse232b.jsidrach.xpath;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
+import edu.ucsd.cse232b.jsidrach.utils.XPathEngine;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -116,7 +117,7 @@ abstract class XPathTests {
             try {
                 String input = resourcesPrefix + "-input-" + i + ".txt";
                 String output = resourcesPrefix + "-output-" + i + ".xml";
-                LinkedList<Node> nodes = IO.XPathQuery(getResource(input));
+                LinkedList<Node> nodes = XPathEngine.Query(getResource(input));
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }

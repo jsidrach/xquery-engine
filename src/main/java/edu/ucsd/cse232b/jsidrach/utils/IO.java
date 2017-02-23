@@ -1,16 +1,5 @@
 package edu.ucsd.cse232b.jsidrach.utils;
 
-import edu.ucsd.cse232b.jsidrach.antlr.XPathLexer;
-import edu.ucsd.cse232b.jsidrach.antlr.XPathParser;
-import edu.ucsd.cse232b.jsidrach.antlr.XQueryLexer;
-import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
-import edu.ucsd.cse232b.jsidrach.xpath.XPathVisitor;
-import edu.ucsd.cse232b.jsidrach.xquery.XQueryFormatter;
-import edu.ucsd.cse232b.jsidrach.xquery.XQueryOptimizer;
-import edu.ucsd.cse232b.jsidrach.xquery.XQueryVisitor;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.w3c.dom.Node;
 
 import javax.xml.transform.OutputKeys;
@@ -18,9 +7,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.FileInputStream;
 import java.io.StringWriter;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -85,155 +72,5 @@ public class IO {
             output += IO.NodeToString(ns.get(i), ts) + "\n";
         }
         return output;
-    }
-
-    /**
-     * Executes a XPath query given an ANTLRInputStream
-     *
-     * @param ANTLRInput Input query
-     * @return List of result nodes
-     */
-    private static LinkedList<Node> XPathQuery(ANTLRInputStream ANTLRInput) {
-        XPathLexer xPathLexer = new XPathLexer(ANTLRInput);
-        CommonTokenStream tokens = new CommonTokenStream(xPathLexer);
-        XPathParser xPathParser = new XPathParser(tokens);
-        // Parse using ap (Absolute Path) as root rule
-        ParseTree xPathTree = xPathParser.ap();
-        XPathVisitor xPathVisitor = new XPathVisitor();
-        return xPathVisitor.visit(xPathTree);
-    }
-
-    /**
-     * Executes a XPath query given a file containing it
-     *
-     * @param file File containing the XPath query
-     * @return List of result nodes
-     * @throws Exception Exception if file is not found
-     */
-    public static LinkedList<Node> XPathQuery(FileInputStream file) throws Exception {
-        return XPathQuery(new ANTLRInputStream(file));
-    }
-
-    /**
-     * Executes a XPath query
-     *
-     * @param query XPath query string
-     * @return List of result nodes
-     */
-    public static LinkedList<Node> XPathQuery(String query) {
-        return XPathQuery(new ANTLRInputStream(query));
-    }
-
-    /**
-     * Executes a XQuery query given an ANTLRInputStream
-     *
-     * @param ANTLRInput Input query
-     * @return List of result nodes
-     */
-    private static LinkedList<Node> XQueryQuery(ANTLRInputStream ANTLRInput) throws Exception {
-        XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
-        CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
-        XQueryParser xQueryParser = new XQueryParser(tokens);
-        // Parse using xq (XQuery) as root rule
-        ParseTree xQueryTree = xQueryParser.xq();
-        XQueryVisitor xQueryVisitor = new XQueryVisitor();
-        return xQueryVisitor.visit(xQueryTree);
-    }
-
-    /**
-     * Executes a XQuery query given a file containing it
-     *
-     * @param file File containing the XQuery query
-     * @return List of result nodes
-     * @throws Exception Exception if file is not found
-     */
-    public static LinkedList<Node> XQueryQuery(FileInputStream file) throws Exception {
-        return XQueryQuery(new ANTLRInputStream(file));
-    }
-
-    /**
-     * Executes a XQuery query
-     *
-     * @param query XQuery query string
-     * @return List of result nodes
-     */
-    public static LinkedList<Node> XQueryQuery(String query) throws Exception {
-        return XQueryQuery(new ANTLRInputStream(query));
-    }
-
-    /**
-     * Optimizes a XQuery query given an ANTLRInputStream
-     *
-     * @param ANTLRInput Input query
-     * @return Rewritten query
-     */
-    private static String XQueryOptimizedQuery(ANTLRInputStream ANTLRInput) throws Exception {
-        XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
-        CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
-        XQueryParser xQueryParser = new XQueryParser(tokens);
-        // Parse using xq (XQuery) as root rule
-        ParseTree xQueryTree = xQueryParser.xq();
-        // Optimize query
-        XQueryOptimizer xQueryVisitor = new XQueryOptimizer();
-        return XQueryFormattedQuery(xQueryVisitor.visit(xQueryTree));
-    }
-
-    /**
-     * Optimizes a XQuery query given a file containing it
-     *
-     * @param file File containing the XQuery query
-     * @return Rewritten query
-     * @throws Exception Exception if file is not found
-     */
-    public static String XQueryOptimizedQuery(FileInputStream file) throws Exception {
-        return XQueryOptimizedQuery(new ANTLRInputStream(file));
-    }
-
-    /**
-     * Optimizes a XQuery query
-     *
-     * @param query XQuery query string
-     * @return Rewritten query
-     */
-    public static String XQueryOptimizedQuery(String query) throws Exception {
-        return XQueryOptimizedQuery(new ANTLRInputStream(query));
-    }
-
-    /**
-     * Formats a XQuery query given an ANTLRInputStream
-     *
-     * @param ANTLRInput Input query
-     * @return Formatted query
-     */
-    private static String XQueryFormattedQuery(ANTLRInputStream ANTLRInput) throws Exception {
-        XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
-        CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
-        XQueryParser xQueryParser = new XQueryParser(tokens);
-        // Parse using xq (XQuery) as root rule
-        ParseTree xQueryTree = xQueryParser.xq();
-        // Format query
-        XQueryFormatter xQueryVisitor = new XQueryFormatter();
-        return xQueryVisitor.visit(xQueryTree);
-    }
-
-    /**
-     * Formats a XQuery query given a file containing it
-     *
-     * @param file File containing the XQuery query
-     * @return Formatted query
-     * @throws Exception Exception if file is not found
-     */
-    public static String XQueryFormattedQuery(FileInputStream file) throws Exception {
-        return XQueryFormattedQuery(new ANTLRInputStream(file));
-    }
-
-    /**
-     * Formats a XQuery query
-     *
-     * @param query XQuery query string
-     * @return Formatted query
-     */
-    public static String XQueryFormattedQuery(String query) throws Exception {
-        return XQueryFormattedQuery(new ANTLRInputStream(query));
     }
 }

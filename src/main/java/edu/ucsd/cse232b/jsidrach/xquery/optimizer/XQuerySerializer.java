@@ -1,26 +1,15 @@
-package edu.ucsd.cse232b.jsidrach.xquery;
+package edu.ucsd.cse232b.jsidrach.xquery.optimizer;
 
+import edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor;
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 
 /**
- * XQueryOptimizer - TODO
+ * XQuerySerializer - transforms the abstract syntax tree of xquery queries into a string
  * <p>
- * TODO
+ * Abstract class, to be used as a base implementation for the renamer/optimized/formatter
  * </p>
  */
-public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor<String> {
-
-    /**
-     * Flag to check if the current FLWR expression can be rewritten
-     */
-    private boolean rewriteFLWR;
-
-    /**
-     * Public constructor - Initializes the variables
-     */
-    public XQueryOptimizer() {
-        this.rewriteFLWR = false;
-    }
+abstract public class XQuerySerializer extends XQueryBaseVisitor<String> {
 
     /*
      * XQuery - Root Rules
@@ -30,7 +19,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (variable)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqVariable(XQueryParser.XqVariableContext ctx) {
@@ -41,7 +30,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (constant)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqConstant(XQueryParser.XqConstantContext ctx) {
@@ -52,7 +41,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (absolute path)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext ctx) {
@@ -63,7 +52,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqParentheses(XQueryParser.XqParenthesesContext ctx) {
@@ -74,7 +63,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (pair)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqPair(XQueryParser.XqPairContext ctx) {
@@ -85,7 +74,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (children)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqChildren(XQueryParser.XqChildrenContext ctx) {
@@ -96,7 +85,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (all)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqAll(XQueryParser.XqAllContext ctx) {
@@ -107,7 +96,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (tag)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqTag(XQueryParser.XqTagContext ctx) {
@@ -118,7 +107,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (join)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqJoin(XQueryParser.XqJoinContext ctx) {
@@ -132,7 +121,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery (let)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqLet(XQueryParser.XqLetContext ctx) {
@@ -141,12 +130,9 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
 
     /**
      * XQuery (for let while return - FLWR)
-     * TODO: Decide whether we can optimize this FLWR or not
-     * TODO: Use rewriteFLWR and save previous value of query and rewriteFLRW)
-     * TODO: Create new string if it can be optimized
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
@@ -168,10 +154,9 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
 
     /**
      * XQuery - FLWR (for)
-     * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitForClause(XQueryParser.ForClauseContext ctx) {
@@ -188,10 +173,9 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
 
     /**
      * XQuery - FLWR (let)
-     * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitLetClause(XQueryParser.LetClauseContext ctx) {
@@ -208,10 +192,9 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
 
     /**
      * XQuery - FLWR (where)
-     * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitWhereClause(XQueryParser.WhereClauseContext ctx) {
@@ -220,10 +203,9 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
 
     /**
      * XQuery - FLWR (return)
-     * TODO
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
@@ -238,7 +220,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Join (tagList)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitTagList(XQueryParser.TagListContext ctx) {
@@ -262,7 +244,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (value equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondValueEquality(XQueryParser.CondValueEqualityContext ctx) {
@@ -273,7 +255,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (identity equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext ctx) {
@@ -284,7 +266,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (empty)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondEmpty(XQueryParser.CondEmptyContext ctx) {
@@ -295,7 +277,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (some)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondSome(XQueryParser.CondSomeContext ctx) {
@@ -315,7 +297,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondParentheses(XQueryParser.CondParenthesesContext ctx) {
@@ -326,7 +308,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (and)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondAnd(XQueryParser.CondAndContext ctx) {
@@ -337,7 +319,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (or)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondOr(XQueryParser.CondOrContext ctx) {
@@ -348,7 +330,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XQuery - Condition (not)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitCondNot(XQueryParser.CondNotContext ctx) {
@@ -363,7 +345,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Absolute path (children)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitApChildren(XQueryParser.ApChildrenContext ctx) {
@@ -374,7 +356,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Absolute path (all)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitApAll(XQueryParser.ApAllContext ctx) {
@@ -385,7 +367,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Absolute path (doc)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitApDoc(XQueryParser.ApDocContext ctx) {
@@ -400,7 +382,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (tag)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpTag(XQueryParser.RpTagContext ctx) {
@@ -411,7 +393,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (wildcard)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpWildcard(XQueryParser.RpWildcardContext ctx) {
@@ -422,7 +404,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (current)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpCurrent(XQueryParser.RpCurrentContext ctx) {
@@ -433,7 +415,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (parent)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpParent(XQueryParser.RpParentContext ctx) {
@@ -444,7 +426,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (text)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpText(XQueryParser.RpTextContext ctx) {
@@ -455,7 +437,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (attribute)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpAttribute(XQueryParser.RpAttributeContext ctx) {
@@ -466,7 +448,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpParentheses(XQueryParser.RpParenthesesContext ctx) {
@@ -477,7 +459,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (children)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpChildren(XQueryParser.RpChildrenContext ctx) {
@@ -488,7 +470,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (all)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpAll(XQueryParser.RpAllContext ctx) {
@@ -499,7 +481,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (filter)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpFilter(XQueryParser.RpFilterContext ctx) {
@@ -510,7 +492,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Relative path (pair)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitRpPair(XQueryParser.RpPairContext ctx) {
@@ -525,7 +507,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (relative path)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFRelativePath(XQueryParser.FRelativePathContext ctx) {
@@ -536,7 +518,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (value equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFValueEquality(XQueryParser.FValueEqualityContext ctx) {
@@ -547,7 +529,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (identity equality)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFIdentityEquality(XQueryParser.FIdentityEqualityContext ctx) {
@@ -558,7 +540,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (parentheses)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFParentheses(XQueryParser.FParenthesesContext ctx) {
@@ -569,7 +551,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (and)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFAnd(XQueryParser.FAndContext ctx) {
@@ -580,7 +562,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (or)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFOr(XQueryParser.FOrContext ctx) {
@@ -591,7 +573,7 @@ public class XQueryOptimizer extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseV
      * XPath - Filter (not)
      *
      * @param ctx Current parse tree context
-     * @return String representation of the optimized abstract syntax tree
+     * @return String representation of the abstract syntax tree
      */
     @Override
     public String visitFNot(XQueryParser.FNotContext ctx) {

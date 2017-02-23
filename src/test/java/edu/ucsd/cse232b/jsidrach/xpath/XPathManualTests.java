@@ -1,6 +1,7 @@
 package edu.ucsd.cse232b.jsidrach.xpath;
 
 import edu.ucsd.cse232b.jsidrach.utils.IO;
+import edu.ucsd.cse232b.jsidrach.utils.XPathEngine;
 import org.junit.Test;
 import org.w3c.dom.Node;
 
@@ -27,7 +28,7 @@ public class XPathManualTests extends XPathTests {
             try {
                 String fileNameInput = baseNameInput + i + ".txt";
                 String fileNameOutput = baseNameOutput + i + ".xml";
-                LinkedList<Node> nodes = IO.XPathQuery(getResource(fileNameInput));
+                LinkedList<Node> nodes = XPathEngine.Query(getResource(fileNameInput));
                 Writer output = getResourceWriter(fileNameOutput);
                 output.write(IO.NodesToString(nodes, true));
                 output.close();

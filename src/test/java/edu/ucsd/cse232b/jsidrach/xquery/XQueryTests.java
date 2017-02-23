@@ -1,6 +1,6 @@
 package edu.ucsd.cse232b.jsidrach.xquery;
 
-import edu.ucsd.cse232b.jsidrach.utils.IO;
+import edu.ucsd.cse232b.jsidrach.utils.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -123,29 +123,39 @@ abstract class XQueryTests {
             try {
                 String input = resourcesPrefix + "-input-" + i + ".txt";
                 String output = resourcesPrefix + "-output-" + i + ".xml";
-                LinkedList<Node> nodes = IO.XQueryQuery(getResource(input));
+                LinkedList<Node> nodes = XQueryEngine.Query(getResource(input));
                 // Compare using standard engine
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }
-                // Compare formatted query
-                String formattedQuery = IO.XQueryFormattedQuery(getResource(input));
-                nodes = IO.XQueryQuery(formattedQuery);
+                // Compare with formatted query
+                String formattedQuery = XQueryFormatterEngine.Format(getResource(input));
+                nodes = XQueryEngine.Query(formattedQuery);
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (formatted, assertion) " + resourcesPrefix + "-" + i);
                 }
                 // Check that the query formatter is idempotent
-                if (!formattedQuery.equals(IO.XQueryFormattedQuery(formattedQuery))) {
+                if (!formattedQuery.equals(XQueryFormatterEngine.Format(formattedQuery))) {
                     fail("Failed (formatted, idempotent) " + resourcesPrefix + "-" + i);
                 }
+                // Compare with renamed variables query
+                String renamedQuery = XQueryVarsRenamerEngine.RenameVars(getResource(input));
+                nodes = XQueryEngine.Query(renamedQuery);
+                if (!nodesEqualToResource(nodes, output)) {
+                    fail("Failed (renamed, assertion) " + resourcesPrefix + "-" + i);
+                }
+                // Check that the query variable renamer is idempotent
+                if (!renamedQuery.equals(XQueryVarsRenamerEngine.RenameVars(renamedQuery))) {
+                    fail("Failed (renamed, idempotent) " + resourcesPrefix + "-" + i);
+                }
                 // Compare using optimized engine
-                String optimizedQuery = IO.XQueryOptimizedQuery(getResource(input));
-                nodes = IO.XQueryQuery(optimizedQuery);
+                String optimizedQuery = XQueryOptimizerEngine.Optimize(getResource(input), false);
+                nodes = XQueryEngine.Query(optimizedQuery);
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
                 }
                 // Check that the query optimizer is idempotent
-                if (!optimizedQuery.equals(IO.XQueryOptimizedQuery(optimizedQuery))) {
+                if (!optimizedQuery.equals(XQueryOptimizerEngine.Optimize(optimizedQuery, false))) {
                     fail("Failed (optimized, idempotent) " + resourcesPrefix + "-" + i);
                 }
             } catch (Exception e) {
