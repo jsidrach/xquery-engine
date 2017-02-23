@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.FileInputStream;
 
 /**
- * TODO
+ * XQueryVarsRenamerEngine - Utility functions to deal with XQueryVarsRenamer
  */
 public class XQueryVarsRenamerEngine {
 
@@ -26,7 +26,7 @@ public class XQueryVarsRenamerEngine {
         XQueryParser xQueryParser = new XQueryParser(tokens);
         // Parse using xq (XQuery) as root rule
         ParseTree xQueryTree = xQueryParser.xq();
-        // Format query
+        // Rename variables in the query
         XQueryVarsRenamer xQueryVarsRenamer = new XQueryVarsRenamer();
         return xQueryVarsRenamer.visit(xQueryTree);
     }

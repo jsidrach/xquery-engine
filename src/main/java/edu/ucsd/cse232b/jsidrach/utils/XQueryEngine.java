@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.util.LinkedList;
 
 /**
- * TODO
+ * XQueryEngine - Utility functions to deal with XQueryVisitor
  */
 public class XQueryEngine {
 

@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import java.io.FileInputStream;
 
 /**
- * TODO
+ * XQueryFormatterEngine - Utility functions to deal with XQueryFormatter
  */
 public class XQueryFormatterEngine {
 

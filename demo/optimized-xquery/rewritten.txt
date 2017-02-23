@@ -1,11 +1,27 @@
-<digits>{
-  ((("1"),
-    "2"),
-   "3"),
-  ((("4",
-     "5"),
-    ("6",
-     "7"),
-    "8"),
-   "9")
-}</digits>
+Phase 0 - Original Query
+------------------------
+let $d := ("0",
+           "1")
+  for $d in (for $d in (for $d in $d
+                        return $d)
+             return $d)
+  return $d
+
+Phase 1 - Variable Renamer
+--------------------------
+let $v1 := ("0",
+            "1")
+  for $v2 in (for $v3 in (for $v4 in $v1
+                          return $v4)
+              return $v3)
+  return $v2
+
+Phase 2 - Optimizer
+-------------------
+let $v1 := ("0",
+            "1")
+  for $v2 in (for $v3 in (for $v4 in $v1
+                          return $v4)
+              return $v3)
+  return $v2
+

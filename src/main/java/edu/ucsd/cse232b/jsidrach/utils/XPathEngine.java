@@ -12,7 +12,7 @@ import java.io.FileInputStream;
 import java.util.LinkedList;
 
 /**
- * TODO
+ * XPathEngine - Utility functions to deal with XPathVisitor
  */
 public class XPathEngine {
 
