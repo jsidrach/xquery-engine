@@ -1,0 +1,6 @@
+let $n := ("0", "1", "2"),
+    $m := ("3", "4", "5"),
+    $o := ("6", "7", "8"),
+    $xq1 := <nums>{for $i in $n return <num>{<n>{$i}</n>,for $j in $o return <a>{$j}</a>}</num>}</nums>,
+    $xq2 := <nums>{for $i in $m return <num>{<n>{$i}</n>,for $j in $o return <b>{$j}</b>}</num>}</nums>
+(join($xq1/*, $xq2/*, [a], [b])/n)

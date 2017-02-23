@@ -1,0 +1,5 @@
+let $n := ("0", "1", "2"),
+    $m := ("3", "4", "5"),
+    $xq1 := <nums>{for $i in $n return <n>{$i}</n>}</nums>,
+    $xq2 := <nums>{for $i in $m return <m>{$i}</m>}</nums>
+join($xq1/*, $xq2/*, [], [])

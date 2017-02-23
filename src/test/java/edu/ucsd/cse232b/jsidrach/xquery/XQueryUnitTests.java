@@ -67,8 +67,8 @@ public class XQueryUnitTests extends XQueryTests {
      */
     @Test
     public void VisitorJoinTests() {
-        String resourcesDir = "unit-tests-join/";
-        int numTestCases = 0; // TODO: Create join tests (9)
+        String resourcesDir = "unit-tests-join/join";
+        int numTestCases = 6;
         runTestSuite(resourcesDir, numTestCases);
     }
 }
