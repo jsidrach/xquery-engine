@@ -1,5 +1,6 @@
 package edu.ucsd.cse232b.jsidrach.xquery;
 
+import edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor;
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.w3c.dom.Node;
@@ -16,7 +17,7 @@ import java.util.List;
  * Each method modifies the current list of nodes (nodes) and returns it<br>
  * </p>
  */
-public class XQueryVisitor extends edu.ucsd.cse232b.jsidrach.antlr.XQueryBaseVisitor<LinkedList<Node>> {
+public class XQueryVisitor extends XQueryBaseVisitor<LinkedList<Node>> {
 
     /**
      * Current map of variables
