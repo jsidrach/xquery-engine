@@ -15,14 +15,14 @@ public class XQueryVarsRenamer extends XQuerySerializer {
     private HashMap<String, String> vars;
 
     /**
-     * Name for undefined variables
-     */
-    private String undefinedVar;
-
-    /**
      * Variable prefix
      */
     private String varPrefix;
+
+    /**
+     * Prefix for undefined variables
+     */
+    private String undefinedVarPrefix;
 
     /**
      * Current variable number
@@ -34,8 +34,8 @@ public class XQueryVarsRenamer extends XQuerySerializer {
      */
     public XQueryVarsRenamer() {
         this.vars = new HashMap<>();
-        this.undefinedVar = "$Undefined";
         this.varPrefix = "$v";
+        this.undefinedVarPrefix = "$Undefined";
         this.varNum = 0;
     }
 
@@ -50,13 +50,26 @@ public class XQueryVarsRenamer extends XQuerySerializer {
     }
 
     /**
+     * Obtains the next unique variable name for undefined variables
+     *
+     * @return Next unique variable name
+     */
+    private String nextUndefinedVarName() {
+        ++varNum;
+        return undefinedVarPrefix + varNum;
+    }
+
+    /**
      * Obtains the equivalent unique variable name given a variable name
      *
      * @param var Old variable name
      * @return Unique variable name
      */
     private String getVarName(String var) {
-        return vars.getOrDefault(var, undefinedVar);
+        if (vars.containsKey(var)) {
+            return vars.get(var);
+        }
+        return nextUndefinedVarName();
     }
 
     /**
