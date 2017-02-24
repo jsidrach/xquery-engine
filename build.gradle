@@ -124,6 +124,9 @@ task docs(type: Javadoc) {
     excludes = ['**/antlr/**']
     destinationDir = file('docs/javadoc')
     failOnError = false
+    configure(options) {
+        noTimestamp true
+    }
 }
 
 //
