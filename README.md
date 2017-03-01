@@ -1,4 +1,5 @@
-# CSE 232B Project - Team \#3
+# Simplified XQuery Engine
+### UCSD CSE 232B Project
 
 ## Build
 
@@ -7,11 +8,13 @@ Requires gradle:
 gradle build
 ```
 
-This will run all tests, compile and place the fat jars into sub-folders of ```demo/```, and generate the javadoc documentation
+This will run all tests, compile and place the fat jars into sub-folders of ```demo/```, and generate the *javadoc* documentation
 
-## Milestone \#1
+## Run
 
-* Run XPath:
+#### XPath
+
+* Navigate to the directory:
   ```bash
   cd demo/xpath/
   ```
@@ -23,9 +26,9 @@ This will run all tests, compile and place the fat jars into sub-folders of ```d
   ```
   The resulting list of nodes will be stored in ```output.xml``` and displayed in the terminal
 
-## Milestone \#2
+#### XQuery
 
-* Run XQuery:
+* Navigate to the directory:
   ```bash
   cd demo/xquery/
   ```
@@ -37,7 +40,7 @@ This will run all tests, compile and place the fat jars into sub-folders of ```d
   ```
   The resulting document will be stored in ```output.xml``` and displayed in the terminal
 
-## Milestone \#3
+#### Optimized XQuery
 
 * Run optimized XQuery:
   ```bash
@@ -50,10 +53,10 @@ This will run all tests, compile and place the fat jars into sub-folders of ```d
   ./optimized-xquery.sh
   ```
   The intermediate rewritten queries will be stored in ```rewritten.txt```
-  
+
   The resulting document will be stored in ```output.xml``` and displayed in the terminal
 
-## Extra
+#### XQuery Formatter
 
 * Run XQuery formatter:
   ```bash
@@ -66,3 +69,28 @@ This will run all tests, compile and place the fat jars into sub-folders of ```d
   ./formatter.sh
   ```
   The formatted query will be stored in ```output.txt``` and displayed in the terminal
+
+## Project Structure
+
+```
+demo/                             - Executables
+docs/                             - Project documentation
+  javadoc/                        -   Code documentation
+  references/                     -   Simplified XQuery references
+  report/                         -   Final project report
+src/                              - Source code
+  main/                           -   Implementation
+    antlr4/                       -     XQuery and XPath grammar definitions
+    java/edu/cse232b/jsidrach/    -     Java code
+      apps/                       -       Command-line executables
+      utils/                      -       IO auxiliary classes
+      xpath/                      -       XPath engine
+      xquery/                     -       XQuery engine
+        optimized/                -         XQuery join optimizator
+  test/                           -   Unit and integration tests
+    java/                         -     Tests code
+    resources                     -     Input (XQuery) and expected output (XML)
+```
+
+## License
+[MIT](LICENSE)
