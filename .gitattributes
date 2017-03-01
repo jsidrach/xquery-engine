@@ -1,4 +1,5 @@
-*.css binary
-*.html binary
-*.js binary
-*.jar binary
+# javadoc generated files
+*.css     binary
+*.html    binary
+*.js      binary
+*.jar     binary
