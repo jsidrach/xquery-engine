@@ -89,7 +89,7 @@ src/                              - Source code
         optimized/                -         XQuery join optimizator
   test/                           -   Unit and integration tests
     java/                         -     Tests code
-    resources                     -     Input (XQuery) and expected output (XML)
+    resources/                    -     Input (XQuery) and expected output (XML)
 ```
 
 ## License
