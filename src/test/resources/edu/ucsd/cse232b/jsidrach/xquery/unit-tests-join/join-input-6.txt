@@ -5,11 +5,11 @@ let $n1 := ("0", "1"),
     $n5 := ("8", "9"),
     $o1 := ("a", "b"),
     $o2 := ("c", "d"),
-    $xq1 := <nums>{for $i in $n1 return <num>{<n>{$i}</n>,for $j in $o1 return <a1>{$j}</a1>,for $j in $o2 return <a2>{$j}</a2>}</num>}</nums>,
+    $xq1 := <nums>{for $i in $n1 return <num>{<n>{$i}</n>,(for $j in $o1 return <a1>{$j}</a1>),for $j in $o2 return <a2>{$j}</a2>}</num>}</nums>,
     $xq2 := <nums>{for $i in $n2 return <num>{<n>{$i}</n>,for $j in $o1 return <a3>{$j}</a3>}</num>}</nums>,
     $xq3 := <nums>{for $i in $n3 return <num>{<n>{$i}</n>,for $j in $o2 return <a4>{$j}</a4>}</num>}</nums>,
     $xq4 := <nums>{for $i in $n4 return <num>{<n>{$i}</n>,for $j in $o2 return <a5>{$j}</a5>}</num>}</nums>,
-    $xq5 := <nums>{for $i in $n5 return <num>{<n>{$i}</n>,for $j in $o1 return <a6>{$j}</a6>,for $j in $o2 return <a7>{$j}</a7>}</num>}</nums>
+    $xq5 := <nums>{for $i in $n5 return <num>{<n>{$i}</n>,(for $j in $o1 return <a6>{$j}</a6>),for $j in $o2 return <a7>{$j}</a7>}</num>}</nums>
 for $num in
 join($xq1/*,
   join($xq2/*,

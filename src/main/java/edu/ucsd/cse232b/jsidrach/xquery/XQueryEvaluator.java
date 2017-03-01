@@ -3,10 +3,7 @@ package edu.ucsd.cse232b.jsidrach.xquery;
 import edu.ucsd.cse232b.jsidrach.utils.IO;
 import edu.ucsd.cse232b.jsidrach.xpath.XPathEvaluator;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -76,17 +73,16 @@ public class XQueryEvaluator extends XPathEvaluator {
      */
     public static String keyNodeTags(Node node, List<TerminalNode> tags) {
         String key = "";
-        if (node.getNodeType() != Node.ELEMENT_NODE) {
-            return key;
-        }
-        Element n = (Element) node;
         for (TerminalNode tag : tags) {
-            Node tagNode = n.getElementsByTagName(tag.getText()).item(0);
-            if (tagNode != null) {
-                try {
-                    key += IO.NodesToString(children(tagNode), false);
-                } catch (Exception e) {
-                    e.printStackTrace();
+            NodeList nodes = node.getChildNodes();
+            for (int i = 0; i < nodes.getLength(); ++i) {
+                Node c = nodes.item(i);
+                if (c.getNodeName().equals(tag.getText())) {
+                    try {
+                        key += IO.NodesToString(children(c), false);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
