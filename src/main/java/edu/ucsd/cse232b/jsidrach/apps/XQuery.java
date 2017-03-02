@@ -23,7 +23,7 @@ public class XQuery {
         // Print the result of executing the xquery query
         try {
             FileInputStream input = new FileInputStream(args[0]);
-            System.out.print(IO.NodesToString(XQueryEngine.Query(input), false));
+            System.out.print(IO.NodesToString(XQueryEngine.Query(input, true), false));
         } catch (Exception e) {
             e.printStackTrace();
         }

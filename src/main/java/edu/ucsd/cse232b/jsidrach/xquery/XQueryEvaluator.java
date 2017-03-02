@@ -24,14 +24,32 @@ public class XQueryEvaluator extends XPathEvaluator {
     private Document doc;
 
     /**
+     * Flag to to print log messages
+     */
+    private boolean verbose;
+
+    /**
      * Public Constructor - Initializes the document
      *
+     * @param verbose Flag to print log messages
      * @throws Exception Internal error
      */
-    public XQueryEvaluator() throws Exception {
+    public XQueryEvaluator(boolean verbose) throws Exception {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = dbf.newDocumentBuilder();
         this.doc = builder.newDocument();
+        this.verbose = verbose;
+    }
+
+    /**
+     * Prints a message to stderr if the verbose flag is set to true
+     *
+     * @param message Message to print
+     */
+    public void logError(String message) {
+        if (verbose) {
+            System.err.println("[Error] " + message);
+        }
     }
 
     /**

@@ -26,7 +26,7 @@ public class XQueryOptimized {
         try {
             FileInputStream input = new FileInputStream(args[0]);
             String rewrittenQuery = XQueryOptimizerEngine.Optimize(input, true);
-            System.out.print(IO.NodesToString(XQueryEngine.Query(rewrittenQuery), false));
+            System.out.print(IO.NodesToString(XQueryEngine.Query(rewrittenQuery, true), false));
         } catch (Exception e) {
             e.printStackTrace();
         }

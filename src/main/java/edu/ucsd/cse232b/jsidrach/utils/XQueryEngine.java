@@ -20,36 +20,39 @@ public class XQueryEngine {
      * Executes a XQuery query given an ANTLRInputStream
      *
      * @param ANTLRInput Input query
+     * @param verbose    Flag to output log messages
      * @return List of result nodes
      */
-    public static LinkedList<Node> Query(ANTLRInputStream ANTLRInput) throws Exception {
+    public static LinkedList<Node> Query(ANTLRInputStream ANTLRInput, boolean verbose) throws Exception {
         XQueryLexer xQueryLexer = new XQueryLexer(ANTLRInput);
         CommonTokenStream tokens = new CommonTokenStream(xQueryLexer);
         XQueryParser xQueryParser = new XQueryParser(tokens);
         // Parse using xq (XQuery) as root rule
         ParseTree xQueryTree = xQueryParser.xq();
-        XQueryVisitor xQueryVisitor = new XQueryVisitor();
+        XQueryVisitor xQueryVisitor = new XQueryVisitor(verbose);
         return xQueryVisitor.visit(xQueryTree);
     }
 
     /**
      * Executes a XQuery query given a file containing it
      *
-     * @param file File containing the XQuery query
+     * @param file    File containing the XQuery query
+     * @param verbose Flag to output log messages
      * @return List of result nodes
      * @throws Exception Exception if file is not found
      */
-    public static LinkedList<Node> Query(FileInputStream file) throws Exception {
-        return Query(new ANTLRInputStream(file));
+    public static LinkedList<Node> Query(FileInputStream file, boolean verbose) throws Exception {
+        return Query(new ANTLRInputStream(file), verbose);
     }
 
     /**
      * Executes a XQuery query
      *
-     * @param query XQuery query string
+     * @param query   XQuery query string
+     * @param verbose Flag to output log messages
      * @return List of result nodes
      */
-    public static LinkedList<Node> Query(String query) throws Exception {
-        return Query(new ANTLRInputStream(query));
+    public static LinkedList<Node> Query(String query, boolean verbose) throws Exception {
+        return Query(new ANTLRInputStream(query), verbose);
     }
 }

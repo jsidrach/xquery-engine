@@ -13,19 +13,19 @@ package edu.ucsd.cse232b.jsidrach.xquery.optimizer;
  * </p>
  * <pre>
  * XQuery
- *   := 'for' v_1 'in' path_1, ..., v_n 'in' path_n
- *      'where' cond
- *      'return' return
+ *   → 'for' v_1 'in' path_1, ..., v_n 'in' path_n
+ *     'where' cond
+ *     'return' return
  * return
- *   := var
- *    | return ',' return
- *    | '&lt;' n '&gt;' return '&lt;/' n '&lt;'
- *    | path
+ *   → var
+ *   | return ',' return
+ *   | '&lt;' n '&gt;' '{' return '}' '&lt;/' n '&lt;'
+ *   | path
  * path
- *   := ('doc(' FileName ')' | var) ('/' | '//') rp
+ *   → (('doc' '(' StringConstant ')') | var) ('/' | '//') rp
  * cond
- *   := (var | StringLiteral) ('eq' | '=') (var | StringLiteral)
- *    | cond 'and' cond
+ *   → (var | StringConstant) ('eq' | '=') (var | StringConstant)
+ *   | cond 'and' cond
  * </pre>
  * Instead of creating a new grammar/visitor for the optimizer,
  * the query is optimized only if its AST conforms to the following restrictions
@@ -41,10 +41,25 @@ package edu.ucsd.cse232b.jsidrach.xquery.optimizer;
  */
 public class XQueryOptimizer extends XQuerySerializer {
 
+    private enum State {
+        INITIAL, CHECK_FOR, CHECK_WHERE, CHECK_RETURN, REWRITTING
+    }
+
+    private class Metadata {
+        boolean valid;
+
+    }
+
+    private State state;
+
+    private Metadata metadata;
+
     /**
      * Public constructor - Initializes the variables
      */
     public XQueryOptimizer() {
+        this.state = State.INITIAL;
+        this.metadata = new Metadata();
     }
 
     // TODO: Work in phases (state machine)

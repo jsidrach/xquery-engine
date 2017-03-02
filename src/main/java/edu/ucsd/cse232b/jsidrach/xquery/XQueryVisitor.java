@@ -36,10 +36,12 @@ public class XQueryVisitor extends XQueryBaseVisitor<LinkedList<Node>> {
 
     /**
      * Public constructor - Initializes the variables
+     *
+     * @param verbose Flag to print log messages
      */
-    public XQueryVisitor() throws Exception {
+    public XQueryVisitor(boolean verbose) throws Exception {
         this.vars = new HashMap<>();
-        this.xQueryEvaluator = new XQueryEvaluator();
+        this.xQueryEvaluator = new XQueryEvaluator(verbose);
         this.nodes = new LinkedList<>();
     }
 
@@ -60,7 +62,13 @@ public class XQueryVisitor extends XQueryBaseVisitor<LinkedList<Node>> {
      */
     @Override
     public LinkedList<Node> visitXqVariable(XQueryParser.XqVariableContext ctx) {
-        this.nodes = vars.getOrDefault(ctx.Variable().getText(), new LinkedList<>());
+        String varName = ctx.Variable().getText();
+        if (vars.containsKey(varName)) {
+            this.nodes = vars.get(varName);
+        } else {
+            xQueryEvaluator.logError("Undefined variable " + varName);
+            this.nodes = new LinkedList<>();
+        }
         return this.nodes;
     }
 
@@ -182,9 +190,12 @@ public class XQueryVisitor extends XQueryBaseVisitor<LinkedList<Node>> {
     @Override
     public LinkedList<Node> visitXqTag(XQueryParser.XqTagContext ctx) {
         LinkedList<Node> nodes = new LinkedList<>();
-        String tagName = ctx.Identifier(0).getText();
-        if (tagName.equals(ctx.Identifier(1).getText())) {
-            nodes.add(xQueryEvaluator.makeElem(tagName, visit(ctx.xq())));
+        String tagNameOpen = ctx.Identifier(0).getText();
+        String tagNameClose = ctx.Identifier(1).getText();
+        if (tagNameOpen.equals(tagNameClose)) {
+            nodes.add(xQueryEvaluator.makeElem(tagNameOpen, visit(ctx.xq())));
+        } else {
+            xQueryEvaluator.logError("Tags don't match: " + tagNameOpen + ", " + tagNameClose);
         }
         this.nodes = nodes;
         return this.nodes;
@@ -213,6 +224,9 @@ public class XQueryVisitor extends XQueryBaseVisitor<LinkedList<Node>> {
         LinkedList<Node> right = visit(ctx.xq(1));
         List<TerminalNode> leftTags = ctx.tagList(0).Identifier();
         List<TerminalNode> rightTags = ctx.tagList(1).Identifier();
+        if (leftTags.size() != rightTags.size()) {
+            xQueryEvaluator.logError("Different number of tag names");
+        }
         // Add all right nodes to the hash
         HashMap<String, LinkedList<Node>> eqVars = new HashMap<>();
         for (Node r : right) {

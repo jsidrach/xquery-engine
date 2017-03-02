@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":9,"i1":10,"i2":10};
+var methods = {"i0":9,"i1":10,"i2":10,"i3":10};
 var tabs = {65535:["t0","All Methods"],1:["t1","Static Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -136,7 +136,7 @@ extends <a href="../../../../../edu/ucsd/cse232b/jsidrach/xpath/XPathEvaluator.h
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../edu/ucsd/cse232b/jsidrach/xquery/XQueryEvaluator.html#XQueryEvaluator--">XQueryEvaluator</a></span>()</code>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../../edu/ucsd/cse232b/jsidrach/xquery/XQueryEvaluator.html#XQueryEvaluator-boolean-">XQueryEvaluator</a></span>(boolean&nbsp;verbose)</code>
 <div class="block">Public Constructor - Initializes the document</div>
 </td>
 </tr>
@@ -163,13 +163,19 @@ extends <a href="../../../../../edu/ucsd/cse232b/jsidrach/xpath/XPathEvaluator.h
 </td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../edu/ucsd/cse232b/jsidrach/xquery/XQueryEvaluator.html#logError-java.lang.String-">logError</a></span>(java.lang.String&nbsp;message)</code>
+<div class="block">Prints a message to stderr if the verbose flag is set to true</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>org.w3c.dom.Node</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../edu/ucsd/cse232b/jsidrach/xquery/XQueryEvaluator.html#makeElem-java.lang.String-java.util.LinkedList-">makeElem</a></span>(java.lang.String&nbsp;tag,
         java.util.LinkedList&lt;org.w3c.dom.Node&gt;&nbsp;nodes)</code>
 <div class="block">Makes a new element node given a tag and a list of nodes corresponding to its children</div>
 </td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>org.w3c.dom.Node</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../../edu/ucsd/cse232b/jsidrach/xquery/XQueryEvaluator.html#makeText-java.lang.String-">makeText</a></span>(java.lang.String&nbsp;content)</code>
 <div class="block">Makes a new text node given its content</div>
@@ -204,16 +210,18 @@ extends <a href="../../../../../edu/ucsd/cse232b/jsidrach/xpath/XPathEvaluator.h
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="XQueryEvaluator--">
+<a name="XQueryEvaluator-boolean-">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>XQueryEvaluator</h4>
-<pre>public&nbsp;XQueryEvaluator()
+<pre>public&nbsp;XQueryEvaluator(boolean&nbsp;verbose)
                 throws java.lang.Exception</pre>
 <div class="block">Public Constructor - Initializes the document</div>
 <dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>verbose</code> - Flag to print log messages</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
 <dd><code>java.lang.Exception</code> - Internal error</dd>
 </dl>
@@ -227,6 +235,20 @@ extends <a href="../../../../../edu/ucsd/cse232b/jsidrach/xpath/XPathEvaluator.h
 <!--   -->
 </a>
 <h3>Method Detail</h3>
+<a name="logError-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>logError</h4>
+<pre>public&nbsp;void&nbsp;logError(java.lang.String&nbsp;message)</pre>
+<div class="block">Prints a message to stderr if the verbose flag is set to true</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>message</code> - Message to print</dd>
+</dl>
+</li>
+</ul>
 <a name="makeElem-java.lang.String-java.util.LinkedList-">
 <!--   -->
 </a>

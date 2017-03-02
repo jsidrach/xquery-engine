@@ -123,14 +123,14 @@ abstract class XQueryTests {
             try {
                 String input = resourcesPrefix + "-input-" + i + ".txt";
                 String output = resourcesPrefix + "-output-" + i + ".xml";
-                LinkedList<Node> nodes = XQueryEngine.Query(getResource(input));
+                LinkedList<Node> nodes = XQueryEngine.Query(getResource(input), false);
                 // Compare using standard engine
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (assertion) " + resourcesPrefix + "-" + i);
                 }
                 // Compare with formatted query
                 String formattedQuery = XQueryFormatterEngine.Format(getResource(input));
-                nodes = XQueryEngine.Query(formattedQuery);
+                nodes = XQueryEngine.Query(formattedQuery, false);
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (formatted, assertion) " + resourcesPrefix + "-" + i);
                 }
@@ -140,7 +140,7 @@ abstract class XQueryTests {
                 }
                 // Compare with renamed variables query
                 String renamedQuery = XQueryVarsRenamerEngine.RenameVars(getResource(input));
-                nodes = XQueryEngine.Query(renamedQuery);
+                nodes = XQueryEngine.Query(renamedQuery, false);
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (renamed, assertion) " + resourcesPrefix + "-" + i);
                 }
@@ -150,7 +150,7 @@ abstract class XQueryTests {
                 }
                 // Compare using optimized engine
                 String optimizedQuery = XQueryOptimizerEngine.Optimize(getResource(input), false);
-                nodes = XQueryEngine.Query(optimizedQuery);
+                nodes = XQueryEngine.Query(optimizedQuery, false);
                 if (!nodesEqualToResource(nodes, output)) {
                     fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
                 }
