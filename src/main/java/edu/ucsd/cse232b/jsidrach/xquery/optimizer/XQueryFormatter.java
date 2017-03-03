@@ -20,7 +20,7 @@ public class XQueryFormatter extends XQuerySerializer {
     /**
      * Extra spaces
      */
-    private int extraSpaces = 0;
+    private int extraSpaces;
 
     /**
      * Public constructor - Initializes the variables
