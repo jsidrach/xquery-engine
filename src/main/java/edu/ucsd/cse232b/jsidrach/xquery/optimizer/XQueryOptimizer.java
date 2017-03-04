@@ -2,6 +2,10 @@ package edu.ucsd.cse232b.jsidrach.xquery.optimizer;
 
 import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 /**
  * XQueryOptimizer - optimizes xquery queries by rewriting FLWR as joins whenever possible
  * <p><b>Prerequisites</b></p>
@@ -43,18 +47,60 @@ import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
  */
 public class XQueryOptimizer extends XQuerySerializer {
 
-    // TODO: Document
+    /**
+     * States of the optimizer
+     * <ol>
+     * <li>INITIAL - initial state</li>
+     * <li>CHECK_FOR - validating that the for clause conforms to the xquery subset grammar</li>
+     * <li>CHECK_WHERE - validating that the where clause conforms to the xquery subset grammar</li>
+     * <li>CHECK_RETURN - validating that the return clause conforms to the xquery subset grammar</li>
+     * <li>OPTIMIZE - optimizing the FLWR expression using join clauses</li>
+     * </ol>
+     */
     private enum State {
-        INITIAL, CHECK_FOR, CHECK_WHERE, CHECK_RETURN, OPTIMIZING
+        INITIAL, CHECK_FOR, CHECK_WHERE, CHECK_RETURN, OPTIMIZE
     }
 
-    // TODO: Document
+    /**
+     * Metadata representation, to be used by the optimizer
+     */
     private class Info {
+        /**
+         * Flag that indicates if the query is optimizable or not
+         */
         boolean optimizable = true;
+
+        /**
+         * Current state of the optimizer
+         */
         State state = State.INITIAL;
+
+        /**
+         * Map from variable names to the subqueries they represent
+         */
+        HashMap<String, String> vars = new HashMap<>();
+
+        /**
+         * Map for variable dependencies, where the every (child, parent) is a (key, value),
+         * and the variables without dependencies (roots) have their parent set to null
+         */
+        HashMap<String, String> dependencies = new HashMap<>();
+
+        /**
+         * Map from root variables to all the variables that directly or indirectly depend on them
+         */
+        HashMap<String, LinkedList<String>> subqueries = new HashMap<>();
+
+        /**
+         * Map for value equalities, where for every equality in the form of (a = b),
+         * the set of equalities of a contains b and the set of equalities of b contains a
+         */
+        HashMap<String, HashSet<String>> equalities = new HashMap<>();
     }
 
-    // TODO: Document
+    /**
+     * Current metadata
+     */
     private Info info;
 
     /**
@@ -76,36 +122,43 @@ public class XQueryOptimizer extends XQuerySerializer {
      */
     @Override
     public String visitXqFLWR(XQueryParser.XqFLWRContext ctx) {
-        // TODO: Backup, rethink initial state
-        if (info.state != State.INITIAL) {
+        if ((info.state != State.INITIAL) || (!info.optimizable)) {
             info.optimizable = false;
+            return super.visitXqFLWR(ctx);
         }
         // Check that the query can be optimized
         info.state = State.CHECK_FOR;
         visit(ctx.forClause());
         if (!info.optimizable) {
-            return super.visit(ctx);
+            return super.visitXqFLWR(ctx);
         }
         if (ctx.letClause() != null) {
             info.optimizable = false;
-            return super.visit(ctx);
+            return super.visitXqFLWR(ctx);
         }
         info.state = State.CHECK_WHERE;
         if (ctx.whereClause() != null) {
             visit(ctx.whereClause());
         }
         if (!info.optimizable) {
-            return super.visit(ctx);
+            return super.visitXqFLWR(ctx);
         }
         info.state = State.CHECK_RETURN;
         visit(ctx.returnClause());
         if (!info.optimizable) {
-            return super.visit(ctx);
+            return super.visitXqFLWR(ctx);
         }
         // Optimize the query
-        info.state = State.OPTIMIZING;
-        // TODO
-        return super.visit(ctx);
+        info.state = State.OPTIMIZE;
+        visit(ctx.forClause());
+        if (ctx.whereClause() != null) {
+            visit(ctx.whereClause());
+        }
+        String q = "";
+        // TODO: algorithm to translate an FLWR clause into join clauses
+        // Clear metadata
+        info = new Info();
+        return super.visitXqFLWR(ctx);
     }
 
     /**
@@ -116,32 +169,35 @@ public class XQueryOptimizer extends XQuerySerializer {
      */
     @Override
     public String visitForClause(XQueryParser.ForClauseContext ctx) {
-        // TODO
-        return super.visit(ctx);
-    }
-
-    /**
-     * XQuery - FLWR (where)
-     *
-     * @param ctx Current parse tree context
-     * @return String representation of the abstract syntax tree
-     */
-    @Override
-    public String visitWhereClause(XQueryParser.WhereClauseContext ctx) {
-        // TODO
-        return super.visit(ctx);
-    }
-
-    /**
-     * XQuery - FLWR (return)
-     *
-     * @param ctx Current parse tree context
-     * @return String representation of the abstract syntax tree
-     */
-    @Override
-    public String visitReturnClause(XQueryParser.ReturnClauseContext ctx) {
-        // TODO
-        return super.visit(ctx);
+        if (info.state != State.OPTIMIZE) {
+            return super.visitForClause(ctx);
+        }
+        for (int i = 0; i < ctx.Variable().size(); ++i) {
+            String varName = ctx.Variable(i).getText();
+            String varQuery = visit(ctx.xq(i));
+            // Add the subquery the variable traverses
+            info.vars.put(varName, varQuery);
+            // Variable with dependency
+            if (varQuery.startsWith("$")) {
+                String parent = varQuery.split("/")[0];
+                info.dependencies.put(varName, parent);
+                // Find root of the dependency relationship
+                String root = parent;
+                while (info.dependencies.get(root) != null) {
+                    root = info.dependencies.get(root);
+                }
+                // Add this var to the group of variables that depend on the root
+                info.subqueries.get(root).add(varName);
+            }
+            // Root variable
+            else {
+                info.dependencies.put(varName, null);
+                LinkedList<String> vars = new LinkedList<>();
+                vars.add(varName);
+                info.subqueries.put(varName, vars);
+            }
+        }
+        return super.visitForClause(ctx);
     }
 
     /*
@@ -157,10 +213,10 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitXqVariable(XQueryParser.XqVariableContext ctx) {
         String suffix = "";
-        if (info.state == State.OPTIMIZING) {
+        if (info.state == State.OPTIMIZE) {
             suffix = "/*";
         }
-        return super.visit(ctx) + suffix;
+        return super.visitXqVariable(ctx) + suffix;
     }
 
     /**
@@ -171,8 +227,13 @@ public class XQueryOptimizer extends XQuerySerializer {
      */
     @Override
     public String visitCondValueEquality(XQueryParser.CondValueEqualityContext ctx) {
-        // TODO
-        return super.visit(ctx);
+        if (info.state == State.OPTIMIZE) {
+            String left = visit(ctx.xq(0));
+            String right = visit(ctx.xq(1));
+            info.equalities.getOrDefault(left, new HashSet<>()).add(right);
+            info.equalities.getOrDefault(right, new HashSet<>()).add(left);
+        }
+        return super.visitCondValueEquality(ctx);
     }
 
     /*
@@ -190,7 +251,7 @@ public class XQueryOptimizer extends XQuerySerializer {
         if (info.state == State.CHECK_FOR) {
             info.optimizable = false;
         }
-        return super.visit(ctx);
+        return super.visitXqConstant(ctx);
     }
 
     /**
@@ -204,7 +265,7 @@ public class XQueryOptimizer extends XQuerySerializer {
         if (info.state == State.CHECK_WHERE) {
             info.optimizable = false;
         }
-        return super.visit(ctx);
+        return super.visitXqAbsolutePath(ctx);
     }
 
     /**
@@ -218,7 +279,7 @@ public class XQueryOptimizer extends XQuerySerializer {
         if ((info.state == State.CHECK_FOR) || (info.state == State.CHECK_WHERE)) {
             info.optimizable = false;
         }
-        return super.visit(ctx);
+        return super.visitXqPair(ctx);
     }
 
     /**
@@ -232,7 +293,7 @@ public class XQueryOptimizer extends XQuerySerializer {
         if (info.state == State.CHECK_WHERE) {
             info.optimizable = false;
         }
-        return super.visit(ctx);
+        return super.visitXqChildren(ctx);
     }
 
     /**
@@ -246,7 +307,7 @@ public class XQueryOptimizer extends XQuerySerializer {
         if (info.state == State.CHECK_WHERE) {
             info.optimizable = false;
         }
-        return super.visit(ctx);
+        return super.visitXqAll(ctx);
     }
 
     /**
@@ -260,7 +321,7 @@ public class XQueryOptimizer extends XQuerySerializer {
         if ((info.state == State.CHECK_FOR) || (info.state == State.CHECK_WHERE)) {
             info.optimizable = false;
         }
-        return super.visit(ctx);
+        return super.visitXqTag(ctx);
     }
 
     /*
@@ -276,7 +337,7 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitXqJoin(XQueryParser.XqJoinContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitXqJoin(ctx);
     }
 
     /**
@@ -288,7 +349,7 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitXqLet(XQueryParser.XqLetContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitXqLet(ctx);
     }
 
     /**
@@ -300,7 +361,7 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitCondIdentityEquality(ctx);
     }
 
     /**
@@ -312,7 +373,7 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitCondEmpty(XQueryParser.CondEmptyContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitCondEmpty(ctx);
     }
 
     /**
@@ -324,7 +385,7 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitCondSome(XQueryParser.CondSomeContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitCondSome(ctx);
     }
 
     /**
@@ -336,7 +397,7 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitCondOr(XQueryParser.CondOrContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitCondOr(ctx);
     }
 
     /**
@@ -348,6 +409,6 @@ public class XQueryOptimizer extends XQuerySerializer {
     @Override
     public String visitCondNot(XQueryParser.CondNotContext ctx) {
         info.optimizable = false;
-        return super.visit(ctx);
+        return super.visitCondNot(ctx);
     }
 }

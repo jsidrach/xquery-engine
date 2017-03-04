@@ -17,6 +17,12 @@
     catch(err) {
     }
 //-->
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
+var altColor = "altColor";
+var rowColor = "rowColor";
+var tableTab = "tableTab";
+var activeTableTab = "activeTableTab";
 </script>
 <noscript>
 <div>JavaScript is disabled on your browser.</div>
@@ -69,13 +75,13 @@
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods.inherited.from.class.edu.ucsd.cse232b.jsidrach.xquery.optimizer.XQuerySerializer">Method</a></li>
+<li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a name="skip.navbar.top">
@@ -181,12 +187,121 @@ extends <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQ
 <!--   -->
 </a>
 <h3>Method Summary</h3>
+<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Method Summary table, listing methods, and an explanation">
+<caption><span id="t0" class="activeTableTab"><span>All Methods</span><span class="tabEnd">&nbsp;</span></span><span id="t2" class="tableTab"><span><a href="javascript:show(2);">Instance Methods</a></span><span class="tabEnd">&nbsp;</span></span><span id="t4" class="tableTab"><span><a href="javascript:show(8);">Concrete Methods</a></span><span class="tabEnd">&nbsp;</span></span></caption>
+<tr>
+<th class="colFirst" scope="col">Modifier and Type</th>
+<th class="colLast" scope="col">Method and Description</th>
+</tr>
+<tr id="i0" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitCondEmpty-XQueryParser.CondEmptyContext-">visitCondEmpty</a></span>(XQueryParser.CondEmptyContext&nbsp;ctx)</code>
+<div class="block">XQuery - Condition (empty)</div>
+</td>
+</tr>
+<tr id="i1" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitCondIdentityEquality-XQueryParser.CondIdentityEqualityContext-">visitCondIdentityEquality</a></span>(XQueryParser.CondIdentityEqualityContext&nbsp;ctx)</code>
+<div class="block">XQuery - Condition (identity equality)</div>
+</td>
+</tr>
+<tr id="i2" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitCondNot-XQueryParser.CondNotContext-">visitCondNot</a></span>(XQueryParser.CondNotContext&nbsp;ctx)</code>
+<div class="block">XQuery - Condition (not)</div>
+</td>
+</tr>
+<tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitCondOr-XQueryParser.CondOrContext-">visitCondOr</a></span>(XQueryParser.CondOrContext&nbsp;ctx)</code>
+<div class="block">XQuery - Condition (or)</div>
+</td>
+</tr>
+<tr id="i4" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitCondSome-XQueryParser.CondSomeContext-">visitCondSome</a></span>(XQueryParser.CondSomeContext&nbsp;ctx)</code>
+<div class="block">XQuery - Condition (some)</div>
+</td>
+</tr>
+<tr id="i5" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitCondValueEquality-XQueryParser.CondValueEqualityContext-">visitCondValueEquality</a></span>(XQueryParser.CondValueEqualityContext&nbsp;ctx)</code>
+<div class="block">XQuery - Condition (value equality)</div>
+</td>
+</tr>
+<tr id="i6" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitForClause-XQueryParser.ForClauseContext-">visitForClause</a></span>(XQueryParser.ForClauseContext&nbsp;ctx)</code>
+<div class="block">XQuery - FLWR (for)</div>
+</td>
+</tr>
+<tr id="i7" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqAbsolutePath-XQueryParser.XqAbsolutePathContext-">visitXqAbsolutePath</a></span>(XQueryParser.XqAbsolutePathContext&nbsp;ctx)</code>
+<div class="block">XQuery (absolute path)</div>
+</td>
+</tr>
+<tr id="i8" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqAll-XQueryParser.XqAllContext-">visitXqAll</a></span>(XQueryParser.XqAllContext&nbsp;ctx)</code>
+<div class="block">XQuery (all)</div>
+</td>
+</tr>
+<tr id="i9" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqChildren-XQueryParser.XqChildrenContext-">visitXqChildren</a></span>(XQueryParser.XqChildrenContext&nbsp;ctx)</code>
+<div class="block">XQuery (children)</div>
+</td>
+</tr>
+<tr id="i10" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqConstant-XQueryParser.XqConstantContext-">visitXqConstant</a></span>(XQueryParser.XqConstantContext&nbsp;ctx)</code>
+<div class="block">XQuery (constant)</div>
+</td>
+</tr>
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqFLWR-XQueryParser.XqFLWRContext-">visitXqFLWR</a></span>(XQueryParser.XqFLWRContext&nbsp;ctx)</code>
+<div class="block">XQuery (for let while return - FLWR)</div>
+</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqJoin-XQueryParser.XqJoinContext-">visitXqJoin</a></span>(XQueryParser.XqJoinContext&nbsp;ctx)</code>
+<div class="block">XQuery (join)</div>
+</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqLet-XQueryParser.XqLetContext-">visitXqLet</a></span>(XQueryParser.XqLetContext&nbsp;ctx)</code>
+<div class="block">XQuery (let)</div>
+</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqPair-XQueryParser.XqPairContext-">visitXqPair</a></span>(XQueryParser.XqPairContext&nbsp;ctx)</code>
+<div class="block">XQuery (pair)</div>
+</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqTag-XQueryParser.XqTagContext-">visitXqTag</a></span>(XQueryParser.XqTagContext&nbsp;ctx)</code>
+<div class="block">XQuery (tag)</div>
+</td>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQueryOptimizer.html#visitXqVariable-XQueryParser.XqVariableContext-">visitXqVariable</a></span>(XQueryParser.XqVariableContext&nbsp;ctx)</code>
+<div class="block">XQuery (variable)</div>
+</td>
+</tr>
+</table>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.edu.ucsd.cse232b.jsidrach.xquery.optimizer.XQuerySerializer">
 <!--   -->
 </a>
 <h3>Methods inherited from class&nbsp;edu.ucsd.cse232b.jsidrach.xquery.optimizer.<a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></h3>
-<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitApAll-XQueryParser.ApAllContext-">visitApAll</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitApChildren-XQueryParser.ApChildrenContext-">visitApChildren</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitApDoc-XQueryParser.ApDocContext-">visitApDoc</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondAnd-XQueryParser.CondAndContext-">visitCondAnd</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondEmpty-XQueryParser.CondEmptyContext-">visitCondEmpty</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondIdentityEquality-XQueryParser.CondIdentityEqualityContext-">visitCondIdentityEquality</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondNot-XQueryParser.CondNotContext-">visitCondNot</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondOr-XQueryParser.CondOrContext-">visitCondOr</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondParentheses-XQueryParser.CondParenthesesContext-">visitCondParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondSome-XQueryParser.CondSomeContext-">visitCondSome</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondValueEquality-XQueryParser.CondValueEqualityContext-">visitCondValueEquality</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFAnd-XQueryParser.FAndContext-">visitFAnd</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFIdentityEquality-XQueryParser.FIdentityEqualityContext-">visitFIdentityEquality</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFNot-XQueryParser.FNotContext-">visitFNot</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFOr-XQueryParser.FOrContext-">visitFOr</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitForClause-XQueryParser.ForClauseContext-">visitForClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFParentheses-XQueryParser.FParenthesesContext-">visitFParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFRelativePath-XQueryParser.FRelativePathContext-">visitFRelativePath</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFValueEquality-XQueryParser.FValueEqualityContext-">visitFValueEquality</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitLetClause-XQueryParser.LetClauseContext-">visitLetClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitReturnClause-XQueryParser.ReturnClauseContext-">visitReturnClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpAll-XQueryParser.RpAllContext-">visitRpAll</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpAttribute-XQueryParser.RpAttributeContext-">visitRpAttribute</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpChildren-XQueryParser.RpChildrenContext-">visitRpChildren</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpCurrent-XQueryParser.RpCurrentContext-">visitRpCurrent</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpFilter-XQueryParser.RpFilterContext-">visitRpFilter</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpPair-XQueryParser.RpPairContext-">visitRpPair</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpParent-XQueryParser.RpParentContext-">visitRpParent</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpParentheses-XQueryParser.RpParenthesesContext-">visitRpParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpTag-XQueryParser.RpTagContext-">visitRpTag</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpText-XQueryParser.RpTextContext-">visitRpText</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpWildcard-XQueryParser.RpWildcardContext-">visitRpWildcard</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitTagList-XQueryParser.TagListContext-">visitTagList</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitWhereClause-XQueryParser.WhereClauseContext-">visitWhereClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqAbsolutePath-XQueryParser.XqAbsolutePathContext-">visitXqAbsolutePath</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqAll-XQueryParser.XqAllContext-">visitXqAll</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqChildren-XQueryParser.XqChildrenContext-">visitXqChildren</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqConstant-XQueryParser.XqConstantContext-">visitXqConstant</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqFLWR-XQueryParser.XqFLWRContext-">visitXqFLWR</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqJoin-XQueryParser.XqJoinContext-">visitXqJoin</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqLet-XQueryParser.XqLetContext-">visitXqLet</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqPair-XQueryParser.XqPairContext-">visitXqPair</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqParentheses-XQueryParser.XqParenthesesContext-">visitXqParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqTag-XQueryParser.XqTagContext-">visitXqTag</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqVariable-XQueryParser.XqVariableContext-">visitXqVariable</a></code></li>
+<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitApAll-XQueryParser.ApAllContext-">visitApAll</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitApChildren-XQueryParser.ApChildrenContext-">visitApChildren</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitApDoc-XQueryParser.ApDocContext-">visitApDoc</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondAnd-XQueryParser.CondAndContext-">visitCondAnd</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondParentheses-XQueryParser.CondParenthesesContext-">visitCondParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFAnd-XQueryParser.FAndContext-">visitFAnd</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFIdentityEquality-XQueryParser.FIdentityEqualityContext-">visitFIdentityEquality</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFNot-XQueryParser.FNotContext-">visitFNot</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFOr-XQueryParser.FOrContext-">visitFOr</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFParentheses-XQueryParser.FParenthesesContext-">visitFParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFRelativePath-XQueryParser.FRelativePathContext-">visitFRelativePath</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitFValueEquality-XQueryParser.FValueEqualityContext-">visitFValueEquality</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitLetClause-XQueryParser.LetClauseContext-">visitLetClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitReturnClause-XQueryParser.ReturnClauseContext-">visitReturnClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpAll-XQueryParser.RpAllContext-">visitRpAll</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpAttribute-XQueryParser.RpAttributeContext-">visitRpAttribute</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpChildren-XQueryParser.RpChildrenContext-">visitRpChildren</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpCurrent-XQueryParser.RpCurrentContext-">visitRpCurrent</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpFilter-XQueryParser.RpFilterContext-">visitRpFilter</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpPair-XQueryParser.RpPairContext-">visitRpPair</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpParent-XQueryParser.RpParentContext-">visitRpParent</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpParentheses-XQueryParser.RpParenthesesContext-">visitRpParentheses</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpTag-XQueryParser.RpTagContext-">visitRpTag</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpText-XQueryParser.RpTextContext-">visitRpText</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitRpWildcard-XQueryParser.RpWildcardContext-">visitRpWildcard</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitTagList-XQueryParser.TagListContext-">visitTagList</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitWhereClause-XQueryParser.WhereClauseContext-">visitWhereClause</a>, <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqParentheses-XQueryParser.XqParenthesesContext-">visitXqParentheses</a></code></li>
 </ul>
 <ul class="blockList">
 <li class="blockList"><a name="methods.inherited.from.class.java.lang.Object">
@@ -217,6 +332,320 @@ extends <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQ
 <h4>XQueryOptimizer</h4>
 <pre>public&nbsp;XQueryOptimizer()</pre>
 <div class="block">Public constructor - Initializes the variables</div>
+</li>
+</ul>
+</li>
+</ul>
+<!-- ============ METHOD DETAIL ========== -->
+<ul class="blockList">
+<li class="blockList"><a name="method.detail">
+<!--   -->
+</a>
+<h3>Method Detail</h3>
+<a name="visitXqFLWR-XQueryParser.XqFLWRContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqFLWR</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqFLWR(XQueryParser.XqFLWRContext&nbsp;ctx)</pre>
+<div class="block">XQuery (for let while return - FLWR)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqFLWR-XQueryParser.XqFLWRContext-">visitXqFLWR</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitForClause-XQueryParser.ForClauseContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitForClause</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitForClause(XQueryParser.ForClauseContext&nbsp;ctx)</pre>
+<div class="block">XQuery - FLWR (for)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitForClause-XQueryParser.ForClauseContext-">visitForClause</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqVariable-XQueryParser.XqVariableContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqVariable</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqVariable(XQueryParser.XqVariableContext&nbsp;ctx)</pre>
+<div class="block">XQuery (variable)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqVariable-XQueryParser.XqVariableContext-">visitXqVariable</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitCondValueEquality-XQueryParser.CondValueEqualityContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCondValueEquality</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitCondValueEquality(XQueryParser.CondValueEqualityContext&nbsp;ctx)</pre>
+<div class="block">XQuery - Condition (value equality)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondValueEquality-XQueryParser.CondValueEqualityContext-">visitCondValueEquality</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqConstant-XQueryParser.XqConstantContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqConstant</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqConstant(XQueryParser.XqConstantContext&nbsp;ctx)</pre>
+<div class="block">XQuery (constant)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqConstant-XQueryParser.XqConstantContext-">visitXqConstant</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqAbsolutePath-XQueryParser.XqAbsolutePathContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqAbsolutePath</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqAbsolutePath(XQueryParser.XqAbsolutePathContext&nbsp;ctx)</pre>
+<div class="block">XQuery (absolute path)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqAbsolutePath-XQueryParser.XqAbsolutePathContext-">visitXqAbsolutePath</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqPair-XQueryParser.XqPairContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqPair</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqPair(XQueryParser.XqPairContext&nbsp;ctx)</pre>
+<div class="block">XQuery (pair)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqPair-XQueryParser.XqPairContext-">visitXqPair</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqChildren-XQueryParser.XqChildrenContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqChildren</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqChildren(XQueryParser.XqChildrenContext&nbsp;ctx)</pre>
+<div class="block">XQuery (children)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqChildren-XQueryParser.XqChildrenContext-">visitXqChildren</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqAll-XQueryParser.XqAllContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqAll</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqAll(XQueryParser.XqAllContext&nbsp;ctx)</pre>
+<div class="block">XQuery (all)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqAll-XQueryParser.XqAllContext-">visitXqAll</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqTag-XQueryParser.XqTagContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqTag</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqTag(XQueryParser.XqTagContext&nbsp;ctx)</pre>
+<div class="block">XQuery (tag)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqTag-XQueryParser.XqTagContext-">visitXqTag</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqJoin-XQueryParser.XqJoinContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqJoin</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqJoin(XQueryParser.XqJoinContext&nbsp;ctx)</pre>
+<div class="block">XQuery (join)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqJoin-XQueryParser.XqJoinContext-">visitXqJoin</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitXqLet-XQueryParser.XqLetContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitXqLet</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitXqLet(XQueryParser.XqLetContext&nbsp;ctx)</pre>
+<div class="block">XQuery (let)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitXqLet-XQueryParser.XqLetContext-">visitXqLet</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitCondIdentityEquality-XQueryParser.CondIdentityEqualityContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCondIdentityEquality</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitCondIdentityEquality(XQueryParser.CondIdentityEqualityContext&nbsp;ctx)</pre>
+<div class="block">XQuery - Condition (identity equality)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondIdentityEquality-XQueryParser.CondIdentityEqualityContext-">visitCondIdentityEquality</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitCondEmpty-XQueryParser.CondEmptyContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCondEmpty</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitCondEmpty(XQueryParser.CondEmptyContext&nbsp;ctx)</pre>
+<div class="block">XQuery - Condition (empty)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondEmpty-XQueryParser.CondEmptyContext-">visitCondEmpty</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitCondSome-XQueryParser.CondSomeContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCondSome</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitCondSome(XQueryParser.CondSomeContext&nbsp;ctx)</pre>
+<div class="block">XQuery - Condition (some)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondSome-XQueryParser.CondSomeContext-">visitCondSome</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitCondOr-XQueryParser.CondOrContext-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>visitCondOr</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitCondOr(XQueryParser.CondOrContext&nbsp;ctx)</pre>
+<div class="block">XQuery - Condition (or)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondOr-XQueryParser.CondOrContext-">visitCondOr</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
+</li>
+</ul>
+<a name="visitCondNot-XQueryParser.CondNotContext-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>visitCondNot</h4>
+<pre>public&nbsp;java.lang.String&nbsp;visitCondNot(XQueryParser.CondNotContext&nbsp;ctx)</pre>
+<div class="block">XQuery - Condition (not)</div>
+<dl>
+<dt><span class="overrideSpecifyLabel">Overrides:</span></dt>
+<dd><code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html#visitCondNot-XQueryParser.CondNotContext-">visitCondNot</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQuerySerializer.html" title="class in edu.ucsd.cse232b.jsidrach.xquery.optimizer">XQuerySerializer</a></code></dd>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>ctx</code> - Current parse tree context</dd>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>String representation of the abstract syntax tree</dd>
+</dl>
 </li>
 </ul>
 </li>
@@ -274,13 +703,13 @@ extends <a href="../../../../../../edu/ucsd/cse232b/jsidrach/xquery/optimizer/XQ
 <li>Nested&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.summary">Constr</a>&nbsp;|&nbsp;</li>
-<li><a href="#methods.inherited.from.class.edu.ucsd.cse232b.jsidrach.xquery.optimizer.XQuerySerializer">Method</a></li>
+<li><a href="#method.summary">Method</a></li>
 </ul>
 <ul class="subNavList">
 <li>Detail:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor.detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method.detail">Method</a></li>
 </ul>
 </div>
 <a name="skip.navbar.bottom">
