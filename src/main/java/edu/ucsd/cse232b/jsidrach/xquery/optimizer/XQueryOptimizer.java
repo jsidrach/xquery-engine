@@ -201,9 +201,10 @@ public class XQueryOptimizer extends XQuerySerializer {
                     "[" + String.join(",", joinLeft) + "]," +
                     "[" + String.join(",", joinRight) + "])";
         }
-        // Clear metadata
+        // Rewrite return clause
         info.state = State.REWRITE_RETURN;
         q += left + visit(ctx.returnClause());
+        // Clear metadata
         info = new Info();
         return q;
     }

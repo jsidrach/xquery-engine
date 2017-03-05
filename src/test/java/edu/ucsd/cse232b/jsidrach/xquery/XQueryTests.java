@@ -155,9 +155,8 @@ abstract class XQueryTests {
                     fail("Failed (optimized, assertion) " + resourcesPrefix + "-" + i);
                 }
                 // Check that the query optimizer is idempotent (after renaming variables)
-                if (!XQueryVarsRenamerEngine.RenameVars(optimizedQuery).equals(
-                        XQueryVarsRenamerEngine.RenameVars(XQueryOptimizerEngine.Optimize(optimizedQuery, false))
-                )) {
+                if (!XQueryVarsRenamerEngine.RenameVars(optimizedQuery)
+                        .equals(XQueryOptimizerEngine.Optimize(optimizedQuery, false))) {
                     fail("Failed (optimized, idempotent) " + resourcesPrefix + "-" + i);
                 }
             } catch (Exception e) {
