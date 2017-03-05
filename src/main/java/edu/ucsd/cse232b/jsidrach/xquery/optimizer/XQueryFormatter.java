@@ -23,12 +23,18 @@ public class XQueryFormatter extends XQuerySerializer {
     private int extraSpaces;
 
     /**
+     * Maximum number of characters a subquery can have before printing it into separate lines
+     */
+    private int maxInline;
+
+    /**
      * Public constructor - Initializes the variables
      */
     public XQueryFormatter() {
         this.level = 0;
         this.spacesPerLevel = 2;
         this.extraSpaces = 0;
+        this.maxInline = 20;
     }
 
     /**
@@ -195,9 +201,14 @@ public class XQueryFormatter extends XQuerySerializer {
         String q = "";
         q += line("<" + ctx.Identifier(0).getText() + ">{");
         ++level;
-        q += visit(ctx.xq());
+        String xq = visit(ctx.xq());
         --level;
-        q += line("}</" + ctx.Identifier(1).getText() + ">");
+        String endTag = "}</" + ctx.Identifier(1).getText() + ">";
+        if (xq.trim().length() <= this.maxInline) {
+            q = rTrim(q) + xq.trim() + lTrim(endTag);
+        } else {
+            q += rTrim(xq) + System.lineSeparator() + line(endTag);
+        }
         return q;
     }
 
@@ -400,12 +411,14 @@ public class XQueryFormatter extends XQuerySerializer {
         String q = "";
         String eq = "= ";
         this.extraSpaces += eq.length();
-        q += visit(ctx.xq(0));
+        String xq1 = visit(ctx.xq(0));
+        String xq2 = visit(ctx.xq(1));
         this.extraSpaces -= eq.length();
-        q += indent(eq);
-        this.extraSpaces += eq.length();
-        q += lTrim(visit(ctx.xq(1)));
-        this.extraSpaces -= eq.length();
+        if ((xq1.trim().length() + xq2.trim().length()) <= this.maxInline) {
+            q += rTrim(xq1) + " " + eq + lTrim(xq2);
+        } else {
+            q += xq1 + indent(eq) + lTrim(xq2);
+        }
         return q;
     }
 
@@ -420,12 +433,14 @@ public class XQueryFormatter extends XQuerySerializer {
         String q = "";
         String is = "== ";
         this.extraSpaces += is.length();
-        q += visit(ctx.xq(0));
+        String xq1 = visit(ctx.xq(0));
+        String xq2 = visit(ctx.xq(1));
         this.extraSpaces -= is.length();
-        q += indent(is);
-        this.extraSpaces += is.length();
-        q += lTrim(visit(ctx.xq(1)));
-        this.extraSpaces -= is.length();
+        if ((xq1.trim().length() + xq2.trim().length()) <= this.maxInline) {
+            q += rTrim(xq1) + " " + is + lTrim(xq2);
+        } else {
+            q += xq1 + indent(is) + lTrim(xq2);
+        }
         return q;
     }
 

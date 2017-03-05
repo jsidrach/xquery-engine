@@ -4,6 +4,7 @@ import edu.ucsd.cse232b.jsidrach.antlr.XQueryParser;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 /**
@@ -58,7 +59,7 @@ public class XQueryOptimizer extends XQuerySerializer {
      * </ol>
      */
     private enum State {
-        INITIAL, CHECK_FOR, CHECK_WHERE, CHECK_RETURN, OPTIMIZE
+        INITIAL, CHECK_FOR, CHECK_WHERE, CHECK_RETURN, OPTIMIZE, REWRITE_RETURN
     }
 
     /**
@@ -89,13 +90,30 @@ public class XQueryOptimizer extends XQuerySerializer {
         /**
          * Map from root variables to all the variables that directly or indirectly depend on them
          */
-        HashMap<String, LinkedList<String>> subqueries = new HashMap<>();
+        LinkedHashMap<String, LinkedList<String>> subqueries = new LinkedHashMap<>();
 
         /**
-         * Map for value equalities, where for every equality in the form of (a = b),
-         * the set of equalities of a contains b and the set of equalities of b contains a
+         * Map for variable value equalities, where for every equality in the form of ($a = $b),
+         * the set of equalities of $a contains $b and the set of equalities of $b contains $a
          */
-        HashMap<String, HashSet<String>> equalities = new HashMap<>();
+        HashMap<String, HashSet<String>> varEqualities = new HashMap<>();
+
+        /**
+         * Map for variable value equality restrictions, where for every equality in the form of ($a = "..." or "..." = $a),
+         * the list of equalities of $a contains "..."
+         */
+        HashMap<String, LinkedList<String>> varRestrictions = new HashMap<>();
+
+        /**
+         * List of free value equality restrictions, where for every equality in the form of ("..." = "..."),
+         * the list contains a string representation of the equality ("..." = "...")
+         */
+        LinkedList<String> freeRestrictions = new LinkedList<>();
+
+        /**
+         * List of variables that have already been incorporated into the rewritten join query
+         */
+        LinkedList<String> varsJoined = new LinkedList<>();
     }
 
     /**
@@ -154,11 +172,90 @@ public class XQueryOptimizer extends XQuerySerializer {
         if (ctx.whereClause() != null) {
             visit(ctx.whereClause());
         }
-        String q = "";
-        // TODO: algorithm to translate an FLWR clause into join clauses
+        if (info.subqueries.size() <= 1) {
+            info = new Info();
+            return super.visitXqFLWR(ctx);
+        }
+        String q = "for $tuple in ";
+        String left = nextSubquery();
+        while (!info.subqueries.isEmpty()) {
+            LinkedList<String> joinLeft = new LinkedList<>();
+            LinkedList<String> joinRight = new LinkedList<>();
+            LinkedList<String> rightVars = info.subqueries.entrySet().iterator().next().getValue();
+            for (String leftVar : info.varsJoined) {
+                HashSet<String> leftEqualities = info.varEqualities.getOrDefault(leftVar, new HashSet<>());
+                for (String rightVar : rightVars) {
+                    if (leftEqualities.contains(rightVar)) {
+                        joinLeft.add(leftVar.substring(1));
+                        joinRight.add(rightVar.substring(1));
+                        leftEqualities.remove(rightVar);
+                        info.varEqualities.get(rightVar).remove(leftVar);
+                        info.varEqualities.get(leftVar).remove(rightVar);
+                    }
+                }
+            }
+            String right = nextSubquery();
+            left = "join(" +
+                    left + "," +
+                    right + "," +
+                    "[" + String.join(",", joinLeft) + "]," +
+                    "[" + String.join(",", joinRight) + "])";
+        }
         // Clear metadata
+        info.state = State.REWRITE_RETURN;
+        q += left + visit(ctx.returnClause());
         info = new Info();
-        return super.visitXqFLWR(ctx);
+        return q;
+    }
+
+    /**
+     * Obtains the string representation of the next FLWR subquery to be used in the join
+     *
+     * @return String representation of the next FLWR subquery to be used in the join
+     */
+    private String nextSubquery() {
+        String root = info.subqueries.entrySet().iterator().next().getKey();
+        LinkedList<String> vars = info.subqueries.remove(root);
+        // For clause
+        String q = " for ";
+        LinkedList<String> forVars = new LinkedList<>();
+        for (String var : vars) {
+            forVars.add(var + " in " + info.vars.get(var));
+        }
+        q += String.join(",", forVars);
+        // Where clause
+        LinkedList<String> whereConds = new LinkedList<>();
+        whereConds.addAll(info.freeRestrictions);
+        for (String var : vars) {
+            LinkedList<String> restrictions = info.varRestrictions.getOrDefault(var, new LinkedList<>());
+            for (String r : restrictions) {
+                whereConds.add(var + " = " + r);
+            }
+            info.varRestrictions.remove(var);
+        }
+        for (String left : vars) {
+            for (String right : vars) {
+                if (info.varEqualities.getOrDefault(left, new HashSet<>()).contains(right)) {
+                    whereConds.add(left + " = " + right);
+                    info.varEqualities.get(left).remove(right);
+                    info.varEqualities.get(right).remove(left);
+                }
+            }
+        }
+        if (!whereConds.isEmpty()) {
+            q += " where ";
+            q += String.join(" and ", whereConds);
+        }
+        // Return clause
+        q += " return ";
+        LinkedList<String> returnVars = new LinkedList<>();
+        for (String var : vars) {
+            String varName = var.substring(1);
+            returnVars.add("<" + varName + ">{" + var + "}</" + varName + ">");
+        }
+        q += "<tuple>{" + String.join(",", returnVars) + "}</tuple>";
+        info.varsJoined.addAll(vars);
+        return q;
     }
 
     /**
@@ -212,11 +309,12 @@ public class XQueryOptimizer extends XQuerySerializer {
      */
     @Override
     public String visitXqVariable(XQueryParser.XqVariableContext ctx) {
-        String suffix = "";
-        if (info.state == State.OPTIMIZE) {
-            suffix = "/*";
+        String var = super.visitXqVariable(ctx);
+        if (info.state == State.REWRITE_RETURN) {
+            String varName = var.substring(1);
+            var = "$tuple/" + varName + "/*";
         }
-        return super.visitXqVariable(ctx) + suffix;
+        return var;
     }
 
     /**
@@ -230,8 +328,22 @@ public class XQueryOptimizer extends XQuerySerializer {
         if (info.state == State.OPTIMIZE) {
             String left = visit(ctx.xq(0));
             String right = visit(ctx.xq(1));
-            info.equalities.getOrDefault(left, new HashSet<>()).add(right);
-            info.equalities.getOrDefault(right, new HashSet<>()).add(left);
+            boolean leftIsVar = left.startsWith("$");
+            boolean rightIsVar = right.startsWith("$");
+            if (leftIsVar && rightIsVar) {
+                info.varEqualities.putIfAbsent(left, new HashSet<>());
+                info.varEqualities.get(left).add(right);
+                info.varEqualities.putIfAbsent(right, new HashSet<>());
+                info.varEqualities.get(right).add(left);
+            } else if (leftIsVar) {
+                info.varRestrictions.putIfAbsent(left, new LinkedList<>());
+                info.varRestrictions.get(left).add(right);
+            } else if (rightIsVar) {
+                info.varRestrictions.putIfAbsent(right, new LinkedList<>());
+                info.varRestrictions.get(right).add(left);
+            } else {
+                info.freeRestrictions.add(left + " = " + right);
+            }
         }
         return super.visitCondValueEquality(ctx);
     }
