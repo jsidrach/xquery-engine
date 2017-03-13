@@ -1,0 +1,81 @@
+\documentclass[paper=letter, fontsize=11pt]{scrartcl}
+
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage[left=2cm,top=2.5cm,right=2cm,bottom=2.5cm,bindingoffset=0cm]{geometry}
+
+\title{
+\normalfont \normalsize
+\textsc{University of California San Diego} \\ [25pt]
+\huge CSE 232B Project - Final Report \\
+}
+\author{J. Sidrach}
+\date{\normalsize{March 17\textsuperscript{th}, 2017}}
+
+\begin{document}
+
+\maketitle
+
+\section{Overview}
+
+The objective of this project is to design and implement an efficient \textit{XQuery} evaluator.
+The specific semantics are a simplification (not a strict subset) of \textit{XQuery 1.0}\footnote{XQuery 1.0: An XML Query Language (https://www.w3.org/TR/xquery)}.
+The grammar's specification is formally defined in \texttt{docs/references/Simplified XQuery Semantics.pdf}.
+The most notable differences are the lack of types and the removal of most of the grammar rules, while still allowing the queries to be expressive enough for the purposes of this project.
+
+More detailed information about the structure of the project's source code, along with instructions on how to build and run it, can be found in the \texttt{README.md} file under the project's root directory.
+Additionally, the \texttt{javadoc} documentation is available under \texttt{docs/javadoc/}.
+
+\section{XQuery Evaluator}
+
+The first phase of the \textit{XQuery Evaluator} is to parse an input query and build its Abstract Syntax Tree (AST).
+This task is relatively easy with the help of the \textit{ANTLR4}\footnote{ANTLR: ANother Tool for Language Recognition (http://www.antlr.org)} library.
+\textit{ANTLR}, given the definition of the grammar, auto-generates the necessary code to achieve this task in just a couple of function calls, while also providing base classes for the traversal of the AST.
+
+The next phase consists in the actual evaluation of the query.
+To do so, the AST is traversed using the \textit{ANTLR} visitor pattern (as opposed to listener).
+The visitor pattern allows more control on this traversal, or even avoid, under certain circumstances, to visit some sub-trees altogether.
+For instance, whenever there are two conditions joined with the binary \texttt{or} operator, if the first one evaluates to true there is no need to traverse/evaluate the second one.
+
+The most relevant class for the evaluation of the query is \texttt{XQueryVisitor}.
+The evaluation of every rule depends on the current value of two of its properties: a list of nodes and a map from variable names to the list of nodes each one represents.
+Some type of rules, like \textit{XPath} filters or \textit{XQuery} conditions, are only allowed to read these two variables but not to modify them.
+To deal with this restriction, the methods that visit these rules store first the current value of both properties.
+Then, once the sub-tree has been visited, their values are restored.
+A similar approach is used to deal with the scope of variables.
+All rules that introduce new variables first store a copy of the current value of the map.
+Once the new variables should no longer be in scope, the stored copy of the map is restored.
+
+The project also contains unit and integration tests for every rule in the grammar.
+Each test case consists of a given \textit{XQuery} and its expected \textit{XML} result, and it verifies that the evaluation of the input \textit{XQuery} results in exactly the same \textit{XML} as the provided one.
+In total, there are more than 120 test cases, and all of them are run as an intermediate step in the build process.
+
+\section{XQuery Optimizer}
+
+The \textit{XQuery Optimizer} rewrites "\texttt{for [...] where [...] return [...]}" expressions into equivalent ones using the join operator (added for this purpose), when some restrictions are satisfied.
+The description of this process is documented in \texttt{docs/references/Join Optimization.pdf}.
+The \textit{XQuery} grammar has been extended, introducing the join operator.
+The implementation of the join is based on the \textit{Hash Join} algorithm.
+For every children of the left and right sub-queries with the same hash, the result of the join includes a new node containing both.
+This hash (a string) only depends on the attributes specified in the join operator.
+
+The query optimization is done in three stages, all based on an \textit{ANTLR} visitor, \texttt{XQuerySerializer}.
+This visitor takes a query and returns an equivalent query (\texttt{String -> String}), allowing the composition of the three stages (visitors) easily.
+The optimizer uses visitors, instead of string manipulations, to be able to access to the AST and its information in the rewrite process.
+
+- The first stage, implemented in \texttt{XQueryVarsRenamer}, simply renames all variables so their names are unique (there won't be name collisions with the current restrictions, but this simplifies more complex optimizations).
+
+- The second stage first verifies that the given query can be rewritten - it checks that it conforms to the sub-grammar for which the optimization is defined.
+If this is the case, it rewrites the query using the join operator, and it pushes back the selections of the form of \texttt{\$var = "Constant"}.
+The rewrite process also works in cases where more than one join operator is needed, nesting them.
+
+- The third stage, implemented in \texttt{XQueryFormatter}, formats/indents the query so that it is easier to read and debug.
+
+The test suite for the query optimizer verify that the evaluation of the output of each stage yields the same result as the evaluation of the original query.
+Additionally, the tests also check that the stages are idempotent (going through a stage once should result in the same output as going through it twice).
+
+All in all, the applied optimizations are somewhat limited to really specific cases.
+However, the developed solution is easy to extend to support more general/complex optimizations, following the defined structure of stages.
+
+\end{document}

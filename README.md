@@ -1,5 +1,6 @@
 # Simplified XQuery Engine
 ### UCSD CSE 232B Project
+#### [Final Report](docs/report/report.pdf)
 
 ## Build
 
@@ -94,3 +95,4 @@ src/                              - Source code
 
 ## License
 [MIT](LICENSE)
+

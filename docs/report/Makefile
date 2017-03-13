@@ -1,14 +1,14 @@
 TEXC := xelatex
 TEXC_OPTS += -shell-escape
-CLEAN = *.aux *.log *.nav *.out *.snm *.toc *.vrb latexmkrc
+CLEAN = *.aux *.log *.nav *.out *.snm *.toc *.vrb *.bak latexmkrc
 
-.PHONY: presentation
+.PHONY: report
 
-all: presentation clean
+all: report clean
 
-presentation:
-	$(TEXC) $(TEXC_OPTS) presentation.tex
-	$(TEXC) $(TEXC_OPTS) presentation.tex
+report:
+	$(TEXC) $(TEXC_OPTS) report.tex
+	$(TEXC) $(TEXC_OPTS) report.tex
 
 clean:
 	rm -f $(CLEAN)
