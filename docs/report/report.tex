@@ -53,26 +53,28 @@ In total, there are more than 120 test cases, and all of them are run as an inte
 
 \section{XQuery Optimizer}
 
-The \textit{XQuery Optimizer} rewrites "\texttt{for [...] where [...] return [...]}" expressions into equivalent ones using the join operator (added for this purpose), when some restrictions are satisfied.
+The \textit{XQuery Optimizer} rewrites "\texttt{for~[...]~where~[...]~return~[...]}" expressions into equivalent ones using the join operator (added for this purpose), when some restrictions are satisfied.
 The description of this process is documented in \texttt{docs/references/Join Optimization.pdf}.
 The \textit{XQuery} grammar has been extended, introducing the join operator.
 The implementation of the join is based on the \textit{Hash Join} algorithm.
 For every children of the left and right sub-queries with the same hash, the result of the join includes a new node containing both.
 This hash (a string) only depends on the attributes specified in the join operator.
 
-The query optimization is done in three stages, all based on an \textit{ANTLR} visitor, \texttt{XQuerySerializer}.
-This visitor takes a query and returns an equivalent query (\texttt{String -> String}), allowing the composition of the three stages (visitors) easily.
-The optimizer uses visitors, instead of string manipulations, to be able to access to the AST and its information in the rewrite process.
+The query optimization is performed in three stages, all based on an \textit{ANTLR} visitor, \texttt{XQuerySerializer}.
+This visitor takes a query and returns an equivalent query (\texttt{String~->~String}), allowing the composition of the three stages (visitors) easily.
+The optimizer uses visitors, instead of string manipulations, to be able to access the AST and its information in the rewrite process.
 
-- The first stage, implemented in \texttt{XQueryVarsRenamer}, simply renames all variables so their names are unique (there won't be name collisions with the current restrictions, but this simplifies more complex optimizations).
+- The first stage, implemented in \texttt{XQueryVarsRenamer}, renames all variables so their names are unique.
+Note that while there won't be name collisions with the current restrictions, this simplifies more complex optimizations.
 
-- The second stage first verifies that the given query can be rewritten - it checks that it conforms to the sub-grammar for which the optimization is defined.
-If this is the case, it rewrites the query using the join operator, and it pushes back the selections of the form of \texttt{\$var = "Constant"}.
+- The second stage, implemented in \texttt{XQueryOptimizer}, first verifies that the given query can be rewritten.
+It checks that it conforms to the sub-grammar for which the optimization is defined.
+If this is the case, it rewrites the query using the join operator, and it pushes back the selections of the form of \texttt{\$var~=~"Constant"}.
 The rewrite process also works in cases where more than one join operator is needed, nesting them.
 
 - The third stage, implemented in \texttt{XQueryFormatter}, formats/indents the query so that it is easier to read and debug.
 
-The test suite for the query optimizer verify that the evaluation of the output of each stage yields the same result as the evaluation of the original query.
+The test suite for the query optimizer verifies that the evaluation of the output of each stage yields the same result as the evaluation of the original query.
 Additionally, the tests also check that the stages are idempotent (going through a stage once should result in the same output as going through it twice).
 
 All in all, the applied optimizations are somewhat limited to really specific cases.
