@@ -91,8 +91,8 @@ public class XQueryEvaluator extends XPathEvaluator {
      */
     public static String keyNodeTags(Node node, List<TerminalNode> tags) {
         String key = "";
+        NodeList nodes = node.getChildNodes();
         for (TerminalNode tag : tags) {
-            NodeList nodes = node.getChildNodes();
             for (int i = 0; i < nodes.getLength(); ++i) {
                 Node c = nodes.item(i);
                 if (c.getNodeName().equals(tag.getText())) {

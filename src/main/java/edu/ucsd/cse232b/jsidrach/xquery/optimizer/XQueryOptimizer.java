@@ -188,7 +188,6 @@ public class XQueryOptimizer extends XQuerySerializer {
                     if (leftEqualities.contains(rightVar)) {
                         joinLeft.add(leftVar.substring(1));
                         joinRight.add(rightVar.substring(1));
-                        leftEqualities.remove(rightVar);
                         info.varEqualities.get(rightVar).remove(leftVar);
                         info.varEqualities.get(leftVar).remove(rightVar);
                     }
@@ -276,7 +275,7 @@ public class XQueryOptimizer extends XQuerySerializer {
             // Add the subquery the variable traverses
             info.vars.put(varName, varQuery);
             // Variable with dependency
-            if (varQuery.startsWith("$")) {
+            if ((varQuery.startsWith("$")) && (!varQuery.startsWith("$Undefined"))) {
                 String parent = varQuery.split("/")[0];
                 info.dependencies.put(varName, parent);
                 // Find root of the dependency relationship

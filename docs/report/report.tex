@@ -69,7 +69,7 @@ Note that while there won't be name collisions with the current restrictions, th
 
 - The second stage, implemented in \texttt{XQueryOptimizer}, first verifies that the given query can be rewritten.
 It checks that it conforms to the sub-grammar for which the optimization is defined.
-If this is the case, it rewrites the query using the join operator, and it pushes back the selections of the form of \texttt{\$var~=~"Constant"}.
+If this is the case, it rewrites the query using the join operator, and it pushes back the selections that belong to the same subquery.
 The rewrite process also works in cases where more than one join operator is needed, nesting them.
 
 - The third stage, implemented in \texttt{XQueryFormatter}, formats/indents the query so that it is easier to read and debug.
