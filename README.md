@@ -1,4 +1,4 @@
-# Simplified XQuery Engine
+# Simplified XQuery Engine [Archived]
 ### UCSD CSE 232B Project
 #### [Final Report](docs/report/report.pdf)
 
